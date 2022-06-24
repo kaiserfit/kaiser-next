@@ -8,12 +8,12 @@ module.exports = {
     extend: {
       keyframes: {
         teleportToRight: {
-          "0%": { position: "absolute", right: "-100%" },
-          "100%": { position: "relative", right: 0 },
+          "0%": { position: "relative", right: "-300%" },
+          "100%": { position: "relative", right: 0, width: "100%" },
         },
         slideToLeft: {
           "0%": { position: "relative", right: 0 },
-          "100%": { position: "absolute", right: "300%" },
+          "100%": { position: "absolute", right: "550%" },
         },
       },
       animation: {
