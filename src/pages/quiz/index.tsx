@@ -180,7 +180,7 @@ function Quiz() {
 
       <div className="space-y-4 max-w-xs ">
         <div className="text-center">
-          <h3 className="text-lg font-light tracking-wider">
+          <h3 className="text-lg font-light tracking-wide">
             Question{" "}
             <span className="text-2xl font-medium">{indexQuestion + 1}</span> /
             6
