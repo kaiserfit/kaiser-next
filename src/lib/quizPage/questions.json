@@ -1,0 +1,38 @@
+[
+  {
+    "question": "are you a woman or a man?",
+    "choices": ["woman", "man"]
+  },
+  {
+    "question": "what is your age range?",
+    "choices": ["teens", "20s", "30s", "40s", "50s", "60s and up"]
+  },
+  {
+    "question": "how fast is your metabolism?",
+    "choices": ["slow", "normal", "fast"]
+  },
+  {
+    "question": "how much do you weigh?",
+    "choices": []
+  },
+  {
+    "question": "how much weight would you like to lose?",
+    "choices": [
+      "5-10 pounds",
+      "15-25 pounds",
+      "26-49 pounds",
+      "50+ pounds",
+      "100+ pounds"
+    ]
+  },
+  {
+    "question": "what has been your BIGGEST challenge",
+    "choices": [
+      "no diet has worked for me",
+      "I am lost/confused",
+      "bad habits",
+      "no motivation",
+      "countless reasons"
+    ]
+  }
+]
