@@ -16,7 +16,7 @@ function Layout({ children }: Children) {
         <div className="bg-gray-100 text-slate-800 relative dark:bg-slate-800 dark:text-gray-100 h-screen overflow-x-hidden">
           <Navbar setShowMenu={setShowMenu} showMenu={showMenu} />
 
-          <div className="min-h-screen py-8">{children}</div>
+          <div className="min-h-screen relative">{children}</div>
 
           <Footer3 />
           {showMenu && (
