@@ -11,6 +11,7 @@ import { questionData } from "../../lib/types";
 import { BsDashLg, BsPersonFill, BsPeopleFill } from "react-icons/bs";
 import { FaCheckCircle } from "react-icons/fa";
 import { GiDna2, GiWeight, GiStairsGoal, GiBarrier } from "react-icons/gi";
+import Image from "next/image";
 
 const firstQuestion = {
   question: "what is your gender?",
@@ -27,11 +28,11 @@ function Quiz() {
   // user input states
   const [pickedChoice, setPickedChoice] = useState("");
   const [gender, setGender] = useState("");
-  const [age, setAge] = useState<String>();
-  const [metabolism, setMetabolism] = useState<String>();
-  const [weight, setWeight] = useState<String>();
-  const [weightGoal, setWeightGoal] = useState<String>();
-  const [challenge, setChallenge] = useState<String>();
+  const [age, setAge] = useState<string>();
+  const [metabolism, setMetabolism] = useState<string>();
+  const [weight, setWeight] = useState<string>();
+  const [weightGoal, setWeightGoal] = useState<string>();
+  const [challenge, setChallenge] = useState<string>();
 
   const fetchQuestion = async (id: number) => {
     setLoading(true);
@@ -108,181 +109,176 @@ function Quiz() {
     <section className="container mx-auto flex flex-col items-center space-y-4">
       {/* <h2 className="text-3xl font-bold">Kaiserfit assessment quiz</h2> */}
 
-      <div className="flex space-x-4">
-        {gender && (
-          <div className="flex items-end space-x-2">
-            <BsPersonFill className="text-2xl" />
-            <p className="font-light">
-              Gender: <span className="font-bold text-2xl">{gender}</span>
-            </p>
-          </div>
-        )}
-        {age && (
-          <div className="flex items-end space-x-2">
-            <BsPeopleFill className="text-2xl" />
-            <p className="font-light">
-              Age: <span className="font-bold text-2xl">{age}</span>
-            </p>
-          </div>
-        )}
-        {metabolism && (
-          <div className="flex items-end space-x-2">
-            <GiDna2 className="text-2xl" />
-            <p className="font-light">
-              Metabolism:{" "}
-              <span className="font-bold text-2xl">{metabolism}</span>
-            </p>
-          </div>
-        )}
-        {weight && (
-          <div className="flex items-end space-x-2">
-            <GiWeight className="text-2xl" />
-            <p className="font-light">
-              Weight: <span className="font-bold text-2xl">{weight}</span>
-            </p>
-          </div>
-        )}
-        {weightGoal && (
-          <div className="flex items-end space-x-2">
-            <GiStairsGoal className="text-2xl" />
-            <p className="font-light">
-              Weight Goal:{" "}
-              <span className="font-bold text-2xl">{weightGoal}</span>
-            </p>
-          </div>
-        )}
-        {challenge && (
-          <div className="flex items-end space-x-2">
-            <GiBarrier className="text-2xl" />
-            <p className="font-light">
-              Challenge: <span className="font-bold text-2xl">{challenge}</span>
-            </p>
-          </div>
-        )}
-      </div>
-      <div className="flex space-x-4 ">
-        {Array.apply(null, Array(6)).map((item, i) => (
-          <span
-            className={`${i === indexQuestion && "text-red-400"} ${
-              i < indexQuestion && "text-green-400"
-            } ${i > indexQuestion && "text-purple-500"} text-3xl font-medium`}
-            key={Math.random() * 123}
-          >
-            <BsDashLg />
-          </span>
-        ))}
-      </div>
-      {question.question === "what is your gender?" && !loading && (
-        <div>insert images for first question here</div>
-      )}
+      <InfoStats
+        gender={gender}
+        age={age}
+        weight={weight}
+        weightGoal={weightGoal}
+        metabolism={metabolism}
+        challenge={challenge}
+      />
 
-      {/* {loading && <div>loading...</div>} */}
+      <ProgressBar indexQuestion={indexQuestion} />
 
-      <div className="space-y-4 max-w-xs ">
-        <div className="text-center">
-          <h3 className="text-lg font-light tracking-wider">
-            Question{" "}
-            <span className="text-2xl font-medium">{indexQuestion + 1}</span> /
-            6
-          </h3>
-
-          <h3
-            className={`${
-              loading
-                ? "animate-slideToLeft"
-                : "relative animate-teleportToRight"
-            } text-2xl font-semibold capitalize transition-all duration-1000 ease-in-out`}
-          >
-            {question.question}
-          </h3>
+      {/* {question.question === "what is your gender?" && !loading && (
+        <div className="relative w-full h-80 outline">
+          <Image
+            src={"/images/quiz/Genetic_Code.webp"}
+            alt="image quiz"
+            layout="fill"
+            className="absolute"
+          />
         </div>
+      )} */}
 
-        <div
-          className={`${
-            loading ? "opacity-0" : "opacity-100"
-          } flex flex-col items-center pt-4 space-y-4 transition-all duration-300 ease-in-out`}
-        >
-          {question.choices &&
-            question.choices.map((choice, i) => (
-              <Choice
-                pickedChoice={pickedChoice}
-                key={Math.random() * 123}
-                choice={choice}
-                handleClick={handleClick}
-                indexQuestion={indexQuestion}
-              />
-            ))}
-          {!question.choices && (
-            <Choice choice={""} handleClick={handleClick} />
-          )}
-        </div>
-      </div>
+      <Choices
+        question={question}
+        loading={loading}
+        indexQuestion={indexQuestion}
+        pickedChoice={pickedChoice}
+        handleClick={handleClick}
+      />
     </section>
   );
 }
 
-// function InfoStats({
-//   gender,
-//   age,
-//   metabolism,
-//   weight,
-//   weightGoal,
-//   challenge,
-// }: {}) {
-//   return (
-//     <div className="flex space-x-4">
-//       {gender && (
-//         <div className="flex items-end space-x-2">
-//           <BsPersonFill className="text-2xl" />
-//           <p className="font-light">
-//             Gender: <span className="font-bold text-2xl">{gender}</span>
-//           </p>
-//         </div>
-//       )}
-//       {age && (
-//         <div className="flex items-end space-x-2">
-//           <BsPeopleFill className="text-2xl" />
-//           <p className="font-light">
-//             Age: <span className="font-bold text-2xl">{age}</span>
-//           </p>
-//         </div>
-//       )}
-//       {metabolism && (
-//         <div className="flex items-end space-x-2">
-//           <GiDna2 className="text-2xl" />
-//           <p className="font-light">
-//             Metabolism: <span className="font-bold text-2xl">{metabolism}</span>
-//           </p>
-//         </div>
-//       )}
-//       {weight && (
-//         <div className="flex items-end space-x-2">
-//           <GiWeight className="text-2xl" />
-//           <p className="font-light">
-//             Weight: <span className="font-bold text-2xl">{weight}</span>
-//           </p>
-//         </div>
-//       )}
-//       {weightGoal && (
-//         <div className="flex items-end space-x-2">
-//           <GiStairsGoal className="text-2xl" />
-//           <p className="font-light">
-//             Weight Goal:{" "}
-//             <span className="font-bold text-2xl">{weightGoal}</span>
-//           </p>
-//         </div>
-//       )}
-//       {challenge && (
-//         <div className="flex items-end space-x-2">
-//           <GiBarrier className="text-2xl" />
-//           <p className="font-light">
-//             Challenge: <span className="font-bold text-2xl">{challenge}</span>
-//           </p>
-//         </div>
-//       )}
-//     </div>
-//   );
-// }
+function InfoStats({
+  gender,
+  age,
+  metabolism,
+  weight,
+  weightGoal,
+  challenge,
+}: {
+  gender: string;
+  age?: string;
+  metabolism?: string;
+  weight?: string;
+  weightGoal?: string;
+  challenge?: string;
+}) {
+  return (
+    <div className="flex space-x-4">
+      {gender && (
+        <div className="flex items-end space-x-2">
+          <BsPersonFill className="text-2xl" />
+          <p className="font-light">
+            Gender: <span className="font-bold text-2xl">{gender}</span>
+          </p>
+        </div>
+      )}
+      {age && (
+        <div className="flex items-end space-x-2">
+          <BsPeopleFill className="text-2xl" />
+          <p className="font-light">
+            Age: <span className="font-bold text-2xl">{age}</span>
+          </p>
+        </div>
+      )}
+      {metabolism && (
+        <div className="flex items-end space-x-2">
+          <GiDna2 className="text-2xl" />
+          <p className="font-light">
+            Metabolism: <span className="font-bold text-2xl">{metabolism}</span>
+          </p>
+        </div>
+      )}
+      {weight && (
+        <div className="flex items-end space-x-2">
+          <GiWeight className="text-2xl" />
+          <p className="font-light">
+            Weight: <span className="font-bold text-2xl">{weight}</span>
+          </p>
+        </div>
+      )}
+      {weightGoal && (
+        <div className="flex items-end space-x-2">
+          <GiStairsGoal className="text-2xl" />
+          <p className="font-light">
+            Weight Goal:{" "}
+            <span className="font-bold text-2xl">{weightGoal}</span>
+          </p>
+        </div>
+      )}
+      {challenge && (
+        <div className="flex items-end space-x-2">
+          <GiBarrier className="text-2xl" />
+          <p className="font-light">
+            Challenge: <span className="font-bold text-2xl">{challenge}</span>
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function ProgressBar({ indexQuestion }: { indexQuestion: number }) {
+  return (
+    <div className="flex space-x-4 ">
+      {Array.apply(null, Array(6)).map((item, i) => (
+        <span
+          className={`${i === indexQuestion && "text-red-400"} ${
+            i < indexQuestion && "text-green-400"
+          } ${i > indexQuestion && "text-purple-500"} text-3xl font-medium`}
+          key={Math.random() * 123}
+        >
+          <BsDashLg />
+        </span>
+      ))}
+    </div>
+  );
+}
+
+function Choices({
+  indexQuestion,
+  loading,
+  question,
+  pickedChoice,
+  handleClick,
+}: {
+  indexQuestion: number;
+  loading: boolean;
+  question: questionData;
+  pickedChoice?: string;
+  handleClick: (category: string, choice: string) => void;
+}) {
+  return (
+    <div className="space-y-4 max-w-xs ">
+      <div className="text-center">
+        <h3 className="text-lg font-light tracking-wider">
+          Question{" "}
+          <span className="text-2xl font-medium">{indexQuestion + 1}</span> / 6
+        </h3>
+
+        <h3
+          className={`${
+            loading ? "animate-slideToLeft" : "relative animate-teleportToRight"
+          } text-2xl font-semibold capitalize transition-all duration-1000 ease-in-out`}
+        >
+          {question.question}
+        </h3>
+      </div>
+
+      <div
+        className={`${
+          loading ? "opacity-0" : "opacity-100"
+        } flex flex-col items-center pt-4 space-y-4 transition-all duration-300 ease-in-out`}
+      >
+        {question.choices &&
+          question.choices.map((choice, i) => (
+            <Choice
+              pickedChoice={pickedChoice}
+              key={Math.random() * 123}
+              choice={choice}
+              handleClick={handleClick}
+              indexQuestion={indexQuestion}
+            />
+          ))}
+        {!question.choices && <Choice choice={""} handleClick={handleClick} />}
+      </div>
+    </div>
+  );
+}
 
 function Choice({
   choice,

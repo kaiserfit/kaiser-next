@@ -13,5 +13,5 @@ export type userQuizResults = {
 
 export type questionData = {
   question: string;
-  choices: [""];
+  choices: string[];
 };
