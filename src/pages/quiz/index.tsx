@@ -189,7 +189,7 @@ function Quiz() {
           <h3
             className={`${
               loading
-                ? " animate-slideToLeft"
+                ? "animate-slideToLeft"
                 : "relative animate-teleportToRight"
             } text-2xl font-semibold capitalize transition-all duration-1000 ease-in-out`}
           >
@@ -220,6 +220,69 @@ function Quiz() {
     </section>
   );
 }
+
+// function InfoStats({
+//   gender,
+//   age,
+//   metabolism,
+//   weight,
+//   weightGoal,
+//   challenge,
+// }: {}) {
+//   return (
+//     <div className="flex space-x-4">
+//       {gender && (
+//         <div className="flex items-end space-x-2">
+//           <BsPersonFill className="text-2xl" />
+//           <p className="font-light">
+//             Gender: <span className="font-bold text-2xl">{gender}</span>
+//           </p>
+//         </div>
+//       )}
+//       {age && (
+//         <div className="flex items-end space-x-2">
+//           <BsPeopleFill className="text-2xl" />
+//           <p className="font-light">
+//             Age: <span className="font-bold text-2xl">{age}</span>
+//           </p>
+//         </div>
+//       )}
+//       {metabolism && (
+//         <div className="flex items-end space-x-2">
+//           <GiDna2 className="text-2xl" />
+//           <p className="font-light">
+//             Metabolism: <span className="font-bold text-2xl">{metabolism}</span>
+//           </p>
+//         </div>
+//       )}
+//       {weight && (
+//         <div className="flex items-end space-x-2">
+//           <GiWeight className="text-2xl" />
+//           <p className="font-light">
+//             Weight: <span className="font-bold text-2xl">{weight}</span>
+//           </p>
+//         </div>
+//       )}
+//       {weightGoal && (
+//         <div className="flex items-end space-x-2">
+//           <GiStairsGoal className="text-2xl" />
+//           <p className="font-light">
+//             Weight Goal:{" "}
+//             <span className="font-bold text-2xl">{weightGoal}</span>
+//           </p>
+//         </div>
+//       )}
+//       {challenge && (
+//         <div className="flex items-end space-x-2">
+//           <GiBarrier className="text-2xl" />
+//           <p className="font-light">
+//             Challenge: <span className="font-bold text-2xl">{challenge}</span>
+//           </p>
+//         </div>
+//       )}
+//     </div>
+//   );
+// }
 
 function Choice({
   choice,
@@ -267,19 +330,19 @@ function Choice({
           <input
             ref={inputRef}
             type="number"
-            name="pounds"
-            id="pounds"
+            name="lbs"
+            id="lbs"
             className="p-2 outline-none bg-transparent border-b-2 text-xl placeholder-transparent peer"
-            placeholder="In pounds"
+            placeholder="In lbs"
 
             // min={20}
             // max={400}
           />
           <label
-            htmlFor="pounds"
+            htmlFor="lbs"
             className="absolute left-0 -top-3.5 peer-placeholder-shown:left-2 peer-placeholder-shown:top-2 peer-focus:left-0 peer-focus:-top-3.5 peer-focus:opacity-75 transition-all ease-in-out duration-300"
           >
-            pounds
+            lbs
           </label>
         </div>
         <button
