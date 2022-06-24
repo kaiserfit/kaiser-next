@@ -106,21 +106,29 @@ function Quiz() {
   }, []);
 
   return (
-    <section className="container mx-auto flex flex-col items-center space-y-4">
+    <section className="pt-8">
       {/* <h2 className="text-3xl font-bold">Kaiserfit assessment quiz</h2> */}
 
-      <InfoStats
-        gender={gender}
-        age={age}
-        weight={weight}
-        weightGoal={weightGoal}
-        metabolism={metabolism}
-        challenge={challenge}
+      <Image
+        src={"/images/quiz/quiz-bg.png"}
+        alt="quiz-bg"
+        layout="fill"
+        objectFit="cover"
+        className="absolute brightness-[0.6]"
       />
+      <div className="container mx-auto flex flex-col items-center space-y-4 relative">
+        <InfoStats
+          gender={gender}
+          age={age}
+          weight={weight}
+          weightGoal={weightGoal}
+          metabolism={metabolism}
+          challenge={challenge}
+        />
 
-      <ProgressBar indexQuestion={indexQuestion} />
+        <ProgressBar indexQuestion={indexQuestion} />
 
-      {/* {question.question === "what is your gender?" && !loading && (
+        {/* {question.question === "what is your gender?" && !loading && (
         <div className="relative w-full h-80 outline">
           <Image
             src={"/images/quiz/Genetic_Code.webp"}
@@ -131,13 +139,14 @@ function Quiz() {
         </div>
       )} */}
 
-      <Choices
-        question={question}
-        loading={loading}
-        indexQuestion={indexQuestion}
-        pickedChoice={pickedChoice}
-        handleClick={handleClick}
-      />
+        <Choices
+          question={question}
+          loading={loading}
+          indexQuestion={indexQuestion}
+          pickedChoice={pickedChoice}
+          handleClick={handleClick}
+        />
+      </div>
     </section>
   );
 }
@@ -243,7 +252,11 @@ function Choices({
   handleClick: (category: string, choice: string) => void;
 }) {
   return (
-    <div className="space-y-4 max-w-xs ">
+    <div
+      className={`${
+        loading ? "animate-slideToLeft" : "relative animate-teleportToRight"
+      } outline p-8 rounded-2xl space-y-4 max-w-xs backdrop-blur-sm bg-white/10`}
+    >
       <div className="text-center">
         <h3 className="text-lg font-light tracking-wider">
           Question{" "}
@@ -251,18 +264,14 @@ function Choices({
         </h3>
 
         <h3
-          className={`${
-            loading ? "animate-slideToLeft" : "relative animate-teleportToRight"
-          } text-2xl font-semibold capitalize transition-all duration-1000 ease-in-out`}
+          className={`text-2xl font-semibold capitalize transition-all duration-1000 ease-in-out`}
         >
           {question.question}
         </h3>
       </div>
 
       <div
-        className={`${
-          loading ? "opacity-0" : "opacity-100"
-        } flex flex-col items-center pt-4 space-y-4 transition-all duration-300 ease-in-out`}
+        className={`flex flex-col items-center pt-4 space-y-4 transition-all duration-300 ease-in-out`}
       >
         {question.choices &&
           question.choices.map((choice, i) => (
