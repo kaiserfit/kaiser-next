@@ -1,17 +1,10 @@
 import { useRouter } from "next/router";
-import React, {
-  FormEvent,
-  MouseEventHandler,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { FormEvent, useEffect, useRef, useState } from "react";
 // import { useQuery } from "react-query";
 import { questionData } from "../../lib/types";
 import { BsDashLg, BsPersonFill, BsPeopleFill } from "react-icons/bs";
 import { FaCheckCircle, FaArrowLeft } from "react-icons/fa";
 import { GiDna2, GiWeight, GiStairsGoal, GiBarrier } from "react-icons/gi";
-import Image from "next/image";
 
 const firstQuestion = {
   question: "what is your gender?",
@@ -202,9 +195,9 @@ function InfoStats({
   challenge?: string;
 }) {
   return (
-    <div className="flex space-x-4">
+    <div className="flex flex-wrap sm:justify-center">
       {gender && (
-        <div className="flex items-end space-x-2">
+        <div className="flex sm:justify-center items-end space-x-2 w-full sm:w-1/2 lg:w-1/3">
           <BsPersonFill className="text-2xl" />
           <p className="font-light">
             Gender: <span className="font-bold text-2xl">{gender}</span>
@@ -212,7 +205,7 @@ function InfoStats({
         </div>
       )}
       {age && (
-        <div className="flex items-end space-x-2">
+        <div className="flex sm:justify-center items-end space-x-2 w-full sm:w-1/2 lg:w-1/3">
           <BsPeopleFill className="text-2xl" />
           <p className="font-light">
             Age: <span className="font-bold text-2xl">{age}</span>
@@ -220,7 +213,7 @@ function InfoStats({
         </div>
       )}
       {metabolism && (
-        <div className="flex items-end space-x-2">
+        <div className="flex sm:justify-center items-end space-x-2 w-full sm:w-1/2 lg:w-1/3">
           <GiDna2 className="text-2xl" />
           <p className="font-light">
             Metabolism: <span className="font-bold text-2xl">{metabolism}</span>
@@ -228,15 +221,15 @@ function InfoStats({
         </div>
       )}
       {weight && (
-        <div className="flex items-end space-x-2">
+        <div className="flex sm:justify-center items-end space-x-2 w-full sm:w-1/2 lg:w-1/3">
           <GiWeight className="text-2xl" />
           <p className="font-light">
-            Weight: <span className="font-bold text-2xl">{weight}</span>
+            Weight: <span className="font-bold text-2xl">{weight} lbs</span>
           </p>
         </div>
       )}
       {weightGoal && (
-        <div className="flex items-end space-x-2">
+        <div className="flex sm:justify-center items-end space-x-2 w-full sm:w-1/2 lg:w-1/3">
           <GiStairsGoal className="text-2xl" />
           <p className="font-light">
             Weight Goal:{" "}
@@ -245,7 +238,7 @@ function InfoStats({
         </div>
       )}
       {challenge && (
-        <div className="flex items-end space-x-2">
+        <div className="flex sm:justify-center items-end space-x-2 w-full sm:w-1/2 lg:w-1/3">
           <GiBarrier className="text-2xl" />
           <p className="font-light">
             Challenge: <span className="font-bold text-2xl">{challenge}</span>
@@ -296,7 +289,7 @@ function Choices({
     >
       {indexQuestion >= 1 && (
         <button
-          className="absolute top-3 left-4 text-2xl hover:-translate-x-2 transition-transform duration-300 ease-in-out"
+          className="absolute top-3 left-4 text-2xl hover:-translate-x-2 transition-transform duration-300 ease-in-out hover:brightness-75"
           onClick={handlePreviousQuestion}
         >
           <FaArrowLeft />
@@ -320,9 +313,7 @@ function Choices({
       </div>
 
       <div
-        className={`flex flex-col md:flex-row md:flex-wrap items-center pt-4 gap-y-4 transition-all duration-300 ease-in-out ${
-          indexQuestion === 3 ? "justify-center" : ""
-        }`}
+        className={`flex flex-col md:flex-row md:flex-wrap items-center pt-4 gap-y-4 transition-all duration-300 ease-in-out justify-center`}
       >
         {question.choices &&
           question.choices.map((choice, i) => (
@@ -383,12 +374,12 @@ function Choice({
 
       if (+inputRef.current!.value > 400) {
         alert(
-          "you have the impossible weight. pls enter below or equal to 400"
+          "you have the impossible weight. pls enter below or equal to 400 (placeholder: can either exceed or discuss what is to be the max)"
         );
         return;
       }
       setHasInputWeight(true);
-      handleClick("weight", inputRef.current!.value);
+      handleClick("weight", parseInt(inputRef.current!.value).toString());
     };
 
     return (
