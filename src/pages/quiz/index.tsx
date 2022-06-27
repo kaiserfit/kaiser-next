@@ -292,7 +292,7 @@ function Choices({
     <div
       className={`${
         loading ? "animate-slideToLeft" : "relative animate-teleportToRight"
-      } pt-4 p-8 rounded-2xl space-y-4 backdrop-blur-sm bg-white/20 relative w-full max-w-6xl`}
+      } pt-4 p-8 rounded-2xl space-y-4 backdrop-blur-sm bg-white/20 relative w-full max-w-6xl shadow-2xl`}
     >
       {indexQuestion >= 1 && (
         <button
@@ -443,7 +443,7 @@ function Choice({
             : pickedChoice
             ? "from-gray-600 to-gray-800 opacity-40 cursor-not-allowed"
             : "bg-gray-200 hover:bg-gray-300 dark:from-red-500 dark:to-red-800  dark:hover:from-red-600  dark:hover:to-red-900 md:hover:-translate-y-2"
-        } bg-gradient-to-b rounded-lg px-4 py-2  font-medium text-lg relative transition-all duration-300 ease-in-out w-full md:w-2/3`}
+        } bg-gradient-to-b rounded-lg px-4 py-2  font-medium text-lg relative transition-all duration-300 ease-in-out w-full md:w-2/3 shadow-2xl`}
       >
         {choice}
         {choice === pickedChoice && (
