@@ -381,11 +381,6 @@ function Choice({
         return;
       }
 
-      // if (hasInputWeight) {
-      //   alert("entry has already been submitted");
-      //   return;
-      // }
-
       if (+inputRef.current!.value > 400) {
         alert(
           "you have the impossible weight. pls enter below or equal to 400"
@@ -401,7 +396,6 @@ function Choice({
         onSubmit={handleSubmit}
         className="flex flex-col items-center space-y-4 w-full max-w-xs px-4"
       >
-        {/* <input ref={inputRef} type="range" min={0} max={400} name="" id="" /> */}
         <div className="relative w-full">
           <input
             ref={inputRef}
@@ -410,7 +404,6 @@ function Choice({
             id="lbs"
             className="p-2 outline-none bg-transparent border-b-2 text-xl placeholder-transparent peer w-full"
             placeholder="In lbs"
-
             // min={20}
             // max={400}
           />
@@ -422,7 +415,7 @@ function Choice({
           </label>
         </div>
         <button
-          // disabled={pickedChoice?.length > 0 ? true : false}
+          disabled={hasInputWeight}
           className={`relative px-4 py-2 rounded-lg bg-gradient-to-b w-full ${
             hasInputWeight
               ? "cursor-not-allowed dark:from-lime-300 dark:to-lime-700"
@@ -442,14 +435,17 @@ function Choice({
   }
 
   return (
-    <div className="w-3/4 px-4 md:w-1/2">
+    <div className="w-full sm:w-3/4 sm:px-4 md:w-1/2 md:flex md:justify-center">
       <button
+        disabled={pickedChoice ? true : false}
         onClick={() => handleClick(category, choice)}
         className={`${
           choice === pickedChoice
-            ? "bg-green-600 dark:from-lime-300 dark:to-lime-700 bg-gradient-to-b md:-translate-y-2"
-            : "bg-gray-200 dark:bg-red-500 hover:bg-gray-300 dark:hover:bg-red-600 md:hover:-translate-y-2"
-        }  rounded-lg px-4 py-2  font-medium text-lg relative transition-all duration-300 ease-in-out w-full`}
+            ? "from-lime-300 to-lime-700  md:-translate-y-2"
+            : pickedChoice
+            ? "from-gray-600 to-gray-800 opacity-40 cursor-not-allowed"
+            : "bg-gray-200 hover:bg-gray-300 dark:from-red-500 dark:to-red-800  dark:hover:from-red-600  dark:hover:to-red-900 md:hover:-translate-y-2"
+        } bg-gradient-to-b rounded-lg px-4 py-2  font-medium text-lg relative transition-all duration-300 ease-in-out w-full md:w-2/3`}
       >
         {choice}
         {choice === pickedChoice && (
