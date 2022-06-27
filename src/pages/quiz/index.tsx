@@ -9,7 +9,7 @@ import React, {
 // import { useQuery } from "react-query";
 import { questionData } from "../../lib/types";
 import { BsDashLg, BsPersonFill, BsPeopleFill } from "react-icons/bs";
-import { FaCheckCircle } from "react-icons/fa";
+import { FaCheckCircle, FaArrowLeft } from "react-icons/fa";
 import { GiDna2, GiWeight, GiStairsGoal, GiBarrier } from "react-icons/gi";
 import Image from "next/image";
 
@@ -42,11 +42,18 @@ function Quiz() {
         body: JSON.stringify({ id: indexQuestion }),
       });
       const { data }: { data: questionData } = await response.json();
-      setQuestion(data);
+      if (indexQuestion) {
+        setQuestion(data);
+      } else {
+        console.log("back to first question");
+        setQuestion(firstQuestion);
+      }
+
       setLoading(false);
     } catch (error) {
       console.log("error");
     }
+    setPickedChoice("");
   };
 
   // const { data, isLoading } = useQuery(
@@ -54,7 +61,12 @@ function Quiz() {
   // );
 
   const handleClick = (category: string, choice: string) => {
+    if (pickedChoice) {
+      return;
+    }
+
     setPickedChoice(choice);
+
     if (category === "gender") {
       setGender(choice);
     }
@@ -95,10 +107,29 @@ function Quiz() {
     setTimeout(() => setIndexQuestion((prev) => prev + 1), 1000);
   };
 
-  useEffect(() => {
-    if (indexQuestion) {
-      fetchQuestion(indexQuestion);
+  const handlePreviousQuestion = () => {
+    if (indexQuestion === 1) {
+      setGender("");
     }
+    if (indexQuestion === 2) {
+      setAge("");
+    }
+    if (indexQuestion === 3) {
+      setMetabolism("");
+    }
+    if (indexQuestion === 4) {
+      setWeight("");
+    }
+    if (indexQuestion === 5) {
+      setWeightGoal("");
+    }
+    setIndexQuestion((prev) => prev - 1);
+  };
+
+  useEffect(() => {
+    // if (indexQuestion) {
+    fetchQuestion(indexQuestion);
+    // }
   }, [indexQuestion]);
 
   useEffect(() => {
@@ -106,17 +137,20 @@ function Quiz() {
   }, []);
 
   return (
-    <section className="pt-8">
+    <section className="pt-32 pb-16 min-h-screen bg-gradient-to-br from-blue-300 to-blue-600 dark:from-blue-600 dark:to-blue-800">
       {/* <h2 className="text-3xl font-bold">Kaiserfit assessment quiz</h2> */}
 
-      <Image
+      {/* <Image
         src={"/images/quiz/quiz-bg.png"}
         alt="quiz-bg"
         layout="fill"
         objectFit="cover"
         className="absolute brightness-[0.6]"
-      />
-      <div className="container mx-auto flex flex-col items-center space-y-4 relative">
+      /> */}
+
+      <SVGBackground />
+
+      <div className="container mx-auto flex flex-col items-center space-y-4 relative px-4 sm:px-6 lg:px-8">
         <InfoStats
           gender={gender}
           age={age}
@@ -145,6 +179,7 @@ function Quiz() {
           indexQuestion={indexQuestion}
           pickedChoice={pickedChoice}
           handleClick={handleClick}
+          handlePreviousQuestion={handlePreviousQuestion}
         />
       </div>
     </section>
@@ -244,34 +279,50 @@ function Choices({
   question,
   pickedChoice,
   handleClick,
+  handlePreviousQuestion,
 }: {
   indexQuestion: number;
   loading: boolean;
   question: questionData;
   pickedChoice?: string;
   handleClick: (category: string, choice: string) => void;
+  handlePreviousQuestion: () => void;
 }) {
   return (
     <div
       className={`${
         loading ? "animate-slideToLeft" : "relative animate-teleportToRight"
-      } outline p-8 rounded-2xl space-y-4 max-w-xs backdrop-blur-sm bg-white/10`}
+      } pt-4 p-8 rounded-2xl space-y-4 backdrop-blur-sm bg-white/20 relative w-full max-w-6xl`}
     >
+      {indexQuestion >= 1 && (
+        <button
+          className="absolute top-3 left-4 text-2xl hover:-translate-x-2 transition-transform duration-300 ease-in-out"
+          onClick={handlePreviousQuestion}
+        >
+          <FaArrowLeft />
+        </button>
+      )}
+
       <div className="text-center">
         <h3 className="text-lg font-light tracking-wider">
           Question{" "}
-          <span className="text-2xl font-medium">{indexQuestion + 1}</span> / 6
+          <span className="text-2xl font-semibold text-amber-300">
+            {indexQuestion + 1}
+          </span>{" "}
+          / 6
         </h3>
 
         <h3
           className={`text-2xl font-semibold capitalize transition-all duration-1000 ease-in-out`}
         >
-          {question.question}
+          {question?.question}
         </h3>
       </div>
 
       <div
-        className={`flex flex-col items-center pt-4 space-y-4 transition-all duration-300 ease-in-out`}
+        className={`flex flex-col md:flex-row md:flex-wrap items-center pt-4 gap-y-4 transition-all duration-300 ease-in-out ${
+          indexQuestion === 3 ? "justify-center" : ""
+        }`}
       >
         {question.choices &&
           question.choices.map((choice, i) => (
@@ -302,6 +353,8 @@ function Choice({
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const [hasInputWeight, setHasInputWeight] = useState(false);
+
   const category =
     indexQuestion === 0
       ? "gender"
@@ -320,26 +373,37 @@ function Choice({
   if (!choice) {
     const handleSubmit = (e: FormEvent<HTMLFormElement> | any) => {
       e.preventDefault();
+
+      if (+!inputRef.current!.value || +inputRef.current!.value < 30) {
+        alert(
+          "pls enter a valid option. (dev: to be replaced by toaster notifcation)"
+        );
+        return;
+      }
+
       if (+inputRef.current!.value > 400) {
         alert(
           "you have the impossible weight. pls enter below or equal to 400"
         );
         return;
       }
+      setHasInputWeight(true);
       handleClick("weight", inputRef.current!.value);
     };
+
     return (
-      <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
-        {/* <input ref={inputRef} type="range" min={0} max={400} name="" id="" /> */}
-        <div className="relative">
+      <form
+        onSubmit={handleSubmit}
+        className="flex flex-col items-center space-y-4 w-full max-w-xs px-4"
+      >
+        <div className="relative w-full">
           <input
             ref={inputRef}
             type="number"
             name="lbs"
             id="lbs"
-            className="p-2 outline-none bg-transparent border-b-2 text-xl placeholder-transparent peer"
+            className="p-2 outline-none bg-transparent border-b-2 text-xl placeholder-transparent peer w-full"
             placeholder="In lbs"
-
             // min={20}
             // max={400}
           />
@@ -351,31 +415,100 @@ function Choice({
           </label>
         </div>
         <button
-          className="px-4 py-2 rounded-lg bg-gradient-to-b dark:from-amber-300 dark:to-amber-700 dark:hover:from-amber-400 dark:hover:to-amber-700"
+          disabled={hasInputWeight}
+          className={`relative px-4 py-2 rounded-lg bg-gradient-to-b w-full ${
+            hasInputWeight
+              ? "cursor-not-allowed dark:from-lime-300 dark:to-lime-700"
+              : "dark:from-amber-300 dark:to-amber-700 dark:hover:from-amber-400 dark:hover:to-amber-700 "
+          }`}
           onClick={handleSubmit}
         >
-          Submit
+          {hasInputWeight ? "Subbmitted" : "Submit"}{" "}
+          {hasInputWeight && (
+            <span className="absolute top-1/2 right-4 -translate-y-1/2">
+              <FaCheckCircle />
+            </span>
+          )}
         </button>
       </form>
     );
   }
 
   return (
-    <button
-      onClick={() => handleClick(category, choice)}
-      className={`${
-        choice === pickedChoice
-          ? "bg-green-600 dark:from-lime-300 dark:to-lime-700 dar bg-gradient-to-b"
-          : "bg-gray-100 dark:bg-slate-500 hover:bg-gray-200 dark:hover:bg-slate-600"
-      }  rounded-lg px-4 py-2 w-3/4 font-light relative`}
-    >
-      {choice}
-      {choice === pickedChoice && (
-        <span className="absolute right-4 top-1/2 -translate-y-1/2 ">
-          <FaCheckCircle />
-        </span>
-      )}
-    </button>
+    <div className="w-full sm:w-3/4 sm:px-4 md:w-1/2 md:flex md:justify-center">
+      <button
+        disabled={pickedChoice ? true : false}
+        onClick={() => handleClick(category, choice)}
+        className={`${
+          choice === pickedChoice
+            ? "from-lime-300 to-lime-700  md:-translate-y-2"
+            : pickedChoice
+            ? "from-gray-600 to-gray-800 opacity-40 cursor-not-allowed"
+            : "bg-gray-200 hover:bg-gray-300 dark:from-red-500 dark:to-red-800  dark:hover:from-red-600  dark:hover:to-red-900 md:hover:-translate-y-2"
+        } bg-gradient-to-b rounded-lg px-4 py-2  font-medium text-lg relative transition-all duration-300 ease-in-out w-full md:w-2/3`}
+      >
+        {choice}
+        {choice === pickedChoice && (
+          <span className="absolute right-4 top-1/2 -translate-y-1/2 ">
+            <FaCheckCircle />
+          </span>
+        )}
+      </button>
+    </div>
+  );
+}
+
+function SVGBackground() {
+  return (
+    <>
+      <svg
+        width="978"
+        height="978"
+        xmlns="http://www.w3.org/2000/svg"
+        className="absolute -top-96 -left-80 scale-50"
+      >
+        <defs>
+          <linearGradient x1="50%" y1=".779%" x2="50%" y2="100%" id="a">
+            <stop stopColor="#0989B4" stopOpacity="0" offset="0%" />
+            <stop stopColor="#53FFEE" offset="99.94%" />
+          </linearGradient>
+        </defs>
+        <ellipse
+          fill="url(#a)"
+          transform="rotate(-135 489 489)"
+          cx="489"
+          cy="489"
+          rx="489"
+          ry="488"
+          fillRule="evenodd"
+          opacity=".5"
+        />
+      </svg>
+
+      <svg
+        className="absolute -bottom-80 -right-80 scale-50"
+        width="978"
+        height="978"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <defs>
+          <linearGradient x1="50%" y1=".779%" x2="50%" y2="100%" id="a">
+            <stop stopColor="#0989B4" stopOpacity="0" offset="0%" />
+            <stop stopColor="#53FFEE" offset="99.94%" />
+          </linearGradient>
+        </defs>
+        <ellipse
+          fill="url(#a)"
+          transform="scale(1 -1) rotate(45 1669.55 0)"
+          cx="489"
+          cy="489"
+          rx="489"
+          ry="488"
+          fillRule="evenodd"
+          opacity=".25"
+        />
+      </svg>
+    </>
   );
 }
 
