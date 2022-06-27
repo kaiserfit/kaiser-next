@@ -9,7 +9,7 @@ import React, {
 // import { useQuery } from "react-query";
 import { questionData } from "../../lib/types";
 import { BsDashLg, BsPersonFill, BsPeopleFill } from "react-icons/bs";
-import { FaCheckCircle } from "react-icons/fa";
+import { FaCheckCircle, FaArrowLeft } from "react-icons/fa";
 import { GiDna2, GiWeight, GiStairsGoal, GiBarrier } from "react-icons/gi";
 import Image from "next/image";
 
@@ -42,7 +42,13 @@ function Quiz() {
         body: JSON.stringify({ id: indexQuestion }),
       });
       const { data }: { data: questionData } = await response.json();
-      setQuestion(data);
+      if (indexQuestion) {
+        setQuestion(data);
+      } else {
+        console.log("back to first question");
+        setQuestion(firstQuestion);
+      }
+
       setLoading(false);
     } catch (error) {
       console.log("error");
@@ -95,10 +101,31 @@ function Quiz() {
     setTimeout(() => setIndexQuestion((prev) => prev + 1), 1000);
   };
 
-  useEffect(() => {
-    if (indexQuestion) {
-      fetchQuestion(indexQuestion);
+  const handlePreviousQuestion = () => {
+    if (indexQuestion === 1) {
+      setGender("");
     }
+    if (indexQuestion === 2) {
+      setAge("");
+    }
+    if (indexQuestion === 3) {
+      setMetabolism("");
+    }
+    if (indexQuestion === 4) {
+      setWeight("");
+    }
+    if (indexQuestion === 5) {
+      setWeightGoal("");
+    }
+
+    setIndexQuestion((prev) => prev - 1);
+    setPickedChoice("");
+  };
+
+  useEffect(() => {
+    // if (indexQuestion) {
+    fetchQuestion(indexQuestion);
+    // }
   }, [indexQuestion]);
 
   useEffect(() => {
@@ -106,7 +133,7 @@ function Quiz() {
   }, []);
 
   return (
-    <section className="pt-32 outline min-h-screen bg-gradient-to-br dark:from-blue-300 dark:to-blue-600">
+    <section className="pt-32 pb-16 min-h-screen bg-gradient-to-br from-blue-300 to-blue-600 dark:from-blue-600 dark:to-blue-800">
       {/* <h2 className="text-3xl font-bold">Kaiserfit assessment quiz</h2> */}
 
       {/* <Image
@@ -148,6 +175,7 @@ function Quiz() {
           indexQuestion={indexQuestion}
           pickedChoice={pickedChoice}
           handleClick={handleClick}
+          handlePreviousQuestion={handlePreviousQuestion}
         />
       </div>
     </section>
@@ -247,19 +275,30 @@ function Choices({
   question,
   pickedChoice,
   handleClick,
+  handlePreviousQuestion,
 }: {
   indexQuestion: number;
   loading: boolean;
   question: questionData;
   pickedChoice?: string;
   handleClick: (category: string, choice: string) => void;
+  handlePreviousQuestion: () => void;
 }) {
   return (
     <div
       className={`${
         loading ? "animate-slideToLeft" : "relative animate-teleportToRight"
-      } outline p-8 rounded-2xl space-y-4 max-w-xs backdrop-blur-sm bg-white/10`}
+      } pt-4 p-8 rounded-2xl space-y-4 max-w-xs backdrop-blur-sm bg-white/10 relative`}
     >
+      {indexQuestion >= 1 && (
+        <button
+          className="absolute top-3 left-4 text-2xl hover:-translate-x-2 transition-transform duration-300 ease-in-out"
+          onClick={handlePreviousQuestion}
+        >
+          <FaArrowLeft />
+        </button>
+      )}
+
       <div className="text-center">
         <h3 className="text-lg font-light tracking-wider">
           Question{" "}
@@ -369,8 +408,8 @@ function Choice({
       className={`${
         choice === pickedChoice
           ? "bg-green-600 dark:from-lime-300 dark:to-lime-700 dar bg-gradient-to-b"
-          : "bg-gray-100 dark:bg-slate-500 hover:bg-gray-200 dark:hover:bg-slate-600"
-      }  rounded-lg px-4 py-2 w-3/4 font-light relative`}
+          : "bg-gray-200 dark:bg-slate-500 hover:bg-gray-300 dark:hover:bg-slate-600"
+      }  rounded-lg px-4 py-2 w-3/4 font-medium text-lg relative`}
     >
       {choice}
       {choice === pickedChoice && (

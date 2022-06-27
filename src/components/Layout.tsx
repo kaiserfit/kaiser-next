@@ -41,7 +41,7 @@ function Navbar({
 
   return (
     <>
-      <header className="bg-gray-600 dark:bg-transparent w-full py-4 px-12 flex justify-between items-center fixed top-0 left-0">
+      <header className="bg-transparent w-full py-4 px-12 flex justify-between items-center fixed top-0 left-0 z-[2]">
         <Link passHref href={"/"}>
           <div className="relative w-1/2 md:w-1/3 lg:w-1/5 h-12 cursor-pointer">
             <Image
