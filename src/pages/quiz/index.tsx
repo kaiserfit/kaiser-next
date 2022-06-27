@@ -151,6 +151,7 @@ function Quiz() {
           weightGoal={weightGoal}
           metabolism={metabolism}
           challenge={challenge}
+          indexQuestion={indexQuestion}
         />
 
         <ProgressBar indexQuestion={indexQuestion} />
@@ -186,6 +187,7 @@ function InfoStats({
   weight,
   weightGoal,
   challenge,
+  indexQuestion,
 }: {
   gender: string;
   age?: string;
@@ -193,11 +195,16 @@ function InfoStats({
   weight?: string;
   weightGoal?: string;
   challenge?: string;
+  indexQuestion: number;
 }) {
   return (
-    <div className="flex flex-wrap sm:justify-center">
+    <div className="flex flex-wrap sm:justify-center w-full">
       {gender && (
-        <div className="flex sm:justify-center items-end space-x-2 w-full sm:w-1/2 lg:w-1/3">
+        <div
+          className={`flex sm:justify-center items-end space-x-2 w-full sm:w-1/2 lg:w-1/3 ${
+            indexQuestion < 2 ? "w-full" : ""
+          }`}
+        >
           <BsPersonFill className="text-2xl" />
           <p className="font-light">
             Gender: <span className="font-bold text-2xl">{gender}</span>
