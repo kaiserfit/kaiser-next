@@ -53,6 +53,7 @@ function Quiz() {
     } catch (error) {
       console.log("error");
     }
+    setPickedChoice("");
   };
 
   // const { data, isLoading } = useQuery(
@@ -60,7 +61,12 @@ function Quiz() {
   // );
 
   const handleClick = (category: string, choice: string) => {
+    if (pickedChoice) {
+      return;
+    }
+
     setPickedChoice(choice);
+
     if (category === "gender") {
       setGender(choice);
     }
@@ -117,9 +123,7 @@ function Quiz() {
     if (indexQuestion === 5) {
       setWeightGoal("");
     }
-
     setIndexQuestion((prev) => prev - 1);
-    setPickedChoice("");
   };
 
   useEffect(() => {
@@ -146,7 +150,7 @@ function Quiz() {
 
       <SVGBackground />
 
-      <div className="container mx-auto flex flex-col items-center space-y-4 relative">
+      <div className="container mx-auto flex flex-col items-center space-y-4 relative px-4 sm:px-6 lg:px-8">
         <InfoStats
           gender={gender}
           age={age}
@@ -288,7 +292,7 @@ function Choices({
     <div
       className={`${
         loading ? "animate-slideToLeft" : "relative animate-teleportToRight"
-      } pt-4 p-8 rounded-2xl space-y-4 max-w-xs backdrop-blur-sm bg-white/10 relative`}
+      } pt-4 p-8 rounded-2xl space-y-4 backdrop-blur-sm bg-white/20 relative w-full max-w-6xl`}
     >
       {indexQuestion >= 1 && (
         <button
@@ -302,18 +306,23 @@ function Choices({
       <div className="text-center">
         <h3 className="text-lg font-light tracking-wider">
           Question{" "}
-          <span className="text-2xl font-medium">{indexQuestion + 1}</span> / 6
+          <span className="text-2xl font-semibold text-amber-300">
+            {indexQuestion + 1}
+          </span>{" "}
+          / 6
         </h3>
 
         <h3
           className={`text-2xl font-semibold capitalize transition-all duration-1000 ease-in-out`}
         >
-          {question.question}
+          {question?.question}
         </h3>
       </div>
 
       <div
-        className={`flex flex-col items-center pt-4 space-y-4 transition-all duration-300 ease-in-out`}
+        className={`flex flex-col md:flex-row md:flex-wrap items-center pt-4 gap-y-4 transition-all duration-300 ease-in-out ${
+          indexQuestion === 3 ? "justify-center" : ""
+        }`}
       >
         {question.choices &&
           question.choices.map((choice, i) => (
@@ -344,6 +353,8 @@ function Choice({
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const [hasInputWeight, setHasInputWeight] = useState(false);
+
   const category =
     indexQuestion === 0
       ? "gender"
@@ -362,24 +373,42 @@ function Choice({
   if (!choice) {
     const handleSubmit = (e: FormEvent<HTMLFormElement> | any) => {
       e.preventDefault();
+
+      if (+!inputRef.current!.value || +inputRef.current!.value < 30) {
+        alert(
+          "pls enter a valid option. (dev: to be replaced by toaster notifcation)"
+        );
+        return;
+      }
+
+      // if (hasInputWeight) {
+      //   alert("entry has already been submitted");
+      //   return;
+      // }
+
       if (+inputRef.current!.value > 400) {
         alert(
           "you have the impossible weight. pls enter below or equal to 400"
         );
         return;
       }
+      setHasInputWeight(true);
       handleClick("weight", inputRef.current!.value);
     };
+
     return (
-      <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
+      <form
+        onSubmit={handleSubmit}
+        className="flex flex-col items-center space-y-4 w-full max-w-xs px-4"
+      >
         {/* <input ref={inputRef} type="range" min={0} max={400} name="" id="" /> */}
-        <div className="relative">
+        <div className="relative w-full">
           <input
             ref={inputRef}
             type="number"
             name="lbs"
             id="lbs"
-            className="p-2 outline-none bg-transparent border-b-2 text-xl placeholder-transparent peer"
+            className="p-2 outline-none bg-transparent border-b-2 text-xl placeholder-transparent peer w-full"
             placeholder="In lbs"
 
             // min={20}
@@ -393,31 +422,43 @@ function Choice({
           </label>
         </div>
         <button
-          className="px-4 py-2 rounded-lg bg-gradient-to-b dark:from-amber-300 dark:to-amber-700 dark:hover:from-amber-400 dark:hover:to-amber-700"
+          // disabled={pickedChoice?.length > 0 ? true : false}
+          className={`relative px-4 py-2 rounded-lg bg-gradient-to-b w-full ${
+            hasInputWeight
+              ? "cursor-not-allowed dark:from-lime-300 dark:to-lime-700"
+              : "dark:from-amber-300 dark:to-amber-700 dark:hover:from-amber-400 dark:hover:to-amber-700 "
+          }`}
           onClick={handleSubmit}
         >
-          Submit
+          {hasInputWeight ? "Subbmitted" : "Submit"}{" "}
+          {hasInputWeight && (
+            <span className="absolute top-1/2 right-4 -translate-y-1/2">
+              <FaCheckCircle />
+            </span>
+          )}
         </button>
       </form>
     );
   }
 
   return (
-    <button
-      onClick={() => handleClick(category, choice)}
-      className={`${
-        choice === pickedChoice
-          ? "bg-green-600 dark:from-lime-300 dark:to-lime-700 dar bg-gradient-to-b"
-          : "bg-gray-200 dark:bg-slate-500 hover:bg-gray-300 dark:hover:bg-slate-600"
-      }  rounded-lg px-4 py-2 w-3/4 font-medium text-lg relative`}
-    >
-      {choice}
-      {choice === pickedChoice && (
-        <span className="absolute right-4 top-1/2 -translate-y-1/2 ">
-          <FaCheckCircle />
-        </span>
-      )}
-    </button>
+    <div className="w-3/4 px-4 md:w-1/2">
+      <button
+        onClick={() => handleClick(category, choice)}
+        className={`${
+          choice === pickedChoice
+            ? "bg-green-600 dark:from-lime-300 dark:to-lime-700 bg-gradient-to-b md:-translate-y-2"
+            : "bg-gray-200 dark:bg-red-500 hover:bg-gray-300 dark:hover:bg-red-600 md:hover:-translate-y-2"
+        }  rounded-lg px-4 py-2  font-medium text-lg relative transition-all duration-300 ease-in-out w-full`}
+      >
+        {choice}
+        {choice === pickedChoice && (
+          <span className="absolute right-4 top-1/2 -translate-y-1/2 ">
+            <FaCheckCircle />
+          </span>
+        )}
+      </button>
+    </div>
   );
 }
 
