@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Children } from "../lib/types";
 import { GiHamburgerMenu } from "react-icons/gi";
 import Link from "next/link";
+import KaiserfitLogo from "./KaiserfitLogo";
 
 const darkMode = true;
 
@@ -45,12 +46,13 @@ function Navbar({
         <Link passHref href={"/"}>
           <div className="relative w-1/2 md:w-1/3 lg:w-1/5 h-12 cursor-pointer">
             <Image
-              src={"/images/kaiserfit_logo.webp"}
+              src={"/images/kaiser.webp"}
               alt={"yep"}
               layout="fill"
               className="absolute"
               priority
             />
+            {/* <KaiserfitLogo /> */}
           </div>
         </Link>
         <button className="text-2xl z-20" onClick={handleToggle}>
