@@ -263,7 +263,7 @@ function ProgressBar({ indexQuestion }: { indexQuestion: number }) {
         <span
           className={`${i === indexQuestion && "text-red-400"} ${
             i < indexQuestion && "text-green-400"
-          } ${i > indexQuestion && "text-purple-500"} text-3xl font-medium`}
+          } ${i > indexQuestion && "text-amber-500"} text-3xl font-medium`}
           key={Math.random() * 123}
         >
           <BsDashLg />

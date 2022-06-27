@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { Dispatch, useState } from "react";
 import { Children } from "../lib/types";
 import { GiHamburgerMenu } from "react-icons/gi";
 import Link from "next/link";
@@ -20,9 +20,7 @@ function Layout({ children }: Children) {
           <div className="min-h-screen">{children}</div>
 
           <Footer />
-          {/* {showMenu && (
-            <div className="h-full w-full absolute inset-0 bg-slate-900/50 backdrop-blur-[1px]"></div>
-          )} */}
+          {showMenu && <BackDrop setShowMenu={setShowMenu} />}
         </div>
       </div>
     </>
@@ -91,6 +89,19 @@ function Menu({
         <a onClick={() => setShowMenu((prev) => !prev)}>cock 1</a>
       </Link>
     </div>
+  );
+}
+
+function BackDrop({
+  setShowMenu,
+}: {
+  setShowMenu: Dispatch<React.SetStateAction<boolean>>;
+}) {
+  return (
+    <div
+      onClick={() => setShowMenu(false)}
+      className="h-full w-full absolute inset-0 bg-slate-900/50 backdrop-blur-[1px]"
+    ></div>
   );
 }
 
