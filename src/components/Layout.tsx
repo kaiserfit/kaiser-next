@@ -16,7 +16,7 @@ function Layout({ children }: Children) {
         <div className="bg-gray-100 text-slate-800 relative dark:bg-slate-800 dark:text-gray-100 h-screen overflow-x-hidden">
           <Navbar setShowMenu={setShowMenu} showMenu={showMenu} />
 
-          <div className="min-h-screen relative">{children}</div>
+          <div className="min-h-screen">{children}</div>
 
           <Footer3 />
           {showMenu && (
@@ -41,7 +41,7 @@ function Navbar({
 
   return (
     <>
-      <header className="bg-gray-600 dark:bg-slate-600 w-full p-4 flex justify-between items-center">
+      <header className="bg-gray-600 dark:bg-transparent w-full py-4 px-12 flex justify-between items-center fixed top-0 left-0">
         <Link passHref href={"/"}>
           <div className="relative w-1/2 md:w-1/3 lg:w-1/5 h-12 cursor-pointer">
             <Image
@@ -90,7 +90,9 @@ function Menu({
 
 function Footer() {
   return (
-    <footer className="bg-slate-800 text-gray-100">this is the footer</footer>
+    <footer className="bg-slate-800 text-gray-100 z-10">
+      this is the footer
+    </footer>
   );
 }
 

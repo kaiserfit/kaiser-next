@@ -106,16 +106,19 @@ function Quiz() {
   }, []);
 
   return (
-    <section className="pt-8">
+    <section className="pt-32 outline min-h-screen bg-gradient-to-br dark:from-blue-300 dark:to-blue-600">
       {/* <h2 className="text-3xl font-bold">Kaiserfit assessment quiz</h2> */}
 
-      <Image
+      {/* <Image
         src={"/images/quiz/quiz-bg.png"}
         alt="quiz-bg"
         layout="fill"
         objectFit="cover"
         className="absolute brightness-[0.6]"
-      />
+      /> */}
+
+      <SVGBackground />
+
       <div className="container mx-auto flex flex-col items-center space-y-4 relative">
         <InfoStats
           gender={gender}
@@ -376,6 +379,60 @@ function Choice({
         </span>
       )}
     </button>
+  );
+}
+
+function SVGBackground() {
+  return (
+    <>
+      <svg
+        width="978"
+        height="978"
+        xmlns="http://www.w3.org/2000/svg"
+        className="absolute -top-96 -left-80 scale-50"
+      >
+        <defs>
+          <linearGradient x1="50%" y1=".779%" x2="50%" y2="100%" id="a">
+            <stop stopColor="#0989B4" stopOpacity="0" offset="0%" />
+            <stop stopColor="#53FFEE" offset="99.94%" />
+          </linearGradient>
+        </defs>
+        <ellipse
+          fill="url(#a)"
+          transform="rotate(-135 489 489)"
+          cx="489"
+          cy="489"
+          rx="489"
+          ry="488"
+          fillRule="evenodd"
+          opacity=".5"
+        />
+      </svg>
+
+      <svg
+        className="absolute -bottom-80 -right-80 scale-50"
+        width="978"
+        height="978"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <defs>
+          <linearGradient x1="50%" y1=".779%" x2="50%" y2="100%" id="a">
+            <stop stopColor="#0989B4" stopOpacity="0" offset="0%" />
+            <stop stopColor="#53FFEE" offset="99.94%" />
+          </linearGradient>
+        </defs>
+        <ellipse
+          fill="url(#a)"
+          transform="scale(1 -1) rotate(45 1669.55 0)"
+          cx="489"
+          cy="489"
+          rx="489"
+          ry="488"
+          fillRule="evenodd"
+          opacity=".25"
+        />
+      </svg>
+    </>
   );
 }
 
