@@ -463,7 +463,7 @@ function Choice({
             : "bg-gray-200 hover:bg-gray-300 dark:from-red-500 dark:to-red-800  dark:hover:from-red-600  dark:hover:to-red-900 md:hover:-translate-y-2"
         } bg-gradient-to-b rounded-lg px-4 py-2  font-medium sm:text-lg relative transition-all duration-300 ease-in-out w-full md:w-2/3 shadow-2xl`}
       >
-        {choice}
+        {choice.charAt(0).toUpperCase() + choice.slice(1, choice.length)}
         {choice === pickedChoice && (
           <span className="absolute right-4 top-1/2 -translate-y-1/2 ">
             <FaCheckCircle />
