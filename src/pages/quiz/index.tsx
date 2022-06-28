@@ -143,7 +143,7 @@ function Quiz() {
   return (
     <section
       ref={ref}
-      className="pt-32 pb-16 min-h-screen bg-gradient-to-br from-blue-300 to-blue-600 dark:from-blue-600 dark:to-blue-800"
+      className=" pt-20 md:pt-32 pb-16 min-h-screen bg-gradient-to-br from-blue-300 to-blue-600 dark:from-blue-600 dark:to-blue-800"
     >
       {/* <h2 className="text-3xl font-bold">Kaiserfit assessment quiz</h2> */}
 
@@ -215,54 +215,56 @@ function InfoStats({
     <div className="flex flex-wrap sm:justify-center w-full">
       {gender && (
         <div
-          className={`flex sm:justify-center items-end space-x-2 w-full sm:w-1/2 lg:w-1/3 ${
+          className={`flex sm:justify-center items-center sm:items-end space-x-1 md:space-x-2 w-1/2 sm:w-1/2 lg:w-1/3 ${
             indexQuestion < 2 ? "w-full" : ""
           }`}
         >
-          <BsPersonFill className="text-2xl" />
-          <p className="font-light">
-            Gender: <span className="font-bold text-2xl">{gender}</span>
+          <BsPersonFill className="sm:text-2xl" />
+          <p className="font-light sm:text-base">
+            Gender: <span className="font-bold sm:text-2xl">{gender}</span>
           </p>
         </div>
       )}
       {age && (
-        <div className="flex sm:justify-center items-end space-x-2 w-full sm:w-1/2 lg:w-1/3">
-          <BsPeopleFill className="text-2xl" />
+        <div className="flex items-center sm:items-end sm:justify-center justify-end space-x-1 md:space-x-2 w-1/2 sm:w-1/2 lg:w-1/3">
+          <BsPeopleFill className="sm:text-2xl" />
           <p className="font-light">
-            Age: <span className="font-bold text-2xl">{age}</span>
+            Age: <span className="font-bold sm:text-2xl">{age}</span>
           </p>
         </div>
       )}
       {metabolism && (
-        <div className="flex sm:justify-center items-end space-x-2 w-full sm:w-1/2 lg:w-1/3">
-          <GiDna2 className="text-2xl" />
+        <div className="flex sm:justify-center items-center sm:items-end space-x-1 md:space-x-2 w-1/2 sm:w-1/2 lg:w-1/3">
+          <GiDna2 className="sm:text-2xl" />
           <p className="font-light">
-            Metabolism: <span className="font-bold text-2xl">{metabolism}</span>
+            Metabolism:{" "}
+            <span className="font-bold sm:text-2xl">{metabolism}</span>
           </p>
         </div>
       )}
       {weight && (
-        <div className="flex sm:justify-center items-end space-x-2 w-full sm:w-1/2 lg:w-1/3">
-          <GiWeight className="text-2xl" />
+        <div className="flex items-center sm:items-end sm:justify-center justify-end space-x-1 md:space-x-2 w-1/2 sm:w-1/2 lg:w-1/3">
+          <GiWeight className="sm:text-2xl" />
           <p className="font-light">
-            Weight: <span className="font-bold text-2xl">{weight} lbs</span>
+            Weight: <span className="font-bold sm:text-2xl">{weight} lbs</span>
           </p>
         </div>
       )}
       {weightGoal && (
-        <div className="flex sm:justify-center items-end space-x-2 w-full sm:w-1/2 lg:w-1/3">
-          <GiStairsGoal className="text-2xl" />
+        <div className="flex sm:justify-center items-center sm:items-end space-x-1 md:space-x-2 w-1/2 sm:w-1/2 lg:w-1/3">
+          <GiStairsGoal className="sm:text-2xl" />
           <p className="font-light">
             Weight Goal:{" "}
-            <span className="font-bold text-2xl">{weightGoal}</span>
+            <span className="font-bold sm:text-2xl">{weightGoal}</span>
           </p>
         </div>
       )}
       {challenge && (
-        <div className="flex sm:justify-center items-end space-x-2 w-full sm:w-1/2 lg:w-1/3">
-          <GiBarrier className="text-2xl" />
+        <div className="flex items-center sm:items-end sm:justify-center justify-end space-x-1 md:space-x-2 w-1/2 sm:w-1/2 lg:w-1/3">
+          <GiBarrier className="sm:text-2xl" />
           <p className="font-light">
-            Challenge: <span className="font-bold text-2xl">{challenge}</span>
+            Challenge:{" "}
+            <span className="font-bold sm:text-2xl">{challenge}</span>
           </p>
         </div>
       )}
@@ -277,7 +279,9 @@ function ProgressBar({ indexQuestion }: { indexQuestion: number }) {
         <span
           className={`${i === indexQuestion && "text-red-400"} ${
             i < indexQuestion && "text-green-400"
-          } ${i > indexQuestion && "text-amber-500"} text-3xl font-medium`}
+          } ${
+            i > indexQuestion && "text-amber-500"
+          } text-xl sm:text-3xl font-medium`}
           key={Math.random() * 123}
         >
           <BsDashLg />
@@ -306,7 +310,7 @@ function Choices({
     <div
       className={`${
         loading ? "animate-slideToLeft" : "relative animate-teleportToRight"
-      } pt-4 p-8 rounded-2xl space-y-4 backdrop-blur-sm bg-white/20 relative w-full max-w-6xl shadow-2xl`}
+      } pt-0 p-4 sm:pt-4 sm:p-8 rounded-2xl space-y-4 backdrop-blur-sm bg-white/20 relative w-full max-w-6xl shadow-2xl`}
     >
       {indexQuestion >= 1 && (
         <button
@@ -318,23 +322,23 @@ function Choices({
       )}
 
       <div className="text-center">
-        <h3 className="text-lg font-light tracking-wider">
+        <h3 className="sm:text-lg font-light tracking-wider">
           Question{" "}
-          <span className="text-2xl font-semibold text-amber-300">
+          <span className="text-xl sm:text-2xl font-semibold text-amber-300">
             {indexQuestion + 1}
           </span>{" "}
           / 6
         </h3>
 
         <h3
-          className={`text-2xl font-semibold capitalize transition-all duration-1000 ease-in-out`}
+          className={`text-xl sm:text-2xl font-semibold capitalize transition-all duration-1000 ease-in-out`}
         >
           {question?.question}
         </h3>
       </div>
 
       <div
-        className={`flex flex-col md:flex-row md:flex-wrap items-center pt-4 gap-y-4 transition-all duration-300 ease-in-out justify-center`}
+        className={`flex flex-col md:flex-row md:flex-wrap items-center sm:pt-4 gap-y-4 transition-all duration-300 ease-in-out justify-center`}
       >
         {question.choices &&
           question.choices.map((choice, i) => (
@@ -346,7 +350,7 @@ function Choices({
               indexQuestion={indexQuestion}
             />
           ))}
-        {!question.choices && <Choice choice={""} handleClick={handleClick} />}
+        {!question.choices && <Choice handleClick={handleClick} />}
       </div>
     </div>
   );
@@ -358,7 +362,7 @@ function Choice({
   indexQuestion,
   pickedChoice,
 }: {
-  choice: string;
+  choice?: string;
   handleClick: (category: string, choice: string) => void;
   indexQuestion?: number;
   pickedChoice?: string;
@@ -406,7 +410,7 @@ function Choice({
     return (
       <form
         onSubmit={handleSubmit}
-        className="flex flex-col items-center space-y-4 w-full max-w-xs px-4"
+        className="flex flex-col items-center space-y-6 sm:space-y-4 w-full max-w-xs px-4"
       >
         <div className="relative w-full">
           <input
@@ -457,7 +461,7 @@ function Choice({
             : pickedChoice
             ? "from-gray-600 to-gray-800 opacity-40 cursor-not-allowed"
             : "bg-gray-200 hover:bg-gray-300 dark:from-red-500 dark:to-red-800  dark:hover:from-red-600  dark:hover:to-red-900 md:hover:-translate-y-2"
-        } bg-gradient-to-b rounded-lg px-4 py-2  font-medium text-lg relative transition-all duration-300 ease-in-out w-full md:w-2/3 shadow-2xl`}
+        } bg-gradient-to-b rounded-lg px-4 py-2  font-medium sm:text-lg relative transition-all duration-300 ease-in-out w-full md:w-2/3 shadow-2xl`}
       >
         {choice}
         {choice === pickedChoice && (

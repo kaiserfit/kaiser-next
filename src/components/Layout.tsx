@@ -66,7 +66,12 @@ function Navbar({
             {/* <KaiserfitLogo /> */}
           </div>
         </Link>
-        <button className="text-3xl relative z-20" onClick={handleToggle}>
+        <button
+          className={`${
+            showMenu ? "text-red-300" : ""
+          } text-3xl relative hover:opacity-[0.85]`}
+          onClick={handleToggle}
+        >
           <GiHamburgerMenu />
         </button>
       </header>
@@ -84,9 +89,9 @@ function Menu({
 }) {
   return (
     <div
-      className={`absolute top-0 w-1/2 sm:w-1/3 ${
+      className={`fixed top-0 w-1/2 sm:w-1/3 ${
         showMenu ? "right-0" : "-right-full"
-      } z-10 bg-green-600 min-h-screen transition-all duration-500 ease-in-out pt-20 flex flex-col items-center`}
+      } z-10 bg-blue-600/60 backdrop-blur-[1px] min-h-screen transition-all duration-500 ease-in-out pt-20 flex flex-col items-center`}
     >
       <Link passHref href={"/quiz"}>
         <a onClick={() => setShowMenu((prev) => !prev)}>cock 1</a>
