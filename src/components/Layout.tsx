@@ -47,7 +47,7 @@ function Navbar({
         className={`${
           isWindowAtTop
             ? "bg-transparent py-4"
-            : "bg-indigo-600/50 py-2 backdrop-blur-sm rounded-br-full rounded-bl-full"
+            : "bg-indigo-600/50 py-1 backdrop-blur-sm rounded-br-full rounded-bl-full"
         } px-4 pr-8 md:pr-16 w-full flex justify-between items-center fixed top-0 left-0 z-20 transition-all duration-500 ease-in-out`}
       >
         <Link passHref href={"/"}>
