@@ -2,16 +2,33 @@
 @tailwind components;
 @tailwind utilities;
 
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
+@layer base {
+  ::-webkit-scrollbar {
+    width: 12.5px;
+    height: 15px;
+  }
 
-input[type="number"] {
-  -moz-appearance: textfield;
-}
+  ::-webkit-scrollbar-track {
+    border-radius: 100vh;
+    background: transparent;
+  }
 
-.asdasd {
-  transform: translate();
+  ::-webkit-scrollbar-thumb {
+    background: #e0cbcb;
+    border-radius: 100vh;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #c0a0b9;
+  }
+
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
 }

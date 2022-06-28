@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React, { Dispatch, useState } from "react";
+import React, { Dispatch, useEffect, useState } from "react";
 import { Children } from "../lib/types";
 import { GiHamburgerMenu } from "react-icons/gi";
 import Link from "next/link";
@@ -9,13 +9,19 @@ import { RootState } from "../store";
 
 const darkMode = true;
 
+// console.log(globalThis);
+
 function Layout({ children }: Children) {
   const [showMenu, setShowMenu] = useState(false);
 
   return (
     <>
       <div className={`${darkMode ? "dark" : ""}`}>
-        <div className="bg-gray-100 text-slate-800 relative dark:bg-slate-800 dark:text-gray-100 h-screen overflow-x-hidden">
+        <div
+          className={`bg-gray-100 text-slate-800 relative dark:bg-slate-800 dark:text-gray-100 h-screen overflow-x-hidden ${
+            showMenu ? "overflow-y-hidden" : ""
+          } `}
+        >
           <Navbar setShowMenu={setShowMenu} showMenu={showMenu} />
 
           <div className="min-h-screen">{children}</div>
@@ -39,6 +45,13 @@ function Navbar({
 
   const handleToggle = () => {
     setShowMenu((prev) => !prev);
+  };
+
+  const x = globalThis.scrollX;
+  const y = globalThis.scrollY;
+  globalThis.onscroll = function () {
+    globalThis.scrollTo(x, y);
+    console.log("WTF");
   };
 
   return (
