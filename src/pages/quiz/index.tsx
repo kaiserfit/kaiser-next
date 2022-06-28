@@ -5,6 +5,9 @@ import { questionData } from "../../lib/types";
 import { BsDashLg, BsPersonFill, BsPeopleFill } from "react-icons/bs";
 import { FaCheckCircle, FaArrowLeft } from "react-icons/fa";
 import { GiDna2, GiWeight, GiStairsGoal, GiBarrier } from "react-icons/gi";
+import { useInView } from "react-intersection-observer";
+import { useDispatch } from "react-redux";
+import { uiActions } from "../../features/uiSlice";
 
 const firstQuestion = {
   question: "what is your gender?",
@@ -13,6 +16,10 @@ const firstQuestion = {
 
 function Quiz() {
   const router = useRouter();
+  const dispatch = useDispatch();
+  const { ref, inView } = useInView({
+    threshold: 1,
+  });
 
   const [question, setQuestion] = useState(firstQuestion);
   const [indexQuestion, setIndexQuestion] = useState(0);
@@ -129,8 +136,15 @@ function Quiz() {
     localStorage.setItem("userAnswers", JSON.stringify({}));
   }, []);
 
+  useEffect(() => {
+    dispatch(uiActions.toggleIsWindowAtTop(inView));
+  }, [inView]);
+
   return (
-    <section className="pt-32 pb-16 min-h-screen bg-gradient-to-br from-blue-300 to-blue-600 dark:from-blue-600 dark:to-blue-800">
+    <section
+      ref={ref}
+      className="pt-32 pb-16 min-h-screen bg-gradient-to-br from-blue-300 to-blue-600 dark:from-blue-600 dark:to-blue-800"
+    >
       {/* <h2 className="text-3xl font-bold">Kaiserfit assessment quiz</h2> */}
 
       {/* <Image
