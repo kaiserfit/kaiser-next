@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useRouter } from "next/router";
 import React, { FormEvent, useEffect, useRef, useState } from "react";
 // import { useQuery } from "react-query";
@@ -20,6 +21,8 @@ function Quiz() {
   const { ref, inView } = useInView({
     threshold: 1,
   });
+
+  const initial = useRef();
 
   const [question, setQuestion] = useState(firstQuestion);
   const [indexQuestion, setIndexQuestion] = useState(0);
@@ -128,6 +131,10 @@ function Quiz() {
 
   useEffect(() => {
     // if (indexQuestion) {
+    if (!initial.current) {
+      initial.current = true;
+      return;
+    }
     fetchQuestion(indexQuestion);
     // }
   }, [indexQuestion]);
