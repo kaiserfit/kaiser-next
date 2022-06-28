@@ -4,12 +4,13 @@ import { Children } from "../lib/types";
 import { GiHamburgerMenu } from "react-icons/gi";
 import Link from "next/link";
 import KaiserfitLogo from "./KaiserfitLogo";
+import { useSelector } from "react-redux";
+import { RootState } from "../store";
 
 const darkMode = true;
 
 function Layout({ children }: Children) {
   const [showMenu, setShowMenu] = useState(false);
-  // console.log(showMenu);
 
   return (
     <>
@@ -34,13 +35,21 @@ function Navbar({
   setShowMenu: React.Dispatch<React.SetStateAction<boolean>>;
   showMenu: boolean;
 }) {
+  const { isWindowAtTop } = useSelector((state: RootState) => state.UI);
+
   const handleToggle = () => {
     setShowMenu((prev) => !prev);
   };
 
   return (
     <>
-      <header className="bg-transparent w-full py-4 px-4 pr-8 md:pr-16 flex justify-between items-center fixed top-0 left-0 z-20">
+      <header
+        className={`${
+          isWindowAtTop
+            ? "bg-transparent py-4"
+            : "bg-indigo-600/50 py-2 backdrop-blur-sm rounded-br-full rounded-bl-full"
+        } px-4 pr-8 md:pr-16 w-full flex justify-between items-center fixed top-0 left-0 z-20 transition-all duration-500 ease-in-out`}
+      >
         <Link passHref href={"/"}>
           <div
             onClick={() => setShowMenu(false)}
