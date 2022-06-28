@@ -47,19 +47,12 @@ function Navbar({
     setShowMenu((prev) => !prev);
   };
 
-  const x = globalThis.scrollX;
-  const y = globalThis.scrollY;
-  globalThis.onscroll = function () {
-    globalThis.scrollTo(x, y);
-    console.log("WTF");
-  };
-
   return (
     <>
       <header
         className={`${
           isWindowAtTop
-            ? "bg-transparent py-4"
+            ? "bg-transparent py-3 md:py-4"
             : "bg-indigo-600/50 py-1 backdrop-blur-sm rounded-br-full rounded-bl-full"
         } px-4 pr-8 md:pr-16 w-full flex justify-between items-center fixed top-0 left-0 z-20 transition-all duration-500 ease-in-out`}
       >
@@ -107,14 +100,19 @@ function Menu({
       } z-10 bg-blue-600/60 backdrop-blur-[1px] min-h-screen transition-all duration-500 ease-in-out pt-20 flex flex-col items-center`}
     >
       <Link passHref href={"/quiz"}>
+        <a
+          className="hover:underline transition-all duration-300 ease-in-out hover:text-slate-800"
+          onClick={() => setShowMenu((prev) => !prev)}
+        >
+          Take the quiz
+        </a>
+      </Link>
+      {/* <Link passHref href={"/quiz"}>
         <a onClick={() => setShowMenu((prev) => !prev)}>cock 1</a>
       </Link>
       <Link passHref href={"/quiz"}>
         <a onClick={() => setShowMenu((prev) => !prev)}>cock 1</a>
-      </Link>
-      <Link passHref href={"/quiz"}>
-        <a onClick={() => setShowMenu((prev) => !prev)}>cock 1</a>
-      </Link>
+      </Link> */}
     </div>
   );
 }

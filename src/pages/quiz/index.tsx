@@ -143,7 +143,7 @@ function Quiz() {
   return (
     <section
       ref={ref}
-      className=" pt-20 md:pt-32 pb-16 min-h-screen bg-gradient-to-br from-blue-300 to-blue-600 dark:from-blue-600 dark:to-blue-800"
+      className="pt-16 md:pt-28 pb-16 min-h-screen bg-gradient-to-br from-blue-300 to-blue-600 dark:from-blue-600 dark:to-blue-800"
     >
       {/* <h2 className="text-3xl font-bold">Kaiserfit assessment quiz</h2> */}
 
@@ -158,6 +158,8 @@ function Quiz() {
       <SVGBackground />
 
       <div className="container mx-auto flex flex-col items-center space-y-4 relative px-4 sm:px-6 lg:px-8">
+        <TitlePage />
+
         <InfoStats
           gender={gender}
           age={age}
@@ -191,6 +193,20 @@ function Quiz() {
         />
       </div>
     </section>
+  );
+}
+
+function TitlePage() {
+  return (
+    <div className="text-center max-w-xl">
+      <h2 className="text-4xl font-bold">
+        <span className="">Discover</span> your genetic code
+      </h2>
+      <h3 className="text-xl font-light tracking-wide">
+        {" "}
+        <span>Unlock</span> your plan
+      </h3>
+    </div>
   );
 }
 
@@ -306,6 +322,9 @@ function Choices({
   handleClick: (category: string, choice: string) => void;
   handlePreviousQuestion: () => void;
 }) {
+  const currentQuestion =
+    question?.question.charAt(0).toUpperCase() +
+    question?.question.slice(1, question?.question.length);
   return (
     <div
       className={`${
@@ -331,9 +350,9 @@ function Choices({
         </h3>
 
         <h3
-          className={`text-xl sm:text-2xl font-semibold capitalize transition-all duration-1000 ease-in-out`}
+          className={`text-xl sm:text-2xl font-semibold transition-all duration-1000 ease-in-out`}
         >
-          {question?.question}
+          {currentQuestion}
         </h3>
       </div>
 
