@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React, { Dispatch, useEffect, useState } from "react";
+import React, { Dispatch, useState } from "react";
 import { Children } from "../lib/types";
 import { GiHamburgerMenu } from "react-icons/gi";
 import Link from "next/link";
