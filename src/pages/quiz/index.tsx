@@ -255,7 +255,7 @@ function Quiz() {
   return (
     <section
       ref={ref}
-      className="pt-16 md:pt-28 pb-16 min-h-screen bg-gradient-to-br from-blue-300 to-blue-600 dark:from-blue-300 dark:to-blue-800"
+      className="pt-8 md:pt-12 pb-20 min-h-screen bg-gradient-to-br from-blue-300 to-blue-600 dark:from-blue-300 dark:to-blue-800"
     >
       {/* <h2 className="text-3xl font-bold">Kaiserfit assessment quiz</h2> */}
 
