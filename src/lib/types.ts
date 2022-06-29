@@ -2,7 +2,7 @@ export type Children = {
   children: JSX.Element | JSX.Element[];
 };
 
-export type userQuizResults = {
+export type UserData = {
   gender: "string";
   age: "string";
   metabolism: "string";
@@ -11,7 +11,7 @@ export type userQuizResults = {
   challenge: "string";
 };
 
-export type questionData = {
+export type QuestionData = {
   question: string;
   choices: string[];
 };

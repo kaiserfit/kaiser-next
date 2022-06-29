@@ -2,7 +2,7 @@
 import { useRouter } from "next/router";
 import React, { FormEvent, useEffect, useRef, useState } from "react";
 // import { useQuery } from "react-query";
-import { questionData } from "../../lib/types";
+import { QuestionData } from "../../lib/types";
 import { BsDashLg, BsPersonFill, BsPeopleFill } from "react-icons/bs";
 import { FaCheckCircle, FaArrowLeft } from "react-icons/fa";
 import { GiDna2, GiWeight, GiStairsGoal, GiBarrier } from "react-icons/gi";
@@ -44,7 +44,7 @@ function Quiz() {
         method: "POST",
         body: JSON.stringify({ id: indexQuestion }),
       });
-      const { data }: { data: questionData } = await response.json();
+      const { data }: { data: QuestionData } = await response.json();
       if (indexQuestion) {
         setQuestion(data);
       } else {
@@ -103,7 +103,8 @@ function Quiz() {
       //   const response = await fetch("");
       // };
       localStorage.setItem("userAnswers", JSON.stringify(userAnswers));
-      router.push("https://kaizerfit.com/fathacks-vsl.html");
+      // router.push("https://kaizerfit.com/fathacks-vsl.html");
+      router.push("/fathacks");
       return;
     }
 
@@ -324,7 +325,7 @@ function Choices({
 }: {
   indexQuestion: number;
   loading: boolean;
-  question: questionData;
+  question: QuestionData;
   pickedChoice?: string;
   handleClick: (category: string, choice: string) => void;
   handlePreviousQuestion: () => void;
@@ -432,6 +433,8 @@ function Choice({
       setHasInputWeight(true);
       handleClick("weight", parseInt(inputRef.current!.value).toString());
     };
+
+    setTimeout(() => inputRef.current?.focus(), 500);
 
     return (
       <form
