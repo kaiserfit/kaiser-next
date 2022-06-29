@@ -22,7 +22,7 @@ function Quiz() {
     threshold: 1,
   });
 
-  const initial = useRef<boolean>();
+  const initial = useRef<boolean>(false);
 
   const [question, setQuestion] = useState(firstQuestion);
   const [indexQuestion, setIndexQuestion] = useState(0);
@@ -205,36 +205,34 @@ function Quiz() {
   useEffect(() => {
     const storedUserData = JSON.parse(localStorage.getItem("userAnswers")!);
     if (!storedUserData) {
-      setIsUserDataReady(true);
+      setTimeout(() => setIsUserDataReady(true), 600);
       return;
     }
-    console.log(storedUserData);
     if (Object.keys(storedUserData).length) {
       setIndexQuestion(Object.keys(storedUserData).length);
-      setIsUserDataReady(true);
+      setTimeout(() => setIsUserDataReady(true), 600);
     }
     if (Object.keys(storedUserData).length === 1) {
       setGender(Object.values<string>(storedUserData)[0]);
-      setIsUserDataReady(true);
+      setTimeout(() => setIsUserDataReady(true), 600);
     }
     if (Object.keys(storedUserData).length === 2) {
       setGender(Object.values<string>(storedUserData)[0]);
       setAge(Object.values<string>(storedUserData)[1]);
-      setIsUserDataReady(true);
+      setTimeout(() => setIsUserDataReady(true), 600);
     }
     if (Object.keys(storedUserData).length === 3) {
       setGender(Object.values<string>(storedUserData)[0]);
       setAge(Object.values<string>(storedUserData)[1]);
       setMetabolism(Object.values<string>(storedUserData)[2]);
-      setIsUserDataReady(true);
+      setTimeout(() => setIsUserDataReady(true), 600);
     }
     if (Object.keys(storedUserData).length === 4) {
       setGender(Object.values<string>(storedUserData)[0]);
       setAge(Object.values<string>(storedUserData)[1]);
       setMetabolism(Object.values<string>(storedUserData)[2]);
       setWeight(Object.values<string>(storedUserData)[3]);
-      console.log(Object.values<string>(storedUserData)[3]);
-      setIsUserDataReady(true);
+      setTimeout(() => setIsUserDataReady(true), 600);
     }
     if (Object.keys(storedUserData).length === 5) {
       setGender(Object.values<string>(storedUserData)[0]);
@@ -242,12 +240,11 @@ function Quiz() {
       setMetabolism(Object.values<string>(storedUserData)[2]);
       setWeight(Object.values<string>(storedUserData)[3]);
       setWeightGoal(Object.values<string>(storedUserData)[4]);
-      setIsUserDataReady(true);
+      setTimeout(() => setIsUserDataReady(true), 600);
     }
     if (Object.keys(storedUserData).length === 6) {
-      console.log("yep quiz has been answered before");
       localStorage.setItem("userAnswers", JSON.stringify({}));
-      setIsUserDataReady(true);
+      setTimeout(() => setIsUserDataReady(true), 600);
     }
   }, []);
 
