@@ -56,7 +56,7 @@ function Navbar({
             : "bg-indigo-600/50 py-1 backdrop-blur-sm rounded-br-full rounded-bl-full"
         } px-4 pr-8 md:pr-16 w-full flex justify-between items-center fixed top-0 left-0 z-20 transition-all duration-500 ease-in-out`}
       >
-        <Link passHref href={"/"}>
+        <Link rel="preload" passHref href={"/"}>
           <div
             onClick={() => setShowMenu(false)}
             className="relative w-1/2 md:w-1/3 lg:w-1/5 h-12 cursor-pointer"
@@ -67,15 +67,21 @@ function Navbar({
               layout="fill"
               objectFit="contain"
               className="absolute"
-              priority
+              priority={true}
             />
             {/* <KaiserfitLogo /> */}
           </div>
         </Link>
+        <Link passHref href="/quiz">
+          <a className="hidden md:inline-block px-4 py-2 rounded-lg bg-gradient-to-br from-red-400 to-red-800 hover:scale-110 hover:-translate-x-1 transition-all duration-300 ease-in-out shadow-2xl">
+            Take the quiz
+          </a>
+        </Link>
+
         <button
           className={`${
             showMenu ? "text-red-300" : ""
-          } text-3xl relative hover:opacity-[0.85]`}
+          } inline-block md:hidden text-3xl relative hover:opacity-[0.85]`}
           onClick={handleToggle}
         >
           <GiHamburgerMenu />
