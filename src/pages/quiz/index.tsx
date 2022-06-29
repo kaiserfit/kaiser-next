@@ -394,9 +394,10 @@ function Choice({
   indexQuestion?: number;
   pickedChoice?: string;
 }) {
-  const inputRef = useRef<HTMLInputElement>(null);
+  // const inputRef = useRef<HTMLInputElement>(null);
 
-  const [hasInputWeight, setHasInputWeight] = useState(false);
+  const [inputWeight, setInputWeight] = useState(0);
+  const [submitWeight, setSubmitWeight] = useState(false);
 
   const category =
     indexQuestion === 0
@@ -417,21 +418,15 @@ function Choice({
     const handleSubmit = (e: FormEvent<HTMLFormElement> | any) => {
       e.preventDefault();
 
-      if (+!inputRef.current!.value || +inputRef.current!.value < 30) {
+      if (!inputWeight || inputWeight < 30) {
         alert(
           "pls enter a valid option. (dev: to be replaced by toaster notifcation)"
         );
         return;
       }
 
-      if (+inputRef.current!.value > 400) {
-        alert(
-          "you have the impossible weight. pls enter below or equal to 400 (placeholder: can either exceed or discuss what is to be the max)"
-        );
-        return;
-      }
-      setHasInputWeight(true);
-      handleClick("weight", parseInt(inputRef.current!.value).toString());
+      setSubmitWeight(true);
+      handleClick("weight", inputWeight.toString());
     };
 
     setTimeout(() => inputRef.current?.focus(), 500);
@@ -441,35 +436,28 @@ function Choice({
         onSubmit={handleSubmit}
         className="flex flex-col items-center space-y-6 sm:space-y-4 w-full max-w-xs px-4"
       >
-        <div className="relative w-full">
+        <div className="relative w-full text-center">
           <input
-            ref={inputRef}
-            type="number"
-            name="lbs"
-            id="lbs"
-            className="p-2 outline-none bg-transparent border-b-2 text-xl placeholder-transparent peer w-full"
-            placeholder="In lbs"
-            // min={20}
-            // max={400}
+            type="range"
+            className="w-full"
+            onChange={(e) => setInputWeight(e.currentTarget.value)}
+            value={inputWeight}
+            max={400}
           />
-          <label
-            htmlFor="lbs"
-            className="absolute left-0 -top-3.5 peer-placeholder-shown:left-2 peer-placeholder-shown:top-2 peer-focus:left-0 peer-focus:-top-3.5 peer-focus:opacity-75 transition-all ease-in-out duration-300"
-          >
-            lbs
-          </label>
+
+          <span className="w-full text-xl font-medium">{inputWeight} lbs</span>
         </div>
         <button
-          disabled={hasInputWeight}
+          disabled={submitWeight}
           className={`relative px-4 py-2 rounded-lg bg-gradient-to-b w-full ${
-            hasInputWeight
-              ? "cursor-not-allowed dark:from-lime-300 dark:to-lime-700"
+            submitWeight
+              ? "dark:from-lime-300 dark:to-lime-700"
               : "dark:from-amber-300 dark:to-amber-700 dark:hover:from-amber-400 dark:hover:to-amber-700 "
           }`}
           onClick={handleSubmit}
         >
-          {hasInputWeight ? "Subbmitted" : "Submit"}{" "}
-          {hasInputWeight && (
+          {submitWeight ? "Subbmitted" : "Submit"}
+          {submitWeight && (
             <span className="absolute top-1/2 right-4 -translate-y-1/2">
               <FaCheckCircle />
             </span>
