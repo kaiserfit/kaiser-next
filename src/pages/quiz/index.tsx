@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { useRouter } from "next/router";
 import React, { FormEvent, useEffect, useRef, useState } from "react";
 // import { useQuery } from "react-query";
@@ -9,6 +8,7 @@ import { GiDna2, GiWeight, GiStairsGoal, GiBarrier } from "react-icons/gi";
 import { useInView } from "react-intersection-observer";
 import { useDispatch } from "react-redux";
 import { uiActions } from "../../features/uiSlice";
+import Image from "next/image";
 
 const firstQuestion = {
   question: "what is your gender?",
@@ -22,15 +22,16 @@ function Quiz() {
     threshold: 1,
   });
 
-  const initial = useRef();
+  const initial = useRef<boolean>();
 
   const [question, setQuestion] = useState(firstQuestion);
   const [indexQuestion, setIndexQuestion] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [isUserDataReady, setIsUserDataReady] = useState(false);
 
   // user input states
   const [pickedChoice, setPickedChoice] = useState("");
-  const [gender, setGender] = useState("");
+  const [gender, setGender] = useState<string>();
   const [age, setAge] = useState<string>();
   const [metabolism, setMetabolism] = useState<string>();
   const [weight, setWeight] = useState<string>();
@@ -72,25 +73,37 @@ function Quiz() {
 
     if (category === "gender") {
       setGender(choice);
+      const userAnswers = { gender: choice };
+      localStorage.setItem("userAnswers", JSON.stringify(userAnswers));
     }
     if (category === "age") {
       setAge(choice);
+      const userAnswers = { gender, age: choice };
+      localStorage.setItem("userAnswers", JSON.stringify(userAnswers));
     }
     if (category === "metabolism") {
       setMetabolism(choice);
+      const userAnswers = { gender, age, metabolism: choice };
+      localStorage.setItem("userAnswers", JSON.stringify(userAnswers));
     }
     if (category === "weight") {
-      console.log(choice, "weight");
       setWeight(choice);
+      const userAnswers = { gender, age, metabolism, weight: choice };
+      localStorage.setItem("userAnswers", JSON.stringify(userAnswers));
     }
     if (category === "weightGoal") {
       setWeightGoal(choice);
+      const userAnswers = {
+        gender,
+        age,
+        metabolism,
+        weight,
+        weightGoal: choice,
+      };
+      localStorage.setItem("userAnswers", JSON.stringify(userAnswers));
     }
     if (category === "challenge") {
       setChallenge(choice);
-    }
-
-    if (indexQuestion === 5) {
       const userAnswers = {
         gender,
         age,
@@ -99,10 +112,22 @@ function Quiz() {
         weightGoal,
         challenge: choice,
       };
+      localStorage.setItem("userAnswers", JSON.stringify(userAnswers));
+    }
+
+    if (indexQuestion === 5) {
+      // const userAnswers = {
+      //   gender,
+      //   age,
+      //   metabolism,
+      //   weight,
+      //   weightGoal,
+      //   challenge: choice,
+      // };
       // const sendData = async () => {
       //   const response = await fetch("");
       // };
-      localStorage.setItem("userAnswers", JSON.stringify(userAnswers));
+      // localStorage.setItem("userAnswers", JSON.stringify(userAnswers));
       // router.push("https://kaizerfit.com/fathacks-vsl.html");
       router.push("/fathacks");
       return;
@@ -114,18 +139,55 @@ function Quiz() {
   const handlePreviousQuestion = () => {
     if (indexQuestion === 1) {
       setGender("");
+      localStorage.removeItem("userAnswers");
     }
     if (indexQuestion === 2) {
       setAge("");
+      const storedUserData = JSON.parse(localStorage.getItem("userAnswers")!);
+      const updatedUserData = Object.entries(storedUserData).slice(
+        0,
+        indexQuestion - 1
+      );
+      localStorage.setItem(
+        "userAnswers",
+        JSON.stringify(Object.fromEntries(updatedUserData))
+      );
     }
     if (indexQuestion === 3) {
       setMetabolism("");
+      const storedUserData = JSON.parse(localStorage.getItem("userAnswers")!);
+      const updatedUserData = Object.entries(storedUserData).slice(
+        0,
+        indexQuestion - 1
+      );
+      localStorage.setItem(
+        "userAnswers",
+        JSON.stringify(Object.fromEntries(updatedUserData))
+      );
     }
     if (indexQuestion === 4) {
       setWeight("");
+      const storedUserData = JSON.parse(localStorage.getItem("userAnswers")!);
+      const updatedUserData = Object.entries(storedUserData).slice(
+        0,
+        indexQuestion - 1
+      );
+      localStorage.setItem(
+        "userAnswers",
+        JSON.stringify(Object.fromEntries(updatedUserData))
+      );
     }
     if (indexQuestion === 5) {
       setWeightGoal("");
+      const storedUserData = JSON.parse(localStorage.getItem("userAnswers")!);
+      const updatedUserData = Object.entries(storedUserData).slice(
+        0,
+        indexQuestion - 1
+      );
+      localStorage.setItem(
+        "userAnswers",
+        JSON.stringify(Object.fromEntries(updatedUserData))
+      );
     }
     setIndexQuestion((prev) => prev - 1);
   };
@@ -141,7 +203,52 @@ function Quiz() {
   }, [indexQuestion]);
 
   useEffect(() => {
-    localStorage.setItem("userAnswers", JSON.stringify({}));
+    const storedUserData = JSON.parse(localStorage.getItem("userAnswers")!);
+    if (!storedUserData) {
+      setIsUserDataReady(true);
+      return;
+    }
+    console.log(storedUserData);
+    if (Object.keys(storedUserData).length) {
+      setIndexQuestion(Object.keys(storedUserData).length);
+      setIsUserDataReady(true);
+    }
+    if (Object.keys(storedUserData).length === 1) {
+      setGender(Object.values<string>(storedUserData)[0]);
+      setIsUserDataReady(true);
+    }
+    if (Object.keys(storedUserData).length === 2) {
+      setGender(Object.values<string>(storedUserData)[0]);
+      setAge(Object.values<string>(storedUserData)[1]);
+      setIsUserDataReady(true);
+    }
+    if (Object.keys(storedUserData).length === 3) {
+      setGender(Object.values<string>(storedUserData)[0]);
+      setAge(Object.values<string>(storedUserData)[1]);
+      setMetabolism(Object.values<string>(storedUserData)[2]);
+      setIsUserDataReady(true);
+    }
+    if (Object.keys(storedUserData).length === 4) {
+      setGender(Object.values<string>(storedUserData)[0]);
+      setAge(Object.values<string>(storedUserData)[1]);
+      setMetabolism(Object.values<string>(storedUserData)[2]);
+      setWeight(Object.values<string>(storedUserData)[3]);
+      console.log(Object.values<string>(storedUserData)[3]);
+      setIsUserDataReady(true);
+    }
+    if (Object.keys(storedUserData).length === 5) {
+      setGender(Object.values<string>(storedUserData)[0]);
+      setAge(Object.values<string>(storedUserData)[1]);
+      setMetabolism(Object.values<string>(storedUserData)[2]);
+      setWeight(Object.values<string>(storedUserData)[3]);
+      setWeightGoal(Object.values<string>(storedUserData)[4]);
+      setIsUserDataReady(true);
+    }
+    if (Object.keys(storedUserData).length === 6) {
+      console.log("yep quiz has been answered before");
+      localStorage.setItem("userAnswers", JSON.stringify({}));
+      setIsUserDataReady(true);
+    }
   }, []);
 
   useEffect(() => {
@@ -151,7 +258,7 @@ function Quiz() {
   return (
     <section
       ref={ref}
-      className="pt-16 md:pt-28 pb-16 min-h-screen bg-gradient-to-br from-blue-300 to-blue-600 dark:from-blue-600 dark:to-blue-800"
+      className="pt-16 md:pt-28 pb-16 min-h-screen bg-gradient-to-br from-blue-300 to-blue-600 dark:from-blue-300 dark:to-blue-800"
     >
       {/* <h2 className="text-3xl font-bold">Kaiserfit assessment quiz</h2> */}
 
@@ -165,22 +272,23 @@ function Quiz() {
 
       <SVGBackground />
 
-      <div className="container mx-auto flex flex-col items-center space-y-4 relative px-4 sm:px-6 lg:px-8">
-        <TitlePage />
+      {isUserDataReady && (
+        <div className="container mx-auto flex flex-col items-center space-y-4 relative px-4 sm:px-6 lg:px-8">
+          <TitlePage />
 
-        <InfoStats
-          gender={gender}
-          age={age}
-          weight={weight}
-          weightGoal={weightGoal}
-          metabolism={metabolism}
-          challenge={challenge}
-          indexQuestion={indexQuestion}
-        />
+          <InfoStats
+            gender={gender}
+            age={age}
+            weight={weight}
+            weightGoal={weightGoal}
+            metabolism={metabolism}
+            challenge={challenge}
+            indexQuestion={indexQuestion}
+          />
 
-        <ProgressBar indexQuestion={indexQuestion} />
+          <ProgressBar indexQuestion={indexQuestion} />
 
-        {/* {question.question === "what is your gender?" && !loading && (
+          {/* {question.question === "what is your gender?" && !loading && (
         <div className="relative w-full h-80 outline">
           <Image
             src={"/images/quiz/Genetic_Code.webp"}
@@ -191,15 +299,16 @@ function Quiz() {
         </div>
       )} */}
 
-        <Choices
-          question={question}
-          loading={loading}
-          indexQuestion={indexQuestion}
-          pickedChoice={pickedChoice}
-          handleClick={handleClick}
-          handlePreviousQuestion={handlePreviousQuestion}
-        />
-      </div>
+          <Choices
+            question={question}
+            loading={loading}
+            indexQuestion={indexQuestion}
+            pickedChoice={pickedChoice}
+            handleClick={handleClick}
+            handlePreviousQuestion={handlePreviousQuestion}
+          />
+        </div>
+      )}
     </section>
   );
 }
@@ -207,6 +316,15 @@ function Quiz() {
 function TitlePage() {
   return (
     <div className="text-center max-w-xl">
+      <div className="relative h-40">
+        <Image
+          src={"/images/quiz/genetic-code.webp"}
+          alt="genetic code"
+          layout="fill"
+          objectFit="contain"
+          priority
+        />
+      </div>
       <h2 className="text-4xl font-bold">
         <span className="">Discover</span> your genetic code
       </h2>
@@ -227,7 +345,7 @@ function InfoStats({
   challenge,
   indexQuestion,
 }: {
-  gender: string;
+  gender?: string;
   age?: string;
   metabolism?: string;
   weight?: string;
@@ -394,7 +512,7 @@ function Choice({
   indexQuestion?: number;
   pickedChoice?: string;
 }) {
-  // const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const [inputWeight, setInputWeight] = useState(0);
   const [submitWeight, setSubmitWeight] = useState(false);
@@ -438,9 +556,11 @@ function Choice({
       >
         <div className="relative w-full text-center">
           <input
+            // ref={inputRef}
             type="range"
+            // name="lbs"
             className="w-full"
-            onChange={(e) => setInputWeight(e.currentTarget.value)}
+            onChange={(e) => setInputWeight(+e.currentTarget.value)}
             value={inputWeight}
             max={400}
           />
