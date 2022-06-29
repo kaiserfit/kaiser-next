@@ -39,7 +39,6 @@ function Video() {
     <div className="absolute left-4 md:left-1/4">
       <div
         id="vidalytics_embed_VGqpMgAid6usjq3x"
-        // style={{ width: "100%", height: "50vh", paddingTop: "56.25%" }}
         className="min-h-[1rem] w-40 relative"
       >
         {/* VIDEO HERE */}
