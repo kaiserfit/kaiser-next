@@ -205,34 +205,34 @@ function Quiz() {
   useEffect(() => {
     const storedUserData = JSON.parse(localStorage.getItem("userAnswers")!);
     if (!storedUserData) {
-      setTimeout(() => setIsUserDataReady(true), 600);
+      setTimeout(() => setIsUserDataReady(true), 900);
       return;
     }
     if (Object.keys(storedUserData).length) {
       setIndexQuestion(Object.keys(storedUserData).length);
-      setTimeout(() => setIsUserDataReady(true), 600);
+      setTimeout(() => setIsUserDataReady(true), 900);
     }
     if (Object.keys(storedUserData).length === 1) {
       setGender(Object.values<string>(storedUserData)[0]);
-      setTimeout(() => setIsUserDataReady(true), 600);
+      setTimeout(() => setIsUserDataReady(true), 900);
     }
     if (Object.keys(storedUserData).length === 2) {
       setGender(Object.values<string>(storedUserData)[0]);
       setAge(Object.values<string>(storedUserData)[1]);
-      setTimeout(() => setIsUserDataReady(true), 600);
+      setTimeout(() => setIsUserDataReady(true), 900);
     }
     if (Object.keys(storedUserData).length === 3) {
       setGender(Object.values<string>(storedUserData)[0]);
       setAge(Object.values<string>(storedUserData)[1]);
       setMetabolism(Object.values<string>(storedUserData)[2]);
-      setTimeout(() => setIsUserDataReady(true), 600);
+      setTimeout(() => setIsUserDataReady(true), 900);
     }
     if (Object.keys(storedUserData).length === 4) {
       setGender(Object.values<string>(storedUserData)[0]);
       setAge(Object.values<string>(storedUserData)[1]);
       setMetabolism(Object.values<string>(storedUserData)[2]);
       setWeight(Object.values<string>(storedUserData)[3]);
-      setTimeout(() => setIsUserDataReady(true), 600);
+      setTimeout(() => setIsUserDataReady(true), 900);
     }
     if (Object.keys(storedUserData).length === 5) {
       setGender(Object.values<string>(storedUserData)[0]);
@@ -240,11 +240,11 @@ function Quiz() {
       setMetabolism(Object.values<string>(storedUserData)[2]);
       setWeight(Object.values<string>(storedUserData)[3]);
       setWeightGoal(Object.values<string>(storedUserData)[4]);
-      setTimeout(() => setIsUserDataReady(true), 600);
+      setTimeout(() => setIsUserDataReady(true), 900);
     }
     if (Object.keys(storedUserData).length === 6) {
       localStorage.setItem("userAnswers", JSON.stringify({}));
-      setTimeout(() => setIsUserDataReady(true), 600);
+      setTimeout(() => setIsUserDataReady(true), 900);
     }
   }, []);
 
