@@ -19,7 +19,11 @@ function FathacksPage() {
   return (
     <section className="pt-24 relative">
       {userData?.age}
-      <Video />
+      <div className="flex">
+        <Video />
+        <h2 className="outline w-3/4 z-10">yes</h2>
+      </div>
+
       <h2 className="z-20 relative">COCK COKC OKC232</h2>
     </section>
   );
@@ -36,11 +40,8 @@ function Video() {
     );
   }, []);
   return (
-    <div className="absolute left-4 md:left-1/4">
-      <div
-        id="vidalytics_embed_VGqpMgAid6usjq3x"
-        className="min-h-[1rem] w-40 relative"
-      >
+    <div className="relative w-full max-h-40">
+      <div style={{ paddingTop: "50%" }} id="vidalytics_embed_VGqpMgAid6usjq3x">
         {/* VIDEO HERE */}
       </div>
     </div>
