@@ -1,9 +1,9 @@
 import { userInfo } from "os";
 import React, { useEffect, useState } from "react";
-import { userQuizResults } from "../../lib/types";
+import { UserData } from "../../lib/types";
 
 function Results() {
-  const [usersInfo, setUsersInfo] = useState<userQuizResults>();
+  const [usersInfo, setUsersInfo] = useState<UserData>();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
