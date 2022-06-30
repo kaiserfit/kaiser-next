@@ -251,7 +251,7 @@ function Quiz() {
       setTimeout(() => setIsUserDataReady(true), 900);
     }
     if (Object.keys(storedUserData).length === 6) {
-      localStorage.setItem("userAnswers", JSON.stringify({}));
+      localStorage.removeItem("userAnswers");
       setTimeout(() => setIsUserDataReady(true), 900);
     }
   }, []);
