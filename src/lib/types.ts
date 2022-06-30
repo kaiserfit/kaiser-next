@@ -15,3 +15,18 @@ export type QuestionData = {
   question: string;
   choices: string[];
 };
+
+export type PriceInformation = {
+  title: string;
+  description: string;
+  originalPrice: number;
+  discountedPrice: number;
+  shipping: number;
+  bonus: boolean;
+  photo: string;
+};
+
+export type FreeBonus = {
+  title: string;
+  description: string;
+}
