@@ -1,11 +1,12 @@
 import Image from "next/image";
-import React, { Dispatch, useState } from "react";
+import React, { Dispatch, useEffect, useState } from "react";
 import { Children } from "../lib/types";
 import { GiHamburgerMenu } from "react-icons/gi";
 import Link from "next/link";
 import KaiserfitLogo from "./KaiserfitLogo";
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
+import { useRouter } from "next/router";
 
 const darkMode = true;
 
@@ -41,11 +42,24 @@ function Navbar({
   setShowMenu: React.Dispatch<React.SetStateAction<boolean>>;
   showMenu: boolean;
 }) {
+  const router = useRouter();
+  const [isQuizAnswered, setIsQuizAnswered] = useState(false);
+
   const { isWindowAtTop } = useSelector((state: RootState) => state.UI);
 
   const handleToggle = () => {
     setShowMenu((prev) => !prev);
   };
+
+  // console.log(router.pathname == "/fathacks");
+
+  useEffect(() => {
+    const quizAnswers = JSON.parse(localStorage.getItem("userAnswers")!);
+    console.log(quizAnswers);
+    // if (Object.values(quizAnswers).length === 6) {
+    //   setIsQuizAnswered(true);
+    // }
+  }, []);
 
   return (
     <>
@@ -72,11 +86,14 @@ function Navbar({
             {/* <KaiserfitLogo /> */}
           </div>
         </Link>
-        <Link passHref href="/quiz">
-          <a className="hidden md:inline-block px-4 py-2 rounded-lg bg-gradient-to-br from-red-400 to-red-800 hover:scale-110 hover:-translate-x-1 transition-all duration-300 ease-in-out shadow-2xl">
-            Take the quiz
-          </a>
-        </Link>
+        {!isQuizAnswered ||
+          (router.pathname !== "/fathacks" && (
+            <Link passHref href="/quiz">
+              <a className="hidden md:inline-block px-4 py-2 rounded-lg bg-gradient-to-br from-red-400 to-red-800 hover:scale-110 hover:-translate-x-1 transition-all duration-300 ease-in-out shadow-2xl">
+                Take the quiz
+              </a>
+            </Link>
+          ))}
 
         <button
           className={`${

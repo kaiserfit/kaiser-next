@@ -205,6 +205,11 @@ function Quiz() {
 
   useEffect(() => {
     const storedUserData = JSON.parse(localStorage.getItem("userAnswers")!);
+    if (!storedUserData) {
+      setIndexQuestion(0);
+      setTimeout(() => setIsUserDataReady(true), 900);
+      return;
+    }
 
     if (!Object.keys(storedUserData).length) {
       setIndexQuestion(0);
