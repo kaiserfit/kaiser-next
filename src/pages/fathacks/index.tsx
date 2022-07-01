@@ -403,7 +403,7 @@ function TeamsSection() {
   return (
     <div className="container mx-auto flex flex-col items-center space-y-8">
       <div className="space-y-8 text-center max-w-xl">
-        <h2>Our team</h2>
+        <h2 className="text-2xl font-bold">Our team</h2>
         <p className=" text-gray-400">
           Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nobis, in
           quisquam. Molestiae cupiditate iure quaerat illum enim aspernatur
