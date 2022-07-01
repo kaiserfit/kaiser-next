@@ -185,7 +185,7 @@ function Footer() {
   ];
 
   return (
-    <footer className="bg-palette-lighter font-primary text-gray-900 pt-10 pb-4 print:hidden bg-gray-300 dark:bg-slate-700 dark:text-gray-300">
+    <footer className="bg-palette-lighter font-primary text-gray-900 pt-10 pb-4 print:hidden bg-gray-300 dark:bg-slate-700 dark:text-gray-300 z-10 relative">
       <div className="container mx-auto px-4">
         <div className="flex flex-wrap">
           <div className="w-full lg:w-6/12 px-4">
