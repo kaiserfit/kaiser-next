@@ -9,10 +9,22 @@ import InfoStats from "../../components/InfoStats";
 import { uiActions } from "../../features/uiSlice";
 import priceInformation from "../../lib/fathacksPage/priceInformation";
 import freeBonuses from "../../lib/fathacksPage/features";
-import { FreeBonus, PriceInformation, UserData, Member } from "../../lib/types";
+import {
+  FreeBonus,
+  PriceInformation,
+  UserData,
+  Member,
+  Faq,
+  CustomerReview,
+} from "../../lib/types";
 import video from "../../lib/vidalytics";
 import { RootState } from "../../store";
 import team from "../../lib/fathacksPage/team";
+import faqData from "../../lib/fathacksPage/faq";
+import ReactPaginate from "react-paginate";
+import usePaginate from "../../hooks/usePaginate";
+import customerReviews from "../../lib/fathacksPage/reviews";
+import { info } from "console";
 
 function FathacksPage() {
   const router = useRouter();
@@ -21,6 +33,12 @@ function FathacksPage() {
 
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("userAnswers")!);
+    if (!userData) {
+      alert("pls answer the quiz before proceeding.");
+      router.push("/quiz");
+      return;
+    }
+
     if (Object.keys(userData).length < 6) {
       alert("pls answer the quiz before proceeding.");
       router.push("/quiz");
@@ -42,7 +60,7 @@ function FathacksPage() {
   }, []);
 
   return (
-    <section className="py-20 relative space-y-8 md:space-y-16">
+    <section className="pt-20 container mx-auto relative space-y-8 md:space-y-16">
       {userData?.age && <Headline userData={userData} />}
 
       <div className="relative w-full h-[600px]">
@@ -58,6 +76,12 @@ function FathacksPage() {
       <BonusDescriptions />
 
       <TeamsSection />
+
+      <FAQSection />
+
+      <ReviewsSection />
+
+      <CoachTestimonial />
     </section>
   );
 }
@@ -318,7 +342,7 @@ function BuyerProtection() {
 
 function BonusDescriptions() {
   return (
-    <div className="space-y-4 container mx-auto flex flex-col items-center">
+    <div className="space-y-4 flex flex-col items-center">
       <h3>
         You also get these 7 <span>free bonus gifts</span> when you order today
       </h3>
@@ -339,7 +363,7 @@ function Features() {
 }
 
 function Feature({ feature, index }: { feature: FreeBonus; index: number }) {
-  const [readMore, setReadMore] = useState(false);
+  // const [readMore, setReadMore] = useState(false);
 
   return (
     <div
@@ -363,22 +387,11 @@ function Feature({ feature, index }: { feature: FreeBonus; index: number }) {
         <h3 className="text-3xl font-bold">{feature.title}</h3>
         <div className="space-y-1">
           <p>{feature.paragraph1}</p>
-          {readMore && (
-            <>
-              <p>{feature.paragraph2}</p>
-              <p>{feature.paragraph3}</p>
-              <p>{feature.paragraph4}</p>
-              <p>{feature.paragraph5}</p>
-              <p>{feature.paragraph6}</p>
-            </>
-          )}
-
-          <span
-            className="hover:underline hover:text-blue-400 cursor-pointer"
-            onClick={() => setReadMore((prev) => !prev)}
-          >
-            {readMore ? "Read less" : "Read more"}
-          </span>
+          <p>{feature.paragraph2}</p>
+          <p>{feature.paragraph3}</p>
+          <p>{feature.paragraph4}</p>
+          <p>{feature.paragraph5}</p>
+          <p>{feature.paragraph6}</p>
           {/* <p className="my-6 dark:text-gray-400">
             {feature.description.length > 200 && !readMore
               ? feature.description.substring(0, 200).concat("...")
@@ -448,6 +461,195 @@ function Member({ person }: { person: Member }) {
         <div>
           {person.role && <span className="font-semibold">{person.role}</span>}
           <h4 className="capitalize">{person.name}</h4>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function FAQSection() {
+  return (
+    <div>
+      <h2>FAQ</h2>
+      <div className="outline p-8 container mx-auto">
+        <div className="space-y-4">
+          {faqData.map((faq, i) => (
+            <FAQ key={Math.random() * 353} index={i} info={faq} />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function FAQ({ info, index }: { info: Faq; index: number }) {
+  return (
+    <details
+      className="p-6 border-l-4 border-green-500 bg-gray-100 dark:bg-slate-600 group"
+      open={index === 0 ? true : false}
+    >
+      <summary className="flex items-center justify-between cursor-pointer">
+        <h5 className="text-lg font-medium ">{info.question}</h5>
+
+        <span className="flex-shrink-0 ml-1.5 p-1.5 bg-white dark:bg-slate-500 rounded-full sm:p-3">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="flex-shrink-0 w-5 h-5 transition duration-300 group-open:-rotate-45"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fillRule="evenodd"
+              d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+              clipRule="evenodd"
+            />
+          </svg>
+        </span>
+      </summary>
+
+      <p className="mt-4 leading-relaxed pt-4 border-t-[1px]">{info.answer1}</p>
+      {info.answer2 && <p className="mt-4 leading-relaxed ">{info.answer2}</p>}
+      {info.answer3 && <p className="mt-4 leading-relaxed ">{info.answer3}</p>}
+      {info.answer4 && <p className="mt-4 leading-relaxed ">{info.answer4}</p>}
+      {info.answer5 && <p className="mt-4 leading-relaxed ">{info.answer5}</p>}
+    </details>
+  );
+}
+
+function ReviewsSection() {
+  return (
+    <div>
+      <h3>Customer reviews</h3>
+
+      <Reviews />
+    </div>
+  );
+}
+
+function Reviews() {
+  const [reviews, setReviews] = useState<CustomerReview[]>();
+  const [itemsPerPage, setItemsPerPage] = useState(5);
+  const [currentPage, setCurrentPage] = useState(0);
+
+  const fetchLocalData = (page: number) => {
+    const startIndex = page * itemsPerPage;
+    const lastIndex = startIndex + itemsPerPage;
+    const fetchedData = customerReviews.filter((_, i: number) => {
+      return i >= startIndex && lastIndex > i;
+    });
+    // console.log(fetchedData);
+    setReviews(fetchedData);
+  };
+
+  const handlePageClick = (e: { selected: number }) => {
+    // console.log(e.selected);
+
+    fetchLocalData(e.selected);
+  };
+
+  useEffect(() => {
+    fetchLocalData(currentPage);
+  }, []);
+
+  return (
+    <div>
+      {reviews?.map((review, i) => (
+        <Review key={Math.random() * 987} index={i} review={review} />
+      ))}
+
+      <ReactPaginate
+        breakLabel="..."
+        nextLabel=">"
+        marginPagesDisplayed={2}
+        onPageChange={handlePageClick}
+        pageRangeDisplayed={2}
+        pageCount={3}
+        previousLabel="<"
+        className="flex justify-center space-x-4 w-full"
+        activeClassName=" text-red-400"
+      />
+    </div>
+  );
+}
+
+function Review({ review, index }: { review: CustomerReview; index: number }) {
+  return (
+    <div
+      id={`${index === 0 ? "top" : ""}`}
+      className="container flex flex-col w-full max-w-lg p-6 mx-auto divide-y rounded-md divide-gray-700 dark:bg-gray-900 dark:text-gray-100"
+    >
+      <div className="flex justify-between p-4">
+        <div className="flex space-x-4">
+          {/* <div>
+            <img
+              src="https://source.unsplash.com/100x100/?portrait"
+              alt=""
+              className="object-cover w-12 h-12 rounded-full dark:bg-gray-500"
+            />
+          </div> */}
+          <div>
+            <h4 className="font-bold">{review.name}</h4>
+            {/* <span className="text-xs dark:text-gray-400">2 days ago</span> */}
+          </div>
+        </div>
+        <div className="flex items-center space-x-2 dark:text-yellow-500">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 512 512"
+            className="w-5 h-5 fill-current"
+          >
+            <path d="M494,198.671a40.536,40.536,0,0,0-32.174-27.592L345.917,152.242,292.185,47.828a40.7,40.7,0,0,0-72.37,0L166.083,152.242,50.176,171.079a40.7,40.7,0,0,0-22.364,68.827l82.7,83.368-17.9,116.055a40.672,40.672,0,0,0,58.548,42.538L256,428.977l104.843,52.89a40.69,40.69,0,0,0,58.548-42.538l-17.9-116.055,82.7-83.368A40.538,40.538,0,0,0,494,198.671Zm-32.53,18.7L367.4,312.2l20.364,132.01a8.671,8.671,0,0,1-12.509,9.088L256,393.136,136.744,453.3a8.671,8.671,0,0,1-12.509-9.088L144.6,312.2,50.531,217.37a8.7,8.7,0,0,1,4.778-14.706L187.15,181.238,248.269,62.471a8.694,8.694,0,0,1,15.462,0L324.85,181.238l131.841,21.426A8.7,8.7,0,0,1,461.469,217.37Z"></path>
+          </svg>
+          <span className="text-xl font-bold">
+            {Math.random() * 1 > 0.5 ? 4 : 5}
+          </span>
+        </div>
+      </div>
+      <div className="p-4 space-y-2 text-sm dark:text-gray-400">
+        <p>{review.title}</p>
+        <p>{review.opinion}</p>
+      </div>
+    </div>
+  );
+}
+
+function CoachTestimonial() {
+  return (
+    <div className="space-y-4 relative">
+      <h2>
+        Coach Shane has been helping women transform for the last 14 years.
+      </h2>
+      <div className="flex flex-col-reverse md:flex-row">
+        <div className="space-y-16 w-full md:w-2/3">
+          <div className="space-y-4 z-[5]">
+            <p>
+              Coach Shane is the best selling author of the book Fat Loss Super
+              System and founder of the company KaiserFit. He is the creator of
+              Kaiser Coach and has used his years of knowledge coaching women to
+              create a Personal 1 on 1 Coach ANY WOMAN CAN USE.
+            </p>
+            <p>
+              Coach Shane&apos;s life mission is to help millions of women
+              discover the TRUTH about weight loss and help them achieve the
+              easiest transformation of their life.
+            </p>
+          </div>
+          <div>
+            <Link passHref href="#pricing">
+              <a className="px-4 py-2 rounded-lg outline hover:scale-110 transition-all duration-300 ease-in-out">
+                Sign up now
+              </a>
+            </Link>
+          </div>
+        </div>
+        <div className="absolute -bottom-40 md:-bottom-52 md:right-0 md:block w-full md:w-1/3 h-[650px] ">
+          <Image
+            src="/images/fathacks/Shane-noBG.png"
+            alt="Shane"
+            layout="fill"
+            objectFit="cover"
+            className="scale-90"
+          />
         </div>
       </div>
     </div>
