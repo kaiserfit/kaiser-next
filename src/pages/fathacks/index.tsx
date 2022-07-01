@@ -1,17 +1,18 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { FaCheckCircle } from "react-icons/fa";
 import { FcCheckmark } from "react-icons/fc";
 import React, { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { useDispatch, useSelector } from "react-redux";
 import InfoStats from "../../components/InfoStats";
 import { uiActions } from "../../features/uiSlice";
-import priceInformation, { freeBonuses } from "../../lib/priceInformation";
-import { PriceInformation, UserData } from "../../lib/types";
+import priceInformation from "../../lib/fathacksPage/priceInformation";
+import freeBonuses from "../../lib/fathacksPage/features";
+import { FreeBonus, PriceInformation, UserData, Member } from "../../lib/types";
 import video from "../../lib/vidalytics";
 import { RootState } from "../../store";
+import team from "../../lib/fathacksPage/team";
 
 function FathacksPage() {
   const router = useRouter();
@@ -26,13 +27,13 @@ function FathacksPage() {
       return;
     }
     setUserData(userData);
-  }, []);
+  }, [router]);
 
   // console.log(userData);
 
-  if (userData?.age) {
-    Object.values(userData).forEach((item) => console.log(item));
-  }
+  // if (userData?.age) {
+  //   Object.values(userData).forEach((item) => console.log(item));
+  // }
 
   useEffect(() => {
     setTimeout(() => {
@@ -41,7 +42,7 @@ function FathacksPage() {
   }, []);
 
   return (
-    <section className="pt-20 relative space-y-8 md:space-y-16">
+    <section className="py-20 relative space-y-8 md:space-y-16">
       {userData?.age && <Headline userData={userData} />}
 
       <div className="relative w-full h-[600px]">
@@ -53,6 +54,10 @@ function FathacksPage() {
       <Pricing />
 
       <BuyerProtection />
+
+      <BonusDescriptions />
+
+      <TeamsSection />
     </section>
   );
 }
@@ -64,7 +69,7 @@ function Headline({ userData }: { userData: UserData }) {
   });
   useEffect(() => {
     dispatch(uiActions.toggleIsWindowAtTop(inView));
-  }, [inView]);
+  }, [inView, dispatch]);
   return (
     <div className="flex flex-col items-center space-y-2">
       <h2 className="text-2xl font-bold" ref={ref}>
@@ -201,7 +206,7 @@ function Pricing() {
   return (
     <div
       id="pricing"
-      className="space-y-8 md:space-y-20 container mx-auto px-4"
+      className="space-y-8 md:space-y-20 container mx-auto px-4 scroll-pt-8"
     >
       <div className="flex w-full justify-center text-center">
         <h1 className="text-2xl md:text-5xl max-w-md">
@@ -311,4 +316,141 @@ function BuyerProtection() {
   );
 }
 
+function BonusDescriptions() {
+  return (
+    <div className="space-y-4 container mx-auto flex flex-col items-center">
+      <h3>
+        You also get these 7 <span>free bonus gifts</span> when you order today
+      </h3>
+
+      <Features />
+    </div>
+  );
+}
+
+function Features() {
+  return (
+    <div className="container mx-auto space-y-12">
+      {freeBonuses.map((feature, i) => (
+        <Feature key={Math.random() * 364} index={i} feature={feature} />
+      ))}
+    </div>
+  );
+}
+
+function Feature({ feature, index }: { feature: FreeBonus; index: number }) {
+  const [readMore, setReadMore] = useState(false);
+
+  return (
+    <div
+      className={`flex flex-col overflow-hidden rounded-md shadow-sm  ${
+        index % 2 == 0 ? "md:flex-row" : "md:flex-row-reverse"
+      } `}
+    >
+      <div className="relative w-full md:w-1/3 h-80">
+        <Image
+          src={feature.photo}
+          alt={feature.title}
+          layout="fill"
+          objectFit="contain"
+          className="absolute aspect-video "
+        />
+      </div>
+      <div className="flex flex-col justify-center flex-1 p-6 dark:bg-gray-900 space-y-4">
+        <span className="text-xs uppercase dark:text-gray-400">
+          Bonus #{index + 1}
+        </span>
+        <h3 className="text-3xl font-bold">{feature.title}</h3>
+        <div className="space-y-1">
+          <p>{feature.paragraph1}</p>
+          {readMore && (
+            <>
+              <p>{feature.paragraph2}</p>
+              <p>{feature.paragraph3}</p>
+              <p>{feature.paragraph4}</p>
+              <p>{feature.paragraph5}</p>
+              <p>{feature.paragraph6}</p>
+            </>
+          )}
+
+          <span
+            className="hover:underline hover:text-blue-400 cursor-pointer"
+            onClick={() => setReadMore((prev) => !prev)}
+          >
+            {readMore ? "Read less" : "Read more"}
+          </span>
+          {/* <p className="my-6 dark:text-gray-400">
+            {feature.description.length > 200 && !readMore
+              ? feature.description.substring(0, 200).concat("...")
+              : feature.description}{" "}
+            <span
+              className="hover:underline hover:text-blue-400 cursor-pointer"
+              onClick={() => setReadMore((prev) => !prev)}
+            >
+              {readMore ? "Read less" : "Read more"}
+            </span>
+          </p> */}
+          {/* <button type="button" className="self-start">
+          Action
+        </button> */}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function TeamsSection() {
+  return (
+    <div className="container mx-auto flex flex-col items-center space-y-8">
+      <div className="space-y-8 text-center max-w-xl">
+        <h2>Our team</h2>
+        <p className=" text-gray-400">
+          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nobis, in
+          quisquam. Molestiae cupiditate iure quaerat illum enim aspernatur
+          omnis, autem natus corrupti.
+        </p>
+      </div>
+
+      <Team />
+
+      <Link passHref href="#pricing">
+        <a className="px-4 py-2 rounded-lg outline hover:scale-110 transition-all duration-300 ease-in-out">
+          Sign up now
+        </a>
+      </Link>
+    </div>
+  );
+}
+
+function Team() {
+  return (
+    <div className="flex flex-col sm:flex-wrap sm:flex-row gap-y-4 sm:gap-y-6">
+      {team.map((person) => (
+        <Member key={Math.random() * 353} person={person} />
+      ))}
+    </div>
+  );
+}
+
+function Member({ person }: { person: Member }) {
+  return (
+    <div className="w-full sm:w-1/3 md:w-1/4 sm:px-4 flex justify-center">
+      <div className="space-y-1">
+        <div className="relative h-40 w-40">
+          <Image
+            src={person.photo}
+            alt={person.name}
+            className="rounded-full absolute"
+            layout="fill"
+            objectFit="cover"
+          />
+        </div>
+        <div>
+          {person.role && <span className="font-semibold">{person.role}</span>}
+          <h4 className="capitalize">{person.name}</h4>
+        </div>
+      </div>
+    </div>
+  );
+}
 export default FathacksPage;
