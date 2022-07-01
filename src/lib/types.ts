@@ -29,4 +29,17 @@ export type PriceInformation = {
 export type FreeBonus = {
   title: string;
   description: string;
-}
+  paragraph1?: string;
+  paragraph2?: string;
+  paragraph3?: string;
+  paragraph4?: string;
+  paragraph5?: string;
+  paragraph6?: string;
+  photo: string;
+};
+
+export type Member = {
+  name: string;
+  role?: string;
+  photo: string;
+};
