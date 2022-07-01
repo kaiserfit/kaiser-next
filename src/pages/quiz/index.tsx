@@ -252,6 +252,7 @@ function Quiz() {
     }
     if (Object.keys(storedUserData).length === 6) {
       localStorage.removeItem("userAnswers");
+      setIndexQuestion(0);
       setTimeout(() => setIsUserDataReady(true), 900);
     }
   }, []);
