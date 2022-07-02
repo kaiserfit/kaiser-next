@@ -24,9 +24,35 @@ import faqData from "../../lib/fathacksPage/faq";
 import ReactPaginate from "react-paginate";
 import usePaginate from "../../hooks/usePaginate";
 import customerReviews from "../../lib/fathacksPage/reviews";
-import { info } from "console";
 
 function FathacksPage() {
+  useEffect(() => {
+    setTimeout(() => {
+      // SCROLL TO PRICING SECTION
+    }, 400000);
+  }, []);
+
+  return (
+    <section className="pt-20">
+      <HeroBanner />
+
+      <div className="container mx-auto space-y-8 md:space-y-16 px-4">
+        <CTA />
+        <Pricing />
+        <BuyerProtection />
+        <BonusDescriptions />
+        <TeamsSection />
+        <FAQSection />
+        <ReviewsSection />
+        <CoachTestimonial />
+      </div>
+    </section>
+  );
+}
+
+function HeroBanner() {
+  // const { isWindowAtTop } = useSelector((state: RootState) => state.UI);
+
   const router = useRouter();
 
   const [userData, setUserData] = useState<UserData>();
@@ -45,44 +71,44 @@ function FathacksPage() {
       return;
     }
     setUserData(userData);
+    video(
+      globalThis,
+      document,
+      "Vidalytics",
+      "vidalytics_embed_VGqpMgAid6usjq3x",
+      "https://fast.vidalytics.com/embeds/YFVwMsqn/VGqpMgAid6usjq3x/"
+    );
   }, [router]);
 
-  // console.log(userData);
-
-  // if (userData?.age) {
-  //   Object.values(userData).forEach((item) => console.log(item));
-  // }
-
-  useEffect(() => {
-    setTimeout(() => {
-      // SCROLL TO PRICING SECTION
-    }, 400000);
-  }, []);
-
   return (
-    <section className="pt-20 container mx-auto relative space-y-8 md:space-y-16">
+    <div className="space-y-8">
       {userData?.age && <Headline userData={userData} />}
 
-      <div className="relative w-full h-[600px]">
-        <Video />
+      <div className="relative h-[825px] sm:h-[700px] md:h-[550px] border-b bg-gradient-to-t from-blue-600/50 to-transparent">
+        <div className="relative w-full container mx-auto px-4">
+          <div className={`flex flex-col items-center w-full space-y-4`}>
+            <div className="flex flex-col-reverse md:flex-row md:items-start md:justify-start md:gap-x-8 items-center gap-y-8 md:gap-y-0 w-full">
+              <div
+                className="max-w-[300px]"
+                id="vidalytics_embed_VGqpMgAid6usjq3x"
+              >
+                {/* VIDEO HERE */}
+              </div>
+              <div className="space-y-6 md:pt-16">
+                <h2 className="text-6xl font-bold max-w-2xl">
+                  We want <br /> to help you
+                </h2>
+                <p className="font-light max-w-xl">
+                  In this video Coach Shane, Celebrity Trainer and Head
+                  Transformation Coach shares your FREE Custom Transformation
+                  Plan that you can start using today
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <CTA />
-
-      {/* <h2 className="relative max-h-max">COCK COKC OKC232</h2> */}
-      <Pricing />
-
-      <BuyerProtection />
-
-      <BonusDescriptions />
-
-      <TeamsSection />
-
-      <FAQSection />
-
-      <ReviewsSection />
-
-      <CoachTestimonial />
-    </section>
+    </div>
   );
 }
 
@@ -95,7 +121,7 @@ function Headline({ userData }: { userData: UserData }) {
     dispatch(uiActions.toggleIsWindowAtTop(inView));
   }, [inView, dispatch]);
   return (
-    <div className="flex flex-col items-center space-y-2">
+    <div className="flex flex-col items-center space-y-2 px-4">
       <h2 className="text-2xl font-bold" ref={ref}>
         Your results
       </h2>
@@ -114,43 +140,6 @@ function Headline({ userData }: { userData: UserData }) {
       <InfoStat key={Math.random() * 232} arr={item} />
     ))} */}
       </div>
-    </div>
-  );
-}
-
-// function InfoStat({ arr }: { arr: [string, "string"] }) {
-//   return (
-//     <div>
-//       <span>
-//         {arr[0]}: {arr[1]}
-//       </span>
-//     </div>
-//   );
-// }
-
-function Video() {
-  const { isWindowAtTop } = useSelector((state: RootState) => state.UI);
-
-  useEffect(() => {
-    video(
-      globalThis,
-      document,
-      "Vidalytics",
-      "vidalytics_embed_VGqpMgAid6usjq3x",
-      "https://fast.vidalytics.com/embeds/YFVwMsqn/VGqpMgAid6usjq3x/"
-    );
-  }, []);
-  return (
-    <div className={`flex flex-col items-center w-full space-y-4`}>
-      <h2 className="max-w-md text-center">
-        In this video Coach Shane, Celebrity Trainer and Head Transformation
-        Coach shares your FREE Custom Transformation Plan that you can start
-        using today
-      </h2>
-      <div
-        className="max-w-[300px]"
-        id="vidalytics_embed_VGqpMgAid6usjq3x"
-      ></div>
     </div>
   );
 }
