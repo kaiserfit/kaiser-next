@@ -33,7 +33,7 @@ function FathacksPage() {
   }, []);
 
   return (
-    <section className="pt-20">
+    <section>
       <HeroBanner />
 
       <div className="container mx-auto space-y-8 md:space-y-16 px-4">
@@ -71,39 +71,36 @@ function HeroBanner() {
       return;
     }
     setUserData(userData);
-    video(
-      globalThis,
-      document,
-      "Vidalytics",
-      "vidalytics_embed_VGqpMgAid6usjq3x",
-      "https://fast.vidalytics.com/embeds/YFVwMsqn/VGqpMgAid6usjq3x/"
-    );
   }, [router]);
 
   return (
-    <div className="space-y-8">
+    <div className="pt-8 space-y-8 bg-gradient-to-t from-blue-600/50 to-blue-300 relative overflow-hidden">
+      <div className="absolute -right-20 -bottom-36">
+        <Image
+          src="/images/fathacks/hero-svg.png"
+          alt="svg"
+          height={500}
+          width={500}
+          className="opacity-50"
+        />
+      </div>
+
       {userData?.age && <Headline userData={userData} />}
 
-      <div className="relative h-[825px] sm:h-[700px] md:h-[550px] border-b bg-gradient-to-t from-blue-600/50 to-transparent">
-        <div className="relative w-full container mx-auto px-4">
-          <div className={`flex flex-col items-center w-full space-y-4`}>
-            <div className="flex flex-col-reverse md:flex-row md:items-start md:justify-start md:gap-x-8 items-center gap-y-8 md:gap-y-0 w-full">
-              <div
-                className="max-w-[300px]"
-                id="vidalytics_embed_VGqpMgAid6usjq3x"
-              >
-                {/* VIDEO HERE */}
-              </div>
-              <div className="space-y-6 md:pt-16">
-                <h2 className="text-6xl font-bold max-w-2xl">
-                  We want <br /> to help you
-                </h2>
-                <p className="font-light max-w-xl">
-                  In this video Coach Shane, Celebrity Trainer and Head
-                  Transformation Coach shares your FREE Custom Transformation
-                  Plan that you can start using today
-                </p>
-              </div>
+      <div className="h-[800px] sm:h-[750px] md:h-[550px] relative">
+        <div className="w-full max-w-7xl mx-auto px-4">
+          <div className="flex flex-col-reverse md:flex-row md:items-start md:justify-start md:gap-x-8 lg:gap-x-4 gap-y-8 md:gap-y-0 w-full relative">
+            <Video />
+            <div className="space-y-6 md:pt-16 md:w-1/2 md:space-y-12">
+              <h2 className="text-5xl sm:text-6xl md:text-7xl font-bold max-w-2xl">
+                We want <br /> to help{" "}
+                <span className=" italic text-red-500">you!</span>
+              </h2>
+              <p className="font-light max-w-xl text-gray-300 tracking-wider">
+                In this video Coach Shane, Celebrity Trainer and Head
+                Transformation Coach shares your FREE Custom Transformation Plan
+                that you can start using today.
+              </p>
             </div>
           </div>
         </div>
@@ -144,6 +141,25 @@ function Headline({ userData }: { userData: UserData }) {
   );
 }
 
+function Video() {
+  useEffect(() => {
+    video(
+      globalThis,
+      document,
+      "Vidalytics",
+      "vidalytics_embed_VGqpMgAid6usjq3x",
+      "https://fast.vidalytics.com/embeds/YFVwMsqn/VGqpMgAid6usjq3x/"
+    );
+  }, []);
+  return (
+    <div className="w-full container mx-auto md:mx-0 md:w-1/3">
+      <div className="max-w-[300px] relative">
+        <div id="vidalytics_embed_VGqpMgAid6usjq3x">{/* VIDEO HERE */}</div>
+      </div>
+    </div>
+  );
+}
+
 function CTA() {
   const monthNames = [
     "January",
@@ -169,7 +185,7 @@ function CTA() {
         <div className="container flex flex-col items-center px-4 py-12 mx-auto lg:flex-row">
           <div className="flex justify-center xl:w-1/2">
             <img
-              className="h-80 w-80 sm:w-[28rem] sm:h-[28rem] flex-shrink-0 object-cover rounded-full"
+              className="h-80 w-80 sm:w-[28rem] sm:h-[28rem] flex-shrink-0 object-contain rounded-full"
               src="/images/fathacks/Shane-Enhanced.jpg"
               alt=""
             />
@@ -219,7 +235,7 @@ function Pricing() {
   return (
     <div
       id="pricing"
-      className="space-y-8 md:space-y-20 container mx-auto px-4 scroll-pt-8"
+      className="space-y-8 md:space-y-20 container mx-auto px-4 scroll-pt-8 border-y"
     >
       <div className="flex w-full justify-center text-center">
         <h1 className="text-2xl md:text-5xl max-w-md">
