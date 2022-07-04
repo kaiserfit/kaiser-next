@@ -44,7 +44,7 @@ const freeBonuses = [
   },
   {
     title: "Recipes For Rapid Fat Loss",
-    photo: "/images/fathacks/feature-5.jpg",
+    photo: "/images/fathacks/feature-5.png",
     paragraph1:
       "On top of this, you are getting our Fat Melting Recipe Books as well-",
     paragraph2:

@@ -1,8 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { FcCheckmark } from "react-icons/fc";
-import React, { useEffect, useState } from "react";
+import {
+  BsCheck,
+  BsFillCaretRightFill,
+  BsFillCaretLeftFill,
+} from "react-icons/bs";
+import React, { Dispatch, useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { useDispatch, useSelector } from "react-redux";
 import InfoStats from "../../components/InfoStats";
@@ -24,9 +28,34 @@ import faqData from "../../lib/fathacksPage/faq";
 import ReactPaginate from "react-paginate";
 import usePaginate from "../../hooks/usePaginate";
 import customerReviews from "../../lib/fathacksPage/reviews";
-import { info } from "console";
 
 function FathacksPage() {
+  useEffect(() => {
+    setTimeout(() => {
+      // SCROLL TO PRICING SECTION
+    }, 400000);
+  }, []);
+
+  return (
+    <section>
+      <HeroBanner />
+
+      <div className="space-y-8 md:space-y-16 ">
+        <CTA />
+        <Pricing />
+        <BonusDescriptions />
+        <TeamsSection />
+        <FAQSection />
+        <ReviewsSection />
+        <CoachTestimonial />
+      </div>
+    </section>
+  );
+}
+
+function HeroBanner() {
+  // const { isWindowAtTop } = useSelector((state: RootState) => state.UI);
+
   const router = useRouter();
 
   const [userData, setUserData] = useState<UserData>();
@@ -47,42 +76,28 @@ function FathacksPage() {
     setUserData(userData);
   }, [router]);
 
-  // console.log(userData);
-
-  // if (userData?.age) {
-  //   Object.values(userData).forEach((item) => console.log(item));
-  // }
-
-  useEffect(() => {
-    setTimeout(() => {
-      // SCROLL TO PRICING SECTION
-    }, 400000);
-  }, []);
-
   return (
-    <section className="pt-20 container mx-auto relative space-y-8 md:space-y-16">
+    <div className="pt-16 space-y-8 bg-gradient-to-t from-blue-800 via-purple-500 to-blue-300 relative overflow-hidden">
+      {/* <div className="absolute -right-20 -bottom-36">
+        <Image
+          src="/images/fathacks/hero-svg.png"
+          alt="svg"
+          height={500}
+          width={500}
+          className="opacity-50"
+        />
+      </div> */}
+
       {userData?.age && <Headline userData={userData} />}
 
-      <div className="relative w-full h-[600px]">
-        <Video />
+      <div className="h-[675px] sm:h-[750px] md:h-[650px] relative">
+        <div className="w-full max-w-7xl mx-auto px-4">
+          <div className="flex flex-col-reverse md:flex-row md:items-start md:justify-start md:gap-x-8 lg:gap-x-4 gap-y-8 md:gap-y-0 w-full relative">
+            <Video />
+          </div>
+        </div>
       </div>
-      <CTA />
-
-      {/* <h2 className="relative max-h-max">COCK COKC OKC232</h2> */}
-      <Pricing />
-
-      <BuyerProtection />
-
-      <BonusDescriptions />
-
-      <TeamsSection />
-
-      <FAQSection />
-
-      <ReviewsSection />
-
-      <CoachTestimonial />
-    </section>
+    </div>
   );
 }
 
@@ -95,8 +110,8 @@ function Headline({ userData }: { userData: UserData }) {
     dispatch(uiActions.toggleIsWindowAtTop(inView));
   }, [inView, dispatch]);
   return (
-    <div className="flex flex-col items-center space-y-2">
-      <h2 className="text-2xl font-bold" ref={ref}>
+    <div className="flex flex-col items-center space-y-2 px-4">
+      <h2 className="text-2xl md:text-4xl font-bold" ref={ref}>
         Your results
       </h2>
       <div className="flex space-x-4">
@@ -118,19 +133,7 @@ function Headline({ userData }: { userData: UserData }) {
   );
 }
 
-// function InfoStat({ arr }: { arr: [string, "string"] }) {
-//   return (
-//     <div>
-//       <span>
-//         {arr[0]}: {arr[1]}
-//       </span>
-//     </div>
-//   );
-// }
-
 function Video() {
-  const { isWindowAtTop } = useSelector((state: RootState) => state.UI);
-
   useEffect(() => {
     video(
       globalThis,
@@ -180,7 +183,7 @@ function CTA() {
         <div className="container flex flex-col items-center px-4 py-12 mx-auto lg:flex-row">
           <div className="flex justify-center xl:w-1/2">
             <img
-              className="h-80 w-80 sm:w-[28rem] sm:h-[28rem] flex-shrink-0 object-cover rounded-full"
+              className="h-80 w-80 sm:w-[28rem] sm:h-[28rem] flex-shrink-0 object-contain rounded-full"
               src="/images/fathacks/Shane-Enhanced.jpg"
               alt=""
             />
@@ -227,80 +230,129 @@ function CTA() {
 }
 
 function Pricing() {
+  const router = useRouter();
+  const [recommend, setRecommend] = useState<string>("");
+
+  useEffect(() => {
+    const storedInfo: UserData = JSON.parse(
+      localStorage.getItem("userAnswers")!
+    );
+    if (!storedInfo || !Object.values(storedInfo).length) {
+      router.push("/quiz");
+      return;
+    }
+    const handleCheckRecommend = (item: string) => {
+      if (item.startsWith("5-10")) {
+        setRecommend("gold");
+      } else {
+        setRecommend("platinum");
+      }
+    };
+    handleCheckRecommend(storedInfo.weightGoal);
+  }, []);
   return (
     <div
       id="pricing"
-      className="space-y-8 md:space-y-20 container mx-auto px-4 scroll-pt-8"
+      className="space-y-8 md:space-y-20 scroll-pt-8 bg-gradient-to-br from-blue-400 via-purple-800 to-blue-700 pb-8 pt-8 md:pb-16"
     >
-      <div className="flex w-full justify-center text-center">
-        <h1 className="text-2xl md:text-5xl max-w-md">
-          Claim Your Saving Bundle While Stocks Last
-        </h1>
+      <div className="max-w-7xl mx-auto px-4 space-y-8 md:space-y-24">
+        <div className="flex flex-col w-full items-center text-center space-y-4">
+          <p className="text-sm font-light text-gray-300 uppercase">
+            Kaiserfit pricing
+          </p>
+          <h1 className="text-3xl md:text-5xl max-w-2xl">
+            <span className=" text-red-400 font-semibold italic">Claim</span>
+            {""} your saving&apos;s bundle while stocks last
+          </h1>
+          <p className="max-w-2xl">
+            In line with your provided information, we recommend the{" "}
+            <span className="text-xl font-semibold italic uppercase">
+              {recommend}
+            </span>{" "}
+            bundle for you.
+          </p>
+        </div>
+        <Prices recommend={recommend} />
+        <BuyerProtection />
       </div>
-      <Prices />
     </div>
   );
 }
 
-function Prices() {
+function Prices({ recommend }: { recommend: string }) {
   return (
-    <div className="flex flex-col md:flex-row space-y-12 md:space-y-0 md:space-x-10">
+    <div className="flex flex-col md:flex-row space-y-12 md:space-y-0 md:space-x-12">
       {priceInformation.map((item) => (
-        <Price key={Math.random() * 123} info={item} />
+        <Price key={Math.random() * 123} info={item} recommend={recommend} />
       ))}
     </div>
   );
 }
 
-function Price({ info }: { info: PriceInformation }) {
+function Price({
+  info,
+  recommend,
+}: {
+  info: PriceInformation;
+  recommend: string;
+}) {
   return (
     <div
-      className={`w-full flex flex-col justify-between md:w-1/3 outline rounded-lg space-y-4 shadow-xl pt-8 ${
-        info.title === "ultimate"
-          ? "relative bg-gradient-to-b from-blue-700 to-blue-900 md:scale-110"
-          : ""
+      className={`w-full flex flex-col justify-between md:w-1/3 rounded-lg space-y-4 shadow-2xl py-8 ${
+        info.title === recommend
+          ? "bg-gradient-to-b from-yellow-300 via-purple-500 to-blue-800 md:scale-110"
+          : "bg-blue-900"
       }`}
     >
-      <div className="space-y-4 px-4">
-        <h3
-          className={`${
-            info.title === "ultimate"
-              ? "absolute -top-6 left-1/2 -translate-x-1/2 font-bold text-2xl outline bg-blue-600 px-2 py-1"
-              : " font-semibold text-xl"
-          } capitalize traciking-wide`}
-        >
-          {info.title}
-        </h3>
-        <div className="relative w-full h-40">
-          <Image
-            src={info.photo}
-            alt={info.title}
-            layout="fill"
-            objectFit="contain"
-            className="absolute"
-          />
+      <div className="space-y-4 px-4 ">
+        <div className="space-y-4 w-full flex flex-col items-center">
+          <div className="relative w-full h-40">
+            <Image
+              src={info.photo}
+              alt={info.title}
+              layout="fill"
+              objectFit="contain"
+              className="absolute"
+            />
+          </div>
+          <div className="w-full text-center">
+            <h3
+              className={`${
+                info.title === "ultimate"
+                  ? "absolute -top-6 left-1/2 -translate-x-1/2 font-bold text-2xl outline bg-blue-600 px-2 py-1"
+                  : " font-semibold text-xl"
+              } capitalize traciking-wide `}
+            >
+              {info.title}
+            </h3>
+            <div className="border-b pb-4">
+              <h3 className="text-3xl">
+                ${info.discountedPrice}{" "}
+                <span className="text-sm">per bottle</span>
+              </h3>
+              {info.shipping > 0 && (
+                <p className="opacity-80">
+                  with a shipping fee of ${info.shipping}
+                </p>
+              )}
+            </div>
+          </div>
         </div>
         <div>
-          <h3 className="text-3xl">
-            ${info.discountedPrice} <span className="text-sm">per bottle</span>
-          </h3>
-        </div>
-        {info.shipping > 0 && <p>with a shipping fee of ${info.shipping}</p>}
-        <div>
-          <p>Includes:</p>
+          {/* <p>Includes:</p> */}
           <ul>
             {info.bonus && (
               <li className="flex space-x-4 items-center ">
-                <span>
-                  <FcCheckmark />
+                <span className=" text-3xl text-green-500">
+                  <BsCheck />
                 </span>
                 <span>free bonuses</span>
               </li>
             )}
             {!info.shipping && (
               <li className="flex space-x-4 items-center ">
-                <span>
-                  <FcCheckmark />
+                <span className=" text-3xl text-green-500">
+                  <BsCheck />
                 </span>
                 <span>free shipping</span>
               </li>
@@ -310,8 +362,8 @@ function Price({ info }: { info: PriceInformation }) {
                 className="flex space-x-4 items-center "
                 key={Math.random() * 456}
               >
-                <span>
-                  <FcCheckmark />
+                <span className=" text-3xl text-green-500">
+                  <BsCheck />
                 </span>
                 <span>{item.title}</span>
               </li>
@@ -319,7 +371,7 @@ function Price({ info }: { info: PriceInformation }) {
           </ul>
         </div>
       </div>
-      <button className="px-4 py-2 outline rounded-lg w-full">
+      <button className="px-4 py-2 rounded-lg w-4/5 mx-auto bg-gray-100 text-black font-bold hover:scale-105 hover:-translate-y-2 transition-all duration-300 ease-in-out">
         Add to cart
       </button>
     </div>
@@ -342,10 +394,19 @@ function BuyerProtection() {
 
 function BonusDescriptions() {
   return (
-    <div className="space-y-4 flex flex-col items-center">
-      <h3>
-        You also get these 7 <span>free bonus gifts</span> when you order today
-      </h3>
+    <div
+      className="space-y-12 flex flex-col items-center container mx-auto
+    px-4"
+    >
+      <div className="text-center space-y-2">
+        <h3 className="text-3xl md:text-5xl font-semibold">
+          7 <span className="text-yellow-300 uppercase">free</span> gifts when
+          you order today
+        </h3>
+        <p className="text-xl text-gray-200 font-light opacity-80">
+          Every bundle includes this gifts
+        </p>
+      </div>
 
       <Features />
     </div>
@@ -354,7 +415,7 @@ function BonusDescriptions() {
 
 function Features() {
   return (
-    <div className="container mx-auto space-y-12">
+    <div className="container mx-auto space-y-6">
       {freeBonuses.map((feature, i) => (
         <Feature key={Math.random() * 364} index={i} feature={feature} />
       ))}
@@ -363,15 +424,17 @@ function Features() {
 }
 
 function Feature({ feature, index }: { feature: FreeBonus; index: number }) {
-  // const [readMore, setReadMore] = useState(false);
-
   return (
     <div
       className={`flex flex-col overflow-hidden rounded-md shadow-sm  ${
         index % 2 == 0 ? "md:flex-row" : "md:flex-row-reverse"
-      } `}
+      } dark:bg-gray-900 `}
     >
-      <div className="relative w-full md:w-1/3 h-80">
+      <div
+        className={`relative w-full md:w-1/3 h-80 md:h-[30rem] ${
+          index % 2 == 0 ? "bg-gradient-to-r" : "bg-gradient-to-l"
+        } from-blue-500/70 to-transparent`}
+      >
         <Image
           src={feature.photo}
           alt={feature.title}
@@ -380,12 +443,12 @@ function Feature({ feature, index }: { feature: FreeBonus; index: number }) {
           className="absolute aspect-video "
         />
       </div>
-      <div className="flex flex-col justify-center flex-1 p-6 dark:bg-gray-900 space-y-4">
+      <div className="flex flex-col justify-center flex-1 p-6 space-y-4 md:h-[30rem]">
         <span className="text-xs uppercase dark:text-gray-400">
           Bonus #{index + 1}
         </span>
         <h3 className="text-3xl font-bold">{feature.title}</h3>
-        <div className="space-y-1">
+        <div className=" space-y-3">
           <p>{feature.paragraph1}</p>
           <p>{feature.paragraph2}</p>
           <p>{feature.paragraph3}</p>
@@ -414,23 +477,43 @@ function Feature({ feature, index }: { feature: FreeBonus; index: number }) {
 
 function TeamsSection() {
   return (
-    <div className="container mx-auto flex flex-col items-center space-y-8">
-      <div className="space-y-8 text-center max-w-xl">
-        <h2 className="text-2xl font-bold">Our team</h2>
-        <p className=" text-gray-400">
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nobis, in
-          quisquam. Molestiae cupiditate iure quaerat illum enim aspernatur
-          omnis, autem natus corrupti.
-        </p>
+    <div className="bg-gradient-to-b from-transparent via-blue-600 to-transparent relative py-8">
+      <div className="container mx-auto flex flex-col items-center space-y-8 sm:space-y-12 z-[3] relative">
+        <div className="space-y-4 text-center max-w-xl">
+          <h2 className="text-3xl md:text-5xl font-bold">Our team</h2>
+          <p className=" text-gray-400">
+            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nobis, in
+            quisquam. Molestiae cupiditate iure quaerat illum enim aspernatur
+            omnis, autem natus corrupti.
+          </p>
+        </div>
+
+        <Team />
+
+        <Link passHref href="#pricing">
+          <a className="px-4 py-2 rounded border border-blue-600 bg-blue-600 hover:bg-transparent transition-all duration-300 ease-in-out md:text-3xl text-2xl text-black hover:text-white">
+            Sign up now
+          </a>
+        </Link>
       </div>
-
-      <Team />
-
-      <Link passHref href="#pricing">
-        <a className="px-4 py-2 rounded-lg outline hover:scale-110 transition-all duration-300 ease-in-out">
-          Sign up now
-        </a>
-      </Link>
+      <div className="absolute -right-36 bottom-0 z-[2]">
+        <Image
+          src="/images/fathacks/hero-svg.png"
+          alt="svg"
+          height={500}
+          width={500}
+          className="opacity-30"
+        />
+      </div>
+      <div className="absolute rotate-180 -left-44 top-0 z-[2]">
+        <Image
+          src="/images/fathacks/hero-svg.png"
+          alt="svg"
+          height={500}
+          width={500}
+          className="opacity-30"
+        />
+      </div>
     </div>
   );
 }
@@ -449,18 +532,22 @@ function Member({ person }: { person: Member }) {
   return (
     <div className="w-full sm:w-1/3 md:w-1/4 sm:px-4 flex justify-center">
       <div className="space-y-1">
-        <div className="relative h-40 w-40">
+        <div className="relative h-40 w-40 rounded-full shadow-2xl border-2 border-black">
           <Image
             src={person.photo}
             alt={person.name}
             className="rounded-full absolute"
             layout="fill"
-            objectFit="cover"
+            // objectFit="cover"
           />
         </div>
-        <div>
-          {person.role && <span className="font-semibold">{person.role}</span>}
-          <h4 className="capitalize">{person.name}</h4>
+        <div className="text-center">
+          {person.role && (
+            <span className="font-semibold uppercase opacity-80">
+              {person.role}
+            </span>
+          )}
+          <h4 className="capitalize text-xl">{person.name}</h4>
         </div>
       </div>
     </div>
@@ -469,14 +556,24 @@ function Member({ person }: { person: Member }) {
 
 function FAQSection() {
   return (
-    <div>
-      <h2>FAQ</h2>
-      <div className="outline p-8 container mx-auto">
-        <div className="space-y-4">
-          {faqData.map((faq, i) => (
-            <FAQ key={Math.random() * 353} index={i} info={faq} />
-          ))}
-        </div>
+    <div className="container mx-auto space-y-6">
+      <div className="text-center">
+        <h2 className="text-3xl md:text-5xl font-bold">
+          Frequently Asked Questions
+        </h2>
+      </div>
+      <FAQContainer />
+    </div>
+  );
+}
+
+function FAQContainer() {
+  return (
+    <div className="px-4 md:px-0">
+      <div className="">
+        {faqData.map((faq, i) => (
+          <FAQ key={Math.random() * 353} index={i} info={faq} />
+        ))}
       </div>
     </div>
   );
@@ -485,13 +582,13 @@ function FAQSection() {
 function FAQ({ info, index }: { info: Faq; index: number }) {
   return (
     <details
-      className="p-6 border-l-4 border-green-500 bg-gray-100 dark:bg-slate-600 group"
+      className="p-6 border-b-4 border-blue-500 bg-gray-100 dark:bg-transparent group"
       open={index === 0 ? true : false}
     >
       <summary className="flex items-center justify-between cursor-pointer">
-        <h5 className="text-lg font-medium ">{info.question}</h5>
+        <h5 className="text-2xl font-semibold">{info.question}</h5>
 
-        <span className="flex-shrink-0 ml-1.5 p-1.5 bg-white dark:bg-slate-500 rounded-full sm:p-3">
+        <span className="flex-shrink-0 ml-1.5 p-1.5 bg-white dark:bg-gray-700 text-lg rounded-full sm:p-3">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="flex-shrink-0 w-5 h-5 transition duration-300 group-open:-rotate-45"
@@ -507,19 +604,31 @@ function FAQ({ info, index }: { info: Faq; index: number }) {
         </span>
       </summary>
 
-      <p className="mt-4 leading-relaxed pt-4 border-t-[1px]">{info.answer1}</p>
-      {info.answer2 && <p className="mt-4 leading-relaxed ">{info.answer2}</p>}
-      {info.answer3 && <p className="mt-4 leading-relaxed ">{info.answer3}</p>}
-      {info.answer4 && <p className="mt-4 leading-relaxed ">{info.answer4}</p>}
-      {info.answer5 && <p className="mt-4 leading-relaxed ">{info.answer5}</p>}
+      <p className="mt-4 leading-relaxed pt-4 border-t-[1px] text-lg">
+        {info.answer1}
+      </p>
+      {info.answer2 && (
+        <p className="mt-4 leading-relaxed text-lg ">{info.answer2}</p>
+      )}
+      {info.answer3 && (
+        <p className="mt-4 leading-relaxed text-lg ">{info.answer3}</p>
+      )}
+      {info.answer4 && (
+        <p className="mt-4 leading-relaxed text-lg ">{info.answer4}</p>
+      )}
+      {info.answer5 && (
+        <p className="mt-4 leading-relaxed text-lg ">{info.answer5}</p>
+      )}
     </details>
   );
 }
 
 function ReviewsSection() {
   return (
-    <div>
-      <h3>Customer reviews</h3>
+    <div className="container mx-auto space-y-8 py-12 px-4">
+      <div className="">
+        <h3 className="text-3xl md:text-5xl font-bold">What customers say</h3>
+      </div>
 
       <Reviews />
     </div>
@@ -528,8 +637,11 @@ function ReviewsSection() {
 
 function Reviews() {
   const [reviews, setReviews] = useState<CustomerReview[]>();
-  const [itemsPerPage, setItemsPerPage] = useState(5);
-  const [currentPage, setCurrentPage] = useState(0);
+  const [itemsPerPage, setItemsPerPage] = useState(3);
+  const [currentPage, setCurrentPage] = useState<number>(0);
+  const [totalPages, setTotalPages] = useState<number>(
+    Math.ceil(customerReviews.length / itemsPerPage)
+  );
 
   const fetchLocalData = (page: number) => {
     const startIndex = page * itemsPerPage;
@@ -549,15 +661,18 @@ function Reviews() {
 
   useEffect(() => {
     fetchLocalData(currentPage);
-  }, []);
+  }, [currentPage]);
 
   return (
-    <div>
-      {reviews?.map((review, i) => (
-        <Review key={Math.random() * 987} index={i} review={review} />
-      ))}
+    <div className="relative">
+      <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center">
+        {reviews?.map((review, i) => (
+          <Review key={Math.random() * 987} index={i} review={review} />
+        ))}
+      </div>
 
-      <ReactPaginate
+      <CarouselBtns setCurrentPage={setCurrentPage} totalPages={totalPages} />
+      {/* <ReactPaginate
         breakLabel="..."
         nextLabel=">"
         marginPagesDisplayed={2}
@@ -567,47 +682,96 @@ function Reviews() {
         previousLabel="<"
         className="flex justify-center space-x-4 w-full"
         activeClassName=" text-red-400"
-      />
+      /> */}
     </div>
+  );
+}
+
+function CarouselBtns({
+  setCurrentPage,
+  totalPages,
+}: {
+  setCurrentPage: Dispatch<React.SetStateAction<number>>;
+  totalPages: number;
+}) {
+  const handlePrevious = () => {
+    setCurrentPage((prev) => {
+      if (!prev) return totalPages - 1;
+      return prev - 1;
+    });
+  };
+
+  const handleNext = () => {
+    setCurrentPage((prev) => {
+      if (prev === totalPages - 1) return 0;
+      return prev + 1;
+    });
+  };
+
+  return (
+    <>
+      <div
+        onClick={handlePrevious}
+        className="absolute text-5xl left-0 md:-left-8 top-1/2 -translate-y-1/2 hover:opacity-80 h-full flex items-center cursor-pointer"
+      >
+        <button className="">
+          <BsFillCaretLeftFill />
+        </button>
+      </div>
+      <div
+        onClick={handleNext}
+        className="absolute text-5xl right-0 md:-right-8 top-1/2 -translate-y-1/2 hover:opacity-80 h-full flex items-center cursor-pointer"
+      >
+        <button>
+          <BsFillCaretRightFill />
+        </button>
+      </div>
+    </>
   );
 }
 
 function Review({ review, index }: { review: CustomerReview; index: number }) {
   return (
-    <div
-      id={`${index === 0 ? "top" : ""}`}
-      className="container flex flex-col w-full max-w-lg p-6 mx-auto divide-y rounded-md divide-gray-700 dark:bg-gray-900 dark:text-gray-100"
-    >
-      <div className="flex justify-between p-4">
-        <div className="flex space-x-4">
-          {/* <div>
+    <div className="container mx-auto flex flex-col w-full sm:w-1/2 md:w-1/3 p-4">
+      <div
+        id={`${index === 0 ? "top" : ""}`}
+        className={`w-full sm:max-w-lg p-6 divide-y rounded-md divide-gray-500 ${
+          index % 2 == 0
+            ? "dark:bg-gradient-to-br dark:from-blue-800 dark:to-blue-900"
+            : "dark:bg-slate-700"
+        }  dark:text-gray-100 shadow-xl`}
+      >
+        <div className="flex justify-between p-4">
+          <div className="flex space-x-4">
+            {/* <div>
             <img
               src="https://source.unsplash.com/100x100/?portrait"
               alt=""
               className="object-cover w-12 h-12 rounded-full dark:bg-gray-500"
             />
           </div> */}
-          <div>
-            <h4 className="font-bold">{review.name}</h4>
-            {/* <span className="text-xs dark:text-gray-400">2 days ago</span> */}
+            <div>
+              <h4 className="font-bold">{review.name}</h4>
+              {/* <span className="text-xs dark:text-gray-400">2 days ago</span> */}
+            </div>
+          </div>
+          <div className="flex items-center space-x-2 dark:text-yellow-500">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 512 512"
+              className="w-5 h-5 fill-current"
+            >
+              <path d="M494,198.671a40.536,40.536,0,0,0-32.174-27.592L345.917,152.242,292.185,47.828a40.7,40.7,0,0,0-72.37,0L166.083,152.242,50.176,171.079a40.7,40.7,0,0,0-22.364,68.827l82.7,83.368-17.9,116.055a40.672,40.672,0,0,0,58.548,42.538L256,428.977l104.843,52.89a40.69,40.69,0,0,0,58.548-42.538l-17.9-116.055,82.7-83.368A40.538,40.538,0,0,0,494,198.671Zm-32.53,18.7L367.4,312.2l20.364,132.01a8.671,8.671,0,0,1-12.509,9.088L256,393.136,136.744,453.3a8.671,8.671,0,0,1-12.509-9.088L144.6,312.2,50.531,217.37a8.7,8.7,0,0,1,4.778-14.706L187.15,181.238,248.269,62.471a8.694,8.694,0,0,1,15.462,0L324.85,181.238l131.841,21.426A8.7,8.7,0,0,1,461.469,217.37Z"></path>
+            </svg>
+            <span className="text-xl font-bold">
+              {Math.random() * 1 > 0.5 ? 4 : 5}
+            </span>
           </div>
         </div>
-        <div className="flex items-center space-x-2 dark:text-yellow-500">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 512 512"
-            className="w-5 h-5 fill-current"
-          >
-            <path d="M494,198.671a40.536,40.536,0,0,0-32.174-27.592L345.917,152.242,292.185,47.828a40.7,40.7,0,0,0-72.37,0L166.083,152.242,50.176,171.079a40.7,40.7,0,0,0-22.364,68.827l82.7,83.368-17.9,116.055a40.672,40.672,0,0,0,58.548,42.538L256,428.977l104.843,52.89a40.69,40.69,0,0,0,58.548-42.538l-17.9-116.055,82.7-83.368A40.538,40.538,0,0,0,494,198.671Zm-32.53,18.7L367.4,312.2l20.364,132.01a8.671,8.671,0,0,1-12.509,9.088L256,393.136,136.744,453.3a8.671,8.671,0,0,1-12.509-9.088L144.6,312.2,50.531,217.37a8.7,8.7,0,0,1,4.778-14.706L187.15,181.238,248.269,62.471a8.694,8.694,0,0,1,15.462,0L324.85,181.238l131.841,21.426A8.7,8.7,0,0,1,461.469,217.37Z"></path>
-          </svg>
-          <span className="text-xl font-bold">
-            {Math.random() * 1 > 0.5 ? 4 : 5}
-          </span>
+        <div className="p-4 space-y-2">
+          <h4 className="text-xl font-medium italic">{review.title}</h4>
+          <p className="dark:text-gray-400 text-sm">{review.opinion}</p>
         </div>
-      </div>
-      <div className="p-4 space-y-2 text-sm dark:text-gray-400">
-        <p>{review.title}</p>
-        <p>{review.opinion}</p>
       </div>
     </div>
   );
@@ -615,41 +779,44 @@ function Review({ review, index }: { review: CustomerReview; index: number }) {
 
 function CoachTestimonial() {
   return (
-    <div className="space-y-4 relative">
-      <h2>
-        Coach Shane has been helping women transform for the last 14 years.
-      </h2>
-      <div className="flex flex-col-reverse md:flex-row">
-        <div className="space-y-16 w-full md:w-2/3">
-          <div className="space-y-4 z-[5]">
-            <p>
-              Coach Shane is the best selling author of the book Fat Loss Super
-              System and founder of the company KaiserFit. He is the creator of
-              Kaiser Coach and has used his years of knowledge coaching women to
-              create a Personal 1 on 1 Coach ANY WOMAN CAN USE.
-            </p>
-            <p>
-              Coach Shane&apos;s life mission is to help millions of women
-              discover the TRUTH about weight loss and help them achieve the
-              easiest transformation of their life.
-            </p>
+    <div className="relative bg-gradient-to-t from-blue-700 to-transparent py-16 md:px-0 px-4">
+      <div className="container mx-auto space-y-8">
+        <h2 className="text-3xl md:text-5xl font-bold max-w-4xl">
+          Coach Shane has been helping women transform for the last 14 years
+        </h2>
+        <div className="flex flex-col-reverse md:flex-row">
+          <div className="space-y-16 w-full md:w-2/3">
+            <div className="space-y-2 relative z-[2]">
+              <p>
+                Coach Shane is the best selling author of the book Fat Loss
+                Super System and founder of the company KaiserFit. He is the
+                creator of Kaiser Coach and has used his years of knowledge
+                coaching women to create a Personal 1 on 1 Coach ANY WOMAN CAN
+                USE.
+              </p>
+              <p>
+                Coach Shane&apos;s life mission is to help millions of women
+                discover the TRUTH about weight loss and help them achieve the
+                easiest transformation of their life.
+              </p>
+            </div>
+            <div className="relative z-[2]">
+              <Link passHref href="#pricing">
+                <a className="px-4 py-2 rounded border border-blue-600 bg-blue-600 hover:bg-transparent transition-all duration-300 ease-in-out md:text-3xl text-2xl text-black hover:text-white">
+                  Sign up now
+                </a>
+              </Link>
+            </div>
           </div>
-          <div>
-            <Link passHref href="#pricing">
-              <a className="px-4 py-2 rounded-lg outline hover:scale-110 transition-all duration-300 ease-in-out">
-                Sign up now
-              </a>
-            </Link>
+          <div className="absolute -bottom-40 -right-16 md:-bottom-52 md:right-8 md:block w-full md:w-1/3 h-[400px] md:h-[700px]">
+            <Image
+              src="/images/fathacks/Shane-noBG.png"
+              alt="Shane"
+              layout="fill"
+              objectFit="contain"
+              className=""
+            />
           </div>
-        </div>
-        <div className="absolute -bottom-40 md:-bottom-52 md:right-0 md:block w-full md:w-1/3 h-[650px] ">
-          <Image
-            src="/images/fathacks/Shane-noBG.png"
-            alt="Shane"
-            layout="fill"
-            objectFit="cover"
-            className="scale-90"
-          />
         </div>
       </div>
     </div>

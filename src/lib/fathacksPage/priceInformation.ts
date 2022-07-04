@@ -1,6 +1,6 @@
 const priceInformation = [
   {
-    title: "starter",
+    title: "bronze",
     description: "1-month supply",
     originalPrice: 119,
     discountedPrice: 69,
@@ -8,23 +8,24 @@ const priceInformation = [
     bonus: false,
     photo: "/images/fathacks/1-bottle.png",
   },
+
   {
-    title: "ultimate",
-    description: "6-month supply",
-    originalPrice: 1194,
-    discountedPrice: 49,
-    shipping: 0,
-    bonus: true,
-    photo: "/images/fathacks/6-bottles.png",
-  },
-  {
-    title: "regular",
+    title: "gold",
     description: "3-month supply",
     originalPrice: 797,
     discountedPrice: 59,
     shipping: 0,
     bonus: true,
     photo: "/images/fathacks/3-bottles.png",
+  },
+  {
+    title: "platinum",
+    description: "6-month supply",
+    originalPrice: 1194,
+    discountedPrice: 49,
+    shipping: 0,
+    bonus: true,
+    photo: "/images/fathacks/6-bottles.png",
   },
 ];
 
