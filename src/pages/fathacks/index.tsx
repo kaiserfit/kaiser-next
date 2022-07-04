@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { FcCheckmark } from "react-icons/fc";
+import { BsCheck } from "react-icons/bs";
 import React, { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { useDispatch, useSelector } from "react-redux";
@@ -36,10 +36,9 @@ function FathacksPage() {
     <section>
       <HeroBanner />
 
-      <div className="container mx-auto space-y-8 md:space-y-16 px-4">
+      <div className=" space-y-8 md:space-y-16 ">
         <CTA />
         <Pricing />
-        <BuyerProtection />
         <BonusDescriptions />
         <TeamsSection />
         <FAQSection />
@@ -74,8 +73,8 @@ function HeroBanner() {
   }, [router]);
 
   return (
-    <div className="pt-8 space-y-8 bg-gradient-to-t from-blue-600/50 to-blue-300 relative overflow-hidden">
-      <div className="absolute -right-20 -bottom-36">
+    <div className="pt-16 space-y-8 bg-gradient-to-t from-blue-600/50 to-blue-300 relative overflow-hidden">
+      {/* <div className="absolute -right-20 -bottom-36">
         <Image
           src="/images/fathacks/hero-svg.png"
           alt="svg"
@@ -83,25 +82,14 @@ function HeroBanner() {
           width={500}
           className="opacity-50"
         />
-      </div>
+      </div> */}
 
       {userData?.age && <Headline userData={userData} />}
 
-      <div className="h-[800px] sm:h-[750px] md:h-[550px] relative">
+      <div className="h-[675px] sm:h-[750px] md:h-[650px] relative">
         <div className="w-full max-w-7xl mx-auto px-4">
           <div className="flex flex-col-reverse md:flex-row md:items-start md:justify-start md:gap-x-8 lg:gap-x-4 gap-y-8 md:gap-y-0 w-full relative">
             <Video />
-            <div className="space-y-6 md:pt-16 md:w-1/2 md:space-y-12">
-              <h2 className="text-5xl sm:text-6xl md:text-7xl font-bold max-w-2xl">
-                We want <br /> to help{" "}
-                <span className=" italic text-red-500">you!</span>
-              </h2>
-              <p className="font-light max-w-xl text-gray-300 tracking-wider">
-                In this video Coach Shane, Celebrity Trainer and Head
-                Transformation Coach shares your FREE Custom Transformation Plan
-                that you can start using today.
-              </p>
-            </div>
           </div>
         </div>
       </div>
@@ -152,10 +140,16 @@ function Video() {
     );
   }, []);
   return (
-    <div className="w-full container mx-auto md:mx-0 md:w-1/3">
-      <div className="max-w-[300px] relative">
-        <div id="vidalytics_embed_VGqpMgAid6usjq3x">{/* VIDEO HERE */}</div>
-      </div>
+    <div className={`flex flex-col items-center w-full space-y-4`}>
+      <h2 className="max-w-md text-center">
+        In this video Coach Shane, Celebrity Trainer and Head Transformation
+        Coach shares your FREE Custom Transformation Plan that you can start
+        using today
+      </h2>
+      <div
+        className="max-w-[300px]"
+        id="vidalytics_embed_VGqpMgAid6usjq3x"
+      ></div>
     </div>
   );
 }
@@ -232,80 +226,129 @@ function CTA() {
 }
 
 function Pricing() {
+  const router = useRouter();
+  const [recommend, setRecommend] = useState<string>("");
+
+  useEffect(() => {
+    const storedInfo: UserData = JSON.parse(
+      localStorage.getItem("userAnswers")!
+    );
+    if (!storedInfo || !Object.values(storedInfo).length) {
+      router.push("/quiz");
+      return;
+    }
+    const handleCheckRecommend = (item: string) => {
+      if (item.startsWith("5-10")) {
+        setRecommend("gold");
+      } else {
+        setRecommend("platinum");
+      }
+    };
+    handleCheckRecommend(storedInfo.weightGoal);
+  }, []);
   return (
     <div
       id="pricing"
-      className="space-y-8 md:space-y-20 container mx-auto px-4 scroll-pt-8 border-y"
+      className="space-y-8 md:space-y-20 scroll-pt-8 bg-gradient-to-br from-blue-500 to-blue-700 pb-8 pt-8 md:pb-16"
     >
-      <div className="flex w-full justify-center text-center">
-        <h1 className="text-2xl md:text-5xl max-w-md">
-          Claim Your Saving Bundle While Stocks Last
-        </h1>
+      <div className="max-w-7xl mx-auto px-4 space-y-8 md:space-y-24">
+        <div className="flex flex-col w-full items-center text-center space-y-4">
+          <p className="text-sm font-light text-gray-300 uppercase">
+            Kaiserfit pricing
+          </p>
+          <h1 className="text-3xl md:text-5xl max-w-2xl">
+            <span className=" text-red-400 font-semibold">Claim</span>
+            {""} your saving&apos;s bundle while stocks last
+          </h1>
+          <p className="max-w-2xl">
+            In line with your provided information, we recommend the{" "}
+            <span className="text-xl font-semibold italic uppercase">
+              {recommend}
+            </span>{" "}
+            bundle for you.
+          </p>
+        </div>
+        <Prices recommend={recommend} />
+        <BuyerProtection />
       </div>
-      <Prices />
     </div>
   );
 }
 
-function Prices() {
+function Prices({ recommend }: { recommend: string }) {
   return (
-    <div className="flex flex-col md:flex-row space-y-12 md:space-y-0 md:space-x-10">
+    <div className="flex flex-col md:flex-row space-y-12 md:space-y-0 md:space-x-12">
       {priceInformation.map((item) => (
-        <Price key={Math.random() * 123} info={item} />
+        <Price key={Math.random() * 123} info={item} recommend={recommend} />
       ))}
     </div>
   );
 }
 
-function Price({ info }: { info: PriceInformation }) {
+function Price({
+  info,
+  recommend,
+}: {
+  info: PriceInformation;
+  recommend: string;
+}) {
   return (
     <div
-      className={`w-full flex flex-col justify-between md:w-1/3 outline rounded-lg space-y-4 shadow-xl pt-8 ${
-        info.title === "ultimate"
-          ? "relative bg-gradient-to-b from-blue-700 to-blue-900 md:scale-110"
-          : ""
+      className={`w-full flex flex-col justify-between md:w-1/3 rounded-lg space-y-4 shadow-2xl py-8 ${
+        info.title === recommend
+          ? "bg-gradient-to-b from-yellow-300 via-purple-500 to-blue-800 md:scale-110"
+          : "bg-blue-900"
       }`}
     >
-      <div className="space-y-4 px-4">
-        <h3
-          className={`${
-            info.title === "ultimate"
-              ? "absolute -top-6 left-1/2 -translate-x-1/2 font-bold text-2xl outline bg-blue-600 px-2 py-1"
-              : " font-semibold text-xl"
-          } capitalize traciking-wide`}
-        >
-          {info.title}
-        </h3>
-        <div className="relative w-full h-40">
-          <Image
-            src={info.photo}
-            alt={info.title}
-            layout="fill"
-            objectFit="contain"
-            className="absolute"
-          />
+      <div className="space-y-4 px-4 ">
+        <div className="space-y-4 w-full flex flex-col items-center">
+          <div className="relative w-full h-40">
+            <Image
+              src={info.photo}
+              alt={info.title}
+              layout="fill"
+              objectFit="contain"
+              className="absolute"
+            />
+          </div>
+          <div className="w-full text-center">
+            <h3
+              className={`${
+                info.title === "ultimate"
+                  ? "absolute -top-6 left-1/2 -translate-x-1/2 font-bold text-2xl outline bg-blue-600 px-2 py-1"
+                  : " font-semibold text-xl"
+              } capitalize traciking-wide `}
+            >
+              {info.title}
+            </h3>
+            <div className="border-b pb-4">
+              <h3 className="text-3xl">
+                ${info.discountedPrice}{" "}
+                <span className="text-sm">per bottle</span>
+              </h3>
+              {info.shipping > 0 && (
+                <p className="opacity-80">
+                  with a shipping fee of ${info.shipping}
+                </p>
+              )}
+            </div>
+          </div>
         </div>
         <div>
-          <h3 className="text-3xl">
-            ${info.discountedPrice} <span className="text-sm">per bottle</span>
-          </h3>
-        </div>
-        {info.shipping > 0 && <p>with a shipping fee of ${info.shipping}</p>}
-        <div>
-          <p>Includes:</p>
+          {/* <p>Includes:</p> */}
           <ul>
             {info.bonus && (
               <li className="flex space-x-4 items-center ">
-                <span>
-                  <FcCheckmark />
+                <span className=" text-3xl text-green-500">
+                  <BsCheck />
                 </span>
                 <span>free bonuses</span>
               </li>
             )}
             {!info.shipping && (
               <li className="flex space-x-4 items-center ">
-                <span>
-                  <FcCheckmark />
+                <span className=" text-3xl text-green-500">
+                  <BsCheck />
                 </span>
                 <span>free shipping</span>
               </li>
@@ -315,8 +358,8 @@ function Price({ info }: { info: PriceInformation }) {
                 className="flex space-x-4 items-center "
                 key={Math.random() * 456}
               >
-                <span>
-                  <FcCheckmark />
+                <span className=" text-3xl text-green-500">
+                  <BsCheck />
                 </span>
                 <span>{item.title}</span>
               </li>
@@ -324,7 +367,7 @@ function Price({ info }: { info: PriceInformation }) {
           </ul>
         </div>
       </div>
-      <button className="px-4 py-2 outline rounded-lg w-full">
+      <button className="px-4 py-2 rounded-lg w-4/5 mx-auto bg-gray-100 text-black font-bold hover:scale-105 hover:-translate-y-2 transition-all duration-300 ease-in-out">
         Add to cart
       </button>
     </div>
@@ -347,10 +390,19 @@ function BuyerProtection() {
 
 function BonusDescriptions() {
   return (
-    <div className="space-y-4 flex flex-col items-center">
-      <h3>
-        You also get these 7 <span>free bonus gifts</span> when you order today
-      </h3>
+    <div
+      className="space-y-12 flex flex-col items-center container mx-auto
+    px-4"
+    >
+      <div className="text-center space-y-2">
+        <h3 className="text-3xl md:text-5xl font-semibold">
+          7 <span className="text-yellow-300 uppercase">free</span> gifts when
+          you order today
+        </h3>
+        <p className="text-xl text-gray-200 font-light opacity-80">
+          Every bundle includes this gifts
+        </p>
+      </div>
 
       <Features />
     </div>
@@ -359,7 +411,7 @@ function BonusDescriptions() {
 
 function Features() {
   return (
-    <div className="container mx-auto space-y-12">
+    <div className="container mx-auto space-y-6">
       {freeBonuses.map((feature, i) => (
         <Feature key={Math.random() * 364} index={i} feature={feature} />
       ))}
@@ -368,15 +420,17 @@ function Features() {
 }
 
 function Feature({ feature, index }: { feature: FreeBonus; index: number }) {
-  // const [readMore, setReadMore] = useState(false);
-
   return (
     <div
       className={`flex flex-col overflow-hidden rounded-md shadow-sm  ${
         index % 2 == 0 ? "md:flex-row" : "md:flex-row-reverse"
-      } `}
+      } dark:bg-gray-900 `}
     >
-      <div className="relative w-full md:w-1/3 h-80">
+      <div
+        className={`relative w-full md:w-1/3 h-80 md:h-[30rem] ${
+          index % 2 == 0 ? "bg-gradient-to-r" : "bg-gradient-to-l"
+        } from-blue-500/70 to-transparent`}
+      >
         <Image
           src={feature.photo}
           alt={feature.title}
@@ -385,12 +439,12 @@ function Feature({ feature, index }: { feature: FreeBonus; index: number }) {
           className="absolute aspect-video "
         />
       </div>
-      <div className="flex flex-col justify-center flex-1 p-6 dark:bg-gray-900 space-y-4">
+      <div className="flex flex-col justify-center flex-1 p-6 space-y-4 md:h-[30rem]">
         <span className="text-xs uppercase dark:text-gray-400">
           Bonus #{index + 1}
         </span>
         <h3 className="text-3xl font-bold">{feature.title}</h3>
-        <div className="space-y-1">
+        <div className=" space-y-3">
           <p>{feature.paragraph1}</p>
           <p>{feature.paragraph2}</p>
           <p>{feature.paragraph3}</p>
