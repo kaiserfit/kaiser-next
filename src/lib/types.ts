@@ -7,7 +7,7 @@ export type UserData = {
   age: "string";
   metabolism: "string";
   weight: "string";
-  weightGoal: "string";
+  goal: "string";
   challenge: "string";
 };
 

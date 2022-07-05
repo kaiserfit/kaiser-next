@@ -7,7 +7,7 @@ function InfoStats({
   age,
   metabolism,
   weight,
-  weightGoal,
+  goal,
   challenge,
   indexQuestion,
 }: {
@@ -15,7 +15,7 @@ function InfoStats({
   age?: string;
   metabolism?: string;
   weight?: string;
-  weightGoal?: string;
+  goal?: string;
   challenge?: string;
   indexQuestion?: number;
 }) {
@@ -58,12 +58,11 @@ function InfoStats({
           </p>
         </div>
       )}
-      {weightGoal && (
+      {goal && (
         <div className="flex sm:justify-center items-center sm:items-end space-x-1 md:space-x-2 w-1/2 sm:w-1/2 lg:w-1/3">
           <GiStairsGoal className="sm:text-2xl" />
           <p className="font-light flex flex-col sm:block">
-            Weight Goal:{" "}
-            <span className="font-bold sm:text-2xl">{weightGoal}</span>
+            Goal: <span className="font-bold sm:text-2xl">{goal}</span>
           </p>
         </div>
       )}
