@@ -29,6 +29,8 @@ import ReactPaginate from "react-paginate";
 import usePaginate from "../../hooks/usePaginate";
 import customerReviews from "../../lib/fathacksPage/reviews";
 
+const lazyOptions = { threshold: 0.035, triggerOnce: true };
+
 function FathacksPage() {
   useEffect(() => {
     setTimeout(() => {
@@ -37,7 +39,7 @@ function FathacksPage() {
   }, []);
 
   return (
-    <section>
+    <div>
       <HeroBanner />
 
       <div className="space-y-8 md:space-y-16 ">
@@ -49,15 +51,15 @@ function FathacksPage() {
         <ReviewsSection />
         <CoachTestimonial />
       </div>
-    </section>
+    </div>
   );
 }
 
 function HeroBanner() {
   // const { isWindowAtTop } = useSelector((state: RootState) => state.UI);
-
   const router = useRouter();
-
+  const { ref, inView } = useInView(lazyOptions);
+  const [isInView, setIsInView] = useState(false);
   const [userData, setUserData] = useState<UserData>();
 
   useEffect(() => {
@@ -76,8 +78,15 @@ function HeroBanner() {
     setUserData(userData);
   }, [router]);
 
+  useEffect(() => {
+    setIsInView(true);
+  }, [inView]);
+
   return (
-    <div className="pt-16 space-y-8 bg-gradient-to-t from-blue-800 via-purple-500 to-blue-300 relative overflow-hidden">
+    <section
+      ref={ref}
+      className="pt-16 bg-gradient-to-t from-blue-800 via-purple-500 to-blue-300 relative overflow-hidden"
+    >
       {/* <div className="absolute -right-20 -bottom-36">
         <Image
           src="/images/fathacks/hero-svg.png"
@@ -87,17 +96,22 @@ function HeroBanner() {
           className="opacity-50"
         />
       </div> */}
+      <div
+        className={`space-y-8 ${
+          isInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+        } transition-all duration-700 ease-in-out`}
+      >
+        {userData?.age && <Headline userData={userData} />}
 
-      {userData?.age && <Headline userData={userData} />}
-
-      <div className="h-[675px] sm:h-[750px] md:h-[650px] relative">
-        <div className="w-full max-w-7xl mx-auto px-4">
-          <div className="flex flex-col-reverse md:flex-row md:items-start md:justify-start md:gap-x-8 lg:gap-x-4 gap-y-8 md:gap-y-0 w-full relative">
-            <Video />
+        <div className="h-[675px] sm:h-[750px] md:h-[650px] relative">
+          <div className="w-full max-w-7xl mx-auto px-4">
+            <div className="flex flex-col-reverse md:flex-row md:items-start md:justify-start md:gap-x-8 lg:gap-x-4 gap-y-8 md:gap-y-0 w-full relative">
+              <Video />
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }
 
@@ -177,10 +191,21 @@ function CTA() {
   const month = new Date().getMonth();
   const year = new Date().getFullYear();
 
+  const { ref, inView } = useInView(lazyOptions);
+  const [isInView, setIsInView] = useState(false);
+
+  useEffect(() => {
+    if (inView) setIsInView(true);
+  }, [inView]);
+
   return (
-    <div>
-      <section className="bg-transparent">
-        <div className="container flex flex-col items-center px-4 py-12 mx-auto lg:flex-row">
+    <>
+      <section ref={ref} className="bg-transparent">
+        <div
+          className={`container flex flex-col items-center px-4 py-12 mx-auto lg:flex-row ${
+            isInView ? "opacity-100 translate-x-0" : "opacity-0 translate-x-8"
+          } transition-all duration-700 ease-in-out`}
+        >
           <div className="flex justify-center xl:w-1/2">
             <img
               className="h-80 w-80 sm:w-[28rem] sm:h-[28rem] flex-shrink-0 object-contain rounded-full"
@@ -225,13 +250,19 @@ function CTA() {
           </div>
         </div>
       </section>
-    </div>
+    </>
   );
 }
 
 function Pricing() {
   const router = useRouter();
+  const { ref, inView } = useInView(lazyOptions);
   const [recommend, setRecommend] = useState<string>("");
+  const [isInView, setIsInView] = useState(false);
+
+  useEffect(() => {
+    if (inView) setIsInView(true);
+  }, [inView]);
 
   useEffect(() => {
     const storedInfo: UserData = JSON.parse(
@@ -250,12 +281,18 @@ function Pricing() {
     };
     handleCheckRecommend(storedInfo.weightGoal);
   }, []);
+
   return (
-    <div
+    <section
+      ref={ref}
       id="pricing"
       className="space-y-8 md:space-y-20 scroll-pt-8 bg-gradient-to-br from-blue-400 via-purple-800 to-blue-700 pb-8 pt-8 md:pb-16"
     >
-      <div className="max-w-7xl mx-auto px-4 space-y-8 md:space-y-24">
+      <div
+        className={`max-w-7xl mx-auto px-4 space-y-8 md:space-y-24 ${
+          isInView ? "opacity-100 -translate-x-0" : "opacity-0 -translate-x-8"
+        } transition-all duration-700 ease-in-out`}
+      >
         <div className="flex flex-col w-full items-center text-center space-y-4">
           <p className="text-sm font-light text-gray-300 uppercase">
             Kaiserfit pricing
@@ -275,7 +312,7 @@ function Pricing() {
         <Prices recommend={recommend} />
         <BuyerProtection />
       </div>
-    </div>
+    </section>
   );
 }
 
@@ -393,10 +430,19 @@ function BuyerProtection() {
 }
 
 function BonusDescriptions() {
+  const { ref, inView } = useInView(lazyOptions);
+  const [isInView, setIsInView] = useState(false);
+
+  useEffect(() => {
+    if (inView) setIsInView(true);
+  }, [inView]);
   return (
-    <div
-      className="space-y-12 flex flex-col items-center container mx-auto
-    px-4"
+    <section
+      ref={ref}
+      className={`space-y-12 flex flex-col items-center container mx-auto
+    px-4 ${
+      isInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+    } transition-all duration-700 ease-in-out`}
     >
       <div className="text-center space-y-2">
         <h3 className="text-3xl md:text-5xl font-semibold">
@@ -409,7 +455,7 @@ function BonusDescriptions() {
       </div>
 
       <Features />
-    </div>
+    </section>
   );
 }
 
@@ -476,9 +522,22 @@ function Feature({ feature, index }: { feature: FreeBonus; index: number }) {
 }
 
 function TeamsSection() {
+  const { ref, inView } = useInView(lazyOptions);
+  const [isInView, setIsInView] = useState(false);
+
+  useEffect(() => {
+    if (inView) setIsInView(true);
+  }, [inView]);
   return (
-    <div className="bg-gradient-to-b from-transparent via-blue-600 to-transparent relative py-8">
-      <div className="container mx-auto flex flex-col items-center space-y-8 sm:space-y-12 z-[3] relative">
+    <section
+      ref={ref}
+      className="bg-gradient-to-b from-transparent via-blue-600 to-transparent relative py-8"
+    >
+      <div
+        className={`container mx-auto flex flex-col items-center space-y-8 sm:space-y-12 z-[3] relative ${
+          isInView ? "opacity-100 translate-x-0" : "opacity-0 translate-x-8"
+        } transition-all duration-700 ease-in-out`}
+      >
         <div className="space-y-4 text-center max-w-xl">
           <h2 className="text-3xl md:text-5xl font-bold">Our team</h2>
           <p className=" text-gray-400">
@@ -514,7 +573,7 @@ function TeamsSection() {
           className="opacity-30"
         />
       </div>
-    </div>
+    </section>
   );
 }
 
@@ -555,15 +614,26 @@ function Member({ person }: { person: Member }) {
 }
 
 function FAQSection() {
+  const { ref, inView } = useInView(lazyOptions);
+  const [isInView, setIsInView] = useState(false);
+
+  useEffect(() => {
+    if (inView) setIsInView(true);
+  }, [inView]);
   return (
-    <div className="container mx-auto space-y-6">
+    <section
+      ref={ref}
+      className={`container mx-auto space-y-6 ${
+        isInView ? "opacity-100 -translate-x-0" : "opacity-0 -translate-x-8"
+      } transition-all duration-700 ease-in-out`}
+    >
       <div className="text-center">
         <h2 className="text-3xl md:text-5xl font-bold">
           Frequently Asked Questions
         </h2>
       </div>
       <FAQContainer />
-    </div>
+    </section>
   );
 }
 
@@ -624,14 +694,25 @@ function FAQ({ info, index }: { info: Faq; index: number }) {
 }
 
 function ReviewsSection() {
+  const { ref, inView } = useInView(lazyOptions);
+  const [isInView, setIsInView] = useState(false);
+
+  useEffect(() => {
+    if (inView) setIsInView(true);
+  }, [inView]);
   return (
-    <div className="container mx-auto space-y-8 py-12 px-4">
+    <section
+      ref={ref}
+      className={`container mx-auto space-y-8 py-12 px-4 ${
+        isInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+      } transition-all duration-700 ease-in-out`}
+    >
       <div className="">
         <h3 className="text-3xl md:text-5xl font-bold">What customers say</h3>
       </div>
 
       <Reviews />
-    </div>
+    </section>
   );
 }
 
@@ -778,9 +859,22 @@ function Review({ review, index }: { review: CustomerReview; index: number }) {
 }
 
 function CoachTestimonial() {
+  const { ref, inView } = useInView(lazyOptions);
+  const [isInView, setIsInView] = useState(false);
+
+  useEffect(() => {
+    if (inView) setIsInView(true);
+  }, [inView]);
   return (
-    <div className="relative bg-gradient-to-t from-blue-700 to-transparent py-16 md:px-0 px-4">
-      <div className="container mx-auto space-y-8">
+    <section
+      ref={ref}
+      className="relative bg-gradient-to-t from-blue-700 to-transparent py-16 md:px-0 px-4"
+    >
+      <div
+        className={`container mx-auto space-y-8 ${
+          isInView ? "opacity-100 translate-x-0" : "opacity-0 translate-x-8"
+        } transition-all duration-700 ease-in-out`}
+      >
         <h2 className="text-3xl md:text-5xl font-bold max-w-4xl">
           Coach Shane has been helping women transform for the last 14 years
         </h2>
@@ -819,7 +913,8 @@ function CoachTestimonial() {
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }
+
 export default FathacksPage;
