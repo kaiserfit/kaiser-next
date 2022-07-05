@@ -18,6 +18,7 @@ export type QuestionData = {
 
 export type PriceInformation = {
   title: string;
+  quantity: number;
   description: string;
   originalPrice: number;
   discountedPrice: number;

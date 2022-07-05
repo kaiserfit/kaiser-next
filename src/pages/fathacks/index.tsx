@@ -280,7 +280,7 @@ function Pricing() {
       }
     };
     handleCheckRecommend(storedInfo.goal);
-  }, []);
+  }, [router]);
 
   return (
     <section
@@ -368,7 +368,10 @@ function Price({
             <div className="border-b pb-4">
               <h3 className="text-3xl">
                 ${info.discountedPrice}{" "}
-                <span className="text-sm">per bottle</span>
+                <span className="text-sm">
+                  per bottle ({info.quantity}{" "}
+                  {info.quantity > 1 ? "bottles" : "bottle"})
+                </span>
               </h3>
               {info.shipping > 0 && (
                 <p className="opacity-80">
@@ -660,11 +663,11 @@ function FAQContainer() {
 function FAQ({ info, index }: { info: Faq; index: number }) {
   return (
     <details
-      className="p-6 border-b-4 border-blue-500 bg-gray-100 dark:bg-transparent group"
+      className="p-6 border-b-4 border-blue-600 bg-gray-100 dark:bg-transparent group"
       open={index === 0 ? true : false}
     >
-      <summary className="flex items-center justify-between cursor-pointer">
-        <h5 className="text-2xl font-semibold">{info.question}</h5>
+      <summary className="flex items-center justify-between cursor-pointer hover:text-blue-400">
+        <h5 className="text-2xl font-semibold ">{info.question}</h5>
 
         <span className="flex-shrink-0 ml-1.5 p-1.5 bg-white dark:bg-gray-700 text-lg rounded-full sm:p-3">
           <svg

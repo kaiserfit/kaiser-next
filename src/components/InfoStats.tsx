@@ -29,7 +29,8 @@ function InfoStats({
         >
           <BsPersonFill className="sm:text-2xl" />
           <p className="font-light sm:text-base">
-            Gender: <span className="font-bold sm:text-2xl">{gender}</span>
+            Gender:{" "}
+            <span className="font-bold sm:text-2xl capitalize">{gender}</span>
           </p>
         </div>
       )}
@@ -46,7 +47,9 @@ function InfoStats({
           <GiDna2 className="sm:text-2xl" />
           <p className="font-light">
             Metabolism:{" "}
-            <span className="font-bold sm:text-2xl">{metabolism}</span>
+            <span className="font-bold sm:text-2xl capitalize">
+              {metabolism}
+            </span>
           </p>
         </div>
       )}
@@ -62,7 +65,8 @@ function InfoStats({
         <div className="flex sm:justify-center items-center sm:items-end space-x-1 md:space-x-2 w-1/2 sm:w-1/2 lg:w-1/3">
           <GiStairsGoal className="sm:text-2xl" />
           <p className="font-light flex flex-col sm:block">
-            Goal: <span className="font-bold sm:text-2xl">{goal}</span>
+            Goal:{" "}
+            <span className="font-bold sm:text-2xl capitalize">{goal}</span>
           </p>
         </div>
       )}
@@ -71,7 +75,9 @@ function InfoStats({
           <GiBarrier className="sm:text-2xl" />
           <p className="font-light flex flex-col sm:block">
             Challenge:{" "}
-            <span className="font-bold sm:text-2xl">{challenge}</span>
+            <span className="font-bold sm:text-2xl capitalize">
+              {challenge}
+            </span>
           </p>
         </div>
       )}

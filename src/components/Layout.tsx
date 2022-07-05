@@ -55,7 +55,6 @@ function Navbar({
 
   useEffect(() => {
     const quizAnswers = JSON.parse(localStorage.getItem("userAnswers")!);
-    console.log(quizAnswers);
     // if (Object.values(quizAnswers).length === 6) {
     //   setIsQuizAnswered(true);
     // }
