@@ -221,13 +221,15 @@ function OrderForm() {
                 Go back
               </a>
             </Link>
-            <button
-              type="submit"
-              onClick={handleSubmit}
-              className="w-auto bg-purple-500 hover:bg-purple-700 rounded-lg shadow-xl font-medium text-white px-4 py-2"
-            >
-              Submit order
-            </button>
+            <Link passHref href={"/checkout/success"}>
+              <button
+                type="submit"
+                onClick={handleSubmit}
+                className="w-auto bg-purple-500 hover:bg-purple-700 rounded-lg shadow-xl font-medium text-white px-4 py-2"
+              >
+                Submit order
+              </button>
+            </Link>
           </div>
         </div>
       </form>
@@ -316,14 +318,18 @@ function OrderSummaryTotals({
           <span>${chosenBundle.discountedPrice * chosenBundle.quantity}</span>
         </div>
         <div className="w-full flex justify-between">
+          <span>Shipping</span>
           <p>{chosenBundle.shipping ? `$${chosenBundle.shipping}` : "free"}</p>
-          <span>free</span>
         </div>
       </div>
       <div className="px-2">
         <div className="w-full flex justify-between items-center text-2xl font-medium">
           <p>Total</p>
-          <span>${chosenBundle.discountedPrice * chosenBundle.quantity}</span>
+          <span>
+            $
+            {chosenBundle.discountedPrice * chosenBundle.quantity +
+              chosenBundle.shipping}
+          </span>
         </div>
       </div>
     </>
