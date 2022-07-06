@@ -38,3 +38,13 @@
     }
   }
 }
+
+@layer components {
+  .billing-input {
+    @apply py-2 px-3 rounded-lg border-2 border-blue-300 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent dark:text-gray-200 bg-gray-100 dark:bg-slate-600;
+  }
+
+  .label-style {
+    @apply text-sm font-light;
+  }
+}

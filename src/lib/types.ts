@@ -7,7 +7,7 @@ export type UserData = {
   age: "string";
   metabolism: "string";
   weight: "string";
-  weightGoal: "string";
+  goal: "string";
   challenge: "string";
 };
 
@@ -18,6 +18,7 @@ export type QuestionData = {
 
 export type PriceInformation = {
   title: string;
+  quantity: number;
   description: string;
   originalPrice: number;
   discountedPrice: number;

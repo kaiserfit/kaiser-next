@@ -36,7 +36,7 @@ function Quiz() {
   const [age, setAge] = useState<string>();
   const [metabolism, setMetabolism] = useState<string>();
   const [weight, setWeight] = useState<string>();
-  const [weightGoal, setWeightGoal] = useState<string>();
+  const [goal, setGoal] = useState<string>();
   const [challenge, setChallenge] = useState<string>();
 
   const fetchQuestion = async (id: number) => {
@@ -92,14 +92,14 @@ function Quiz() {
       const userAnswers = { gender, age, metabolism, weight: choice };
       localStorage.setItem("userAnswers", JSON.stringify(userAnswers));
     }
-    if (category === "weightGoal") {
-      setWeightGoal(choice);
+    if (category === "goal") {
+      setGoal(choice);
       const userAnswers = {
         gender,
         age,
         metabolism,
         weight,
-        weightGoal: choice,
+        goal: choice,
       };
       localStorage.setItem("userAnswers", JSON.stringify(userAnswers));
     }
@@ -110,7 +110,7 @@ function Quiz() {
         age,
         metabolism,
         weight,
-        weightGoal,
+        goal,
         challenge: choice,
       };
       localStorage.setItem("userAnswers", JSON.stringify(userAnswers));
@@ -122,7 +122,7 @@ function Quiz() {
       //   age,
       //   metabolism,
       //   weight,
-      //   weightGoal,
+      //   goal,
       //   challenge: choice,
       // };
       // const sendData = async () => {
@@ -179,7 +179,7 @@ function Quiz() {
       );
     }
     if (indexQuestion === 5) {
-      setWeightGoal("");
+      setGoal("");
       const storedUserData = JSON.parse(localStorage.getItem("userAnswers")!);
       const updatedUserData = Object.entries(storedUserData).slice(
         0,
@@ -247,7 +247,7 @@ function Quiz() {
       setAge(Object.values<string>(storedUserData)[1]);
       setMetabolism(Object.values<string>(storedUserData)[2]);
       setWeight(Object.values<string>(storedUserData)[3]);
-      setWeightGoal(Object.values<string>(storedUserData)[4]);
+      setGoal(Object.values<string>(storedUserData)[4]);
       setTimeout(() => setIsUserDataReady(true), 900);
     }
     if (Object.keys(storedUserData).length === 6) {
@@ -286,7 +286,7 @@ function Quiz() {
             gender={gender}
             age={age}
             weight={weight}
-            weightGoal={weightGoal}
+            goal={goal}
             metabolism={metabolism}
             challenge={challenge}
             indexQuestion={indexQuestion}
@@ -455,7 +455,7 @@ function Choice({
       : indexQuestion === 3
       ? "weight"
       : indexQuestion === 4
-      ? "weightGoal"
+      ? "goal"
       : indexQuestion === 5
       ? "challenge"
       : "";

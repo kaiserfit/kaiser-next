@@ -135,7 +135,7 @@ function Headline({ userData }: { userData: UserData }) {
             age={userData.age}
             metabolism={userData.metabolism}
             weight={userData.weight}
-            weightGoal={userData.weightGoal}
+            goal={userData.goal}
             challenge={userData.challenge}
           />
         )}
@@ -159,10 +159,10 @@ function Video() {
   }, []);
   return (
     <div className={`flex flex-col items-center w-full space-y-4`}>
-      <h2 className="max-w-md text-center">
+      <h2 className="max-w-2xl text-center md:text-xl">
         In this video Coach Shane, Celebrity Trainer and Head Transformation
         Coach shares your FREE Custom Transformation Plan that you can start
-        using today
+        using today.
       </h2>
       <div
         className="max-w-[300px]"
@@ -279,8 +279,8 @@ function Pricing() {
         setRecommend("platinum");
       }
     };
-    handleCheckRecommend(storedInfo.weightGoal);
-  }, []);
+    handleCheckRecommend(storedInfo.goal);
+  }, [router]);
 
   return (
     <section
@@ -333,6 +333,9 @@ function Price({
   info: PriceInformation;
   recommend: string;
 }) {
+  const handlePassToStorage = (item: string) => {
+    localStorage.setItem("bundle", JSON.stringify({ bundle: item }));
+  };
   return (
     <div
       className={`w-full flex flex-col justify-between md:w-1/3 rounded-lg space-y-4 shadow-2xl py-8 ${
@@ -365,7 +368,10 @@ function Price({
             <div className="border-b pb-4">
               <h3 className="text-3xl">
                 ${info.discountedPrice}{" "}
-                <span className="text-sm">per bottle</span>
+                <span className="text-sm">
+                  per bottle ({info.quantity}{" "}
+                  {info.quantity > 1 ? "bottles" : "bottle"})
+                </span>
               </h3>
               {info.shipping > 0 && (
                 <p className="opacity-80">
@@ -408,9 +414,14 @@ function Price({
           </ul>
         </div>
       </div>
-      <button className="px-4 py-2 rounded-lg w-4/5 mx-auto bg-gray-100 text-black font-bold hover:scale-105 hover:-translate-y-2 transition-all duration-300 ease-in-out">
-        Add to cart
-      </button>
+      <Link passHref href="/checkout">
+        <a
+          onClick={() => handlePassToStorage(info.title)}
+          className="flex justify-center px-4 py-2 rounded-lg w-4/5 mx-auto bg-gray-100 text-black font-bold hover:scale-105 hover:-translate-y-2 transition-all duration-300 ease-in-out"
+        >
+          <span>Choose this bundle</span>
+        </a>
+      </Link>
     </div>
   );
 }
@@ -652,11 +663,11 @@ function FAQContainer() {
 function FAQ({ info, index }: { info: Faq; index: number }) {
   return (
     <details
-      className="p-6 border-b-4 border-blue-500 bg-gray-100 dark:bg-transparent group"
+      className="p-6 border-b-4 border-blue-600 bg-gray-100 dark:bg-transparent group"
       open={index === 0 ? true : false}
     >
-      <summary className="flex items-center justify-between cursor-pointer">
-        <h5 className="text-2xl font-semibold">{info.question}</h5>
+      <summary className="flex items-center justify-between cursor-pointer hover:text-blue-400">
+        <h5 className="text-2xl font-semibold ">{info.question}</h5>
 
         <span className="flex-shrink-0 ml-1.5 p-1.5 bg-white dark:bg-gray-700 text-lg rounded-full sm:p-3">
           <svg

@@ -2,6 +2,7 @@ const priceInformation = [
   {
     title: "bronze",
     description: "1-month supply",
+    quantity: 1,
     originalPrice: 119,
     discountedPrice: 69,
     shipping: 9.95,
@@ -12,6 +13,7 @@ const priceInformation = [
   {
     title: "gold",
     description: "3-month supply",
+    quantity: 3,
     originalPrice: 797,
     discountedPrice: 59,
     shipping: 0,
@@ -20,6 +22,7 @@ const priceInformation = [
   },
   {
     title: "platinum",
+    quantity: 6,
     description: "6-month supply",
     originalPrice: 1194,
     discountedPrice: 49,
