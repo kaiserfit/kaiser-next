@@ -23,6 +23,7 @@ export type PriceInformation = {
   originalPrice: number;
   discountedPrice: number;
   shipping: number;
+  id: string;
   bonus: boolean;
   photo: string;
 };

@@ -7,6 +7,7 @@ const priceInformation = [
     discountedPrice: 69,
     shipping: 9.95,
     bonus: false,
+    id: "price_1LISgrAtSFPFrKY5Ax1fxb23",
     photo: "/images/fathacks/1-bottle.png",
   },
 
@@ -18,6 +19,7 @@ const priceInformation = [
     discountedPrice: 59,
     shipping: 0,
     bonus: true,
+    id: 'price_1LIShZAtSFPFrKY5O4NYjrJD',
     photo: "/images/fathacks/3-bottles.png",
   },
   {
@@ -28,6 +30,7 @@ const priceInformation = [
     discountedPrice: 49,
     shipping: 0,
     bonus: true,
+    id: "price_1LISiMAtSFPFrKY5CLlTNPiu",
     photo: "/images/fathacks/6-bottles.png",
   },
 ];
