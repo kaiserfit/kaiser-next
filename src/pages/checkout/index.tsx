@@ -14,10 +14,13 @@ function CheckoutPage() {
     dispatch(uiActions.toggleIsWindowAtTop(false));
   }, [dispatch]);
   return (
-    <section className="py-16 container mx-auto">
+    <section className="py-16 max-w-7xl mx-auto px-4">
       <div className="flex flex-col-reverse md:flex-row md:justify-between gap-y-8 md:gap-y-0">
         <OrderForm />
-        <OrderSummary />
+        <div className="md:w-1/4 space-y-8">
+          <OrderSummary />
+          <ProtectionLabel />
+        </div>
       </div>
     </section>
   );
@@ -114,27 +117,26 @@ function OrderForm() {
               </select>
             </div>
 
-            <div className="flex flex-col md:pr-32">
-              <label className="label-style">City/town *</label>
-              <input
-                className="billing-input"
-                type="text"
-                placeholder="Street name"
-                name="address"
-                required
-              />
-            </div>
-
-            <div className="flex flex-col md:pr-32">
-              <label className="label-style">Postal code *</label>
-              <input
-                className="billing-input"
-                type="number"
-                placeholder="Street name"
-                name="address"
-                maxLength={10}
-                required
-              />
+            <div className="flex flex-col md:flex-row gap-5 md:gap-8  md:pr-32">
+              <div className="flex flex-col w-full md:w-2/3">
+                <label className="label-style">City/town *</label>
+                <input
+                  className="billing-input"
+                  type="text"
+                  placeholder="City/town"
+                  name="city"
+                  required
+                />
+              </div>
+              <div className="flex flex-col w-full md:w-1/3">
+                <label className="label-style">Postal code *</label>
+                <input
+                  className="billing-input"
+                  type="text"
+                  placeholder="Postal code"
+                  name="postal"
+                />
+              </div>
             </div>
 
             <div className="flex flex-col md:pr-32">
@@ -149,12 +151,74 @@ function OrderForm() {
             </div>
 
             <h4 className="text-xl md:text-2xl font-semibold">Payment</h4>
+
+            <div className="border-b-2 border-blue-400 pb-2 flex flex-col space-y-2 md:space-y-0 md:flex-row md:justify-between">
+              <p className="label-style">Credit card</p>
+              <div className="flex gap-x-4">
+                {["amex", "jcb", "mastercard", "visa"].map((card) => (
+                  <Image
+                    key={Math.random() * 644}
+                    src={`/images/checkout/${card}.png`}
+                    alt={card}
+                    width={30}
+                    height={20}
+                  />
+                ))}
+              </div>
+            </div>
+
+            <div className="flex flex-col md:pr-32">
+              <label className="label-style">Card number *</label>
+              <input
+                className="billing-input"
+                type="number"
+                placeholder="Card number"
+                name="cardNumber"
+                required
+                maxLength={19}
+              />
+            </div>
+
+            <div className="flex flex-col md:pr-32">
+              <label className="label-style">Name on card *</label>
+              <input
+                className="billing-input"
+                type="number"
+                placeholder="Name on card"
+                name="cardName"
+                required
+              />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-8  md:pr-32">
+              <div className="flex flex-col">
+                <label className="label-style">Expiration date (MM / YY)</label>
+                <input
+                  className="billing-input"
+                  type="text"
+                  placeholder="Expiration date (MM / YY)"
+                  name="expiration"
+                  required
+                />
+              </div>
+              <div className="flex flex-col">
+                <label className="label-style">Security code</label>
+                <input
+                  className="billing-input"
+                  type="number"
+                  placeholder="Security code"
+                  name="security"
+                  maxLength={4}
+                />
+              </div>
+            </div>
+            {/* END OF INPUTS */}
           </div>
 
           <div className="flex items-center justify-center  md:gap-8 gap-4 ">
-            <Link passHref href={"/cart"}>
+            <Link passHref href={"/fathacks"}>
               <a className="w-auto bg-gray-500 hover:bg-gray-700 rounded-lg shadow-xl font-medium text-white px-4 py-2">
-                Back to cart
+                Go back
               </a>
             </Link>
             <button
@@ -192,7 +256,7 @@ function OrderSummary() {
     // console.log(itemBundle);
   }, [router]);
   return (
-    <div className="md:w-1/4 bg-gray-100 dark:bg-slate-600 p-4">
+    <div className="bg-gray-100 dark:bg-slate-600 p-4">
       {chosenBundle && (
         <div className="space-y-4">
           <div className="pb-6 border-b-2">
@@ -267,7 +331,29 @@ function OrderSummaryTotals({
 }
 
 function ProtectionLabel() {
-  return <div></div>;
+  return (
+    <div className="bg-gray-100 dark:bg-slate-600 p-4">
+      <div className="flex space-x-2">
+        <div className="relative w-1/2 md:w-1/4 h-24 md:h-40">
+          <Image
+            src="/images/checkout/padlock.png"
+            alt="secure"
+            layout="fill"
+            objectFit="contain"
+            className="absolute"
+          />
+        </div>
+        <div className="space-y-2 md:w-2/3">
+          <h4 className="font-semibold">100% Secure and guaranteed payment</h4>
+          <p>
+            This website has advanced safeguards in place to protect information
+            and personal data. All your personal information is encrypted and
+            secure.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 function ModalOfConfirmation() {
