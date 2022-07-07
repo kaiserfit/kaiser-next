@@ -23,6 +23,8 @@ export type PriceInformation = {
   originalPrice: number;
   discountedPrice: number;
   shipping: number;
+  id: string;
+  productId: number;
   bonus: boolean;
   photo: string;
 };
@@ -54,9 +56,22 @@ export type Faq = {
   answer5?: string;
 };
 
+export type CustomerInfo = {
+  name: string;
+  email: string;
+  phoneNumber: string;
+  uniqueEventId: string;
+  facebookCookie: string;
+};
+
 export type CustomerReview = {
   name: string;
   title: string;
   rating?: number;
   opinion?: string;
 };
+
+export type LineItems = {
+  price: string;
+  quantity: number;
+}[];

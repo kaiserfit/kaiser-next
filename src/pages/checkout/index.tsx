@@ -1,37 +1,116 @@
 import Image from "next/image";
 import Link from "next/link";
+import { v4 as uuidv4 } from "uuid";
 import { useRouter } from "next/router";
 import React, { FormEvent, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { uiActions } from "../../features/uiSlice";
+import { userActions } from "../../features/userSlice";
+import checkOut from "../../lib/checkout";
 import countries from "../../lib/checkout/countries";
 import priceInformation from "../../lib/fathacksPage/priceInformation";
 import { PriceInformation } from "../../lib/types";
 
 function CheckoutPage() {
   const dispatch = useDispatch();
+  const router = useRouter();
+  const [chosenBundle, setChosenBundle] = useState<PriceInformation>();
+
+  useEffect(() => {
+    const storedItem: { bundle: string } = JSON.parse(
+      localStorage.getItem("bundle")!
+    );
+    console.log(storedItem);
+    if (!storedItem || !Object.values(storedItem).length) {
+      alert("pls choose a bundle before proceeding");
+      router.push("/fathacks");
+      return;
+    }
+    const itemBundle = priceInformation.find(
+      (item) => item.title === storedItem.bundle
+    );
+    setChosenBundle(itemBundle);
+    // console.log(itemBundle);
+  }, [router]);
   useEffect(() => {
     dispatch(uiActions.toggleIsWindowAtTop(false));
   }, [dispatch]);
   return (
-    <section className="py-16 max-w-7xl mx-auto px-4">
-      <div className="flex flex-col-reverse md:flex-row md:justify-between gap-y-8 md:gap-y-0">
-        <OrderForm />
-        <div className="md:w-1/4 space-y-8">
-          <OrderSummary />
-          <ProtectionLabel />
+    <section className="py-20 container mx-auto px-4">
+      {chosenBundle && (
+        <div className="flex flex-col-reverse md:flex-row md:justify-between gap-y-8 md:gap-y-0 md:gap-x-8">
+          <OrderForm chosenBundle={chosenBundle} />
+          <div className="md:w-1/3 space-y-8">
+            <OrderSummary chosenBundle={chosenBundle} />
+            <ProtectionLabel />
+          </div>
         </div>
-      </div>
+      )}
     </section>
   );
 }
 
-function OrderForm() {
+function OrderForm({ chosenBundle }: { chosenBundle: PriceInformation }) {
+  const router = useRouter();
+  const dispatch = useDispatch();
+
+  const [uniqueEventId, setUniqueEventId] = useState(uuidv4());
+  const [facebookCookie, setFacebookCookie] = useState<string>();
+  const [fullName, setFullName] = useState<string>();
+  const [email, setEmail] = useState<string>();
+  const [phoneNumber, setPhoneNumber] = useState<number>();
+  const [country, setCountry] = useState<string>();
+  const [city, setCity] = useState<string>();
+  const [postalCode, setPostalCode] = useState<string>();
+  const [streetName, setStreetName] = useState<string>();
+
+  // REFERENCE FOR COOKIE : https://stackoverflow.com/questions/10730362/get-cookie-by-name
+  useEffect(() => {
+    const cookie = ("; " + document.cookie)
+      .split(`; COOKIE_NAME=_fbc`)
+      .pop()!
+      .split(";")[0];
+    setFacebookCookie(cookie);
+  }, []);
+
   const handleSubmit = (
     e:
       | FormEvent<HTMLFormElement>
       | React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {};
+  ) => {
+    e.preventDefault();
+    if (
+      !fullName ||
+      !email ||
+      !phoneNumber ||
+      !country ||
+      !city ||
+      !streetName
+    ) {
+      alert("pls fill out all inputs");
+      return;
+    }
+    const userInfo = {
+      name: fullName,
+      email,
+      phoneNumber,
+      uniqueEventId,
+      facebookCookie,
+    };
+    localStorage.setItem("customerInfo", JSON.stringify(userInfo));
+    const checkoutOptions = {
+      lineItems: [
+        {
+          price: chosenBundle.id,
+          quantity: 1,
+        },
+      ],
+      email,
+    };
+    checkOut(checkoutOptions);
+    // router.push("/checkout/success");
+  };
+
   return (
     <>
       <form
@@ -72,6 +151,8 @@ function OrderForm() {
                 placeholder="Full name"
                 name="full name"
                 required
+                value={fullName}
+                onChange={(e) => setFullName(e.currentTarget.value)}
               />
             </div>
 
@@ -80,10 +161,12 @@ function OrderForm() {
                 <label className="label-style">Phone number *</label>
                 <input
                   className="billing-input"
-                  type="text"
+                  type="tel"
                   placeholder="Phone number"
                   name="phoneNumber"
                   required
+                  value={phoneNumber}
+                  onChange={(e) => setPhoneNumber(+e.currentTarget.value)}
                 />
               </div>
               <div className="flex flex-col">
@@ -93,6 +176,8 @@ function OrderForm() {
                   type="email"
                   placeholder="Email Address"
                   name="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.currentTarget.value)}
                 />
               </div>
             </div>
@@ -108,6 +193,7 @@ function OrderForm() {
                 id="country"
                 className="billing-input"
                 required
+                onChange={(e) => setCountry(e.currentTarget.value)}
               >
                 {countries.map((country) => (
                   <option value={country.code} key={country.code}>
@@ -126,6 +212,8 @@ function OrderForm() {
                   placeholder="City/town"
                   name="city"
                   required
+                  value={city}
+                  onChange={(e) => setCity(e.currentTarget.value)}
                 />
               </div>
               <div className="flex flex-col w-full md:w-1/3">
@@ -135,6 +223,8 @@ function OrderForm() {
                   type="text"
                   placeholder="Postal code"
                   name="postal"
+                  value={postalCode}
+                  onChange={(e) => setPostalCode(e.currentTarget.value)}
                 />
               </div>
             </div>
@@ -147,12 +237,14 @@ function OrderForm() {
                 placeholder="Street name"
                 name="address"
                 required
+                value={streetName}
+                onChange={(e) => setStreetName(e.currentTarget.value)}
               />
             </div>
 
-            <h4 className="text-xl md:text-2xl font-semibold">Payment</h4>
+            {/* <h4 className="text-xl md:text-2xl font-semibold">Payment</h4> */}
 
-            <div className="border-b-2 border-blue-400 pb-2 flex flex-col space-y-2 md:space-y-0 md:flex-row md:justify-between">
+            {/* <div className="border-b-2 border-blue-400 pb-2 flex flex-col space-y-2 md:space-y-0 md:flex-row md:justify-between">
               <p className="label-style">Credit card</p>
               <div className="flex gap-x-4">
                 {["amex", "jcb", "mastercard", "visa"].map((card) => (
@@ -165,27 +257,16 @@ function OrderForm() {
                   />
                 ))}
               </div>
-            </div>
+            </div> */}
 
-            <div className="flex flex-col md:pr-32">
+            {/* <div className="flex flex-col md:pr-32">
               <label className="label-style">Card number *</label>
               <input
                 className="billing-input"
-                type="number"
+                type="tel"
+                pattern="[\d| ]{16,22}"
                 placeholder="Card number"
                 name="cardNumber"
-                required
-                maxLength={19}
-              />
-            </div>
-
-            <div className="flex flex-col md:pr-32">
-              <label className="label-style">Name on card *</label>
-              <input
-                className="billing-input"
-                type="number"
-                placeholder="Name on card"
-                name="cardName"
                 required
               />
             </div>
@@ -195,38 +276,41 @@ function OrderForm() {
                 <label className="label-style">Expiration date (MM / YY)</label>
                 <input
                   className="billing-input"
-                  type="text"
+                  type="tel"
                   placeholder="Expiration date (MM / YY)"
+                  pattern="\d\d/\d\d"
                   name="expiration"
                   required
                 />
               </div>
               <div className="flex flex-col">
-                <label className="label-style">Security code</label>
+                <label className="label-style">CVC</label>
                 <input
                   className="billing-input"
                   type="number"
-                  placeholder="Security code"
-                  name="security"
-                  maxLength={4}
+                  placeholder="CVC"
+                  name="cvc"
+                  pattern="\d{3,4}"
+                  required
                 />
               </div>
-            </div>
+            </div> */}
             {/* END OF INPUTS */}
           </div>
 
           <div className="flex items-center justify-center  md:gap-8 gap-4 ">
-            <Link passHref href={"/fathacks"}>
+            {/* <Link passHref href={"/fathacks"}>
               <a className="w-auto bg-gray-500 hover:bg-gray-700 rounded-lg shadow-xl font-medium text-white px-4 py-2">
                 Go back
               </a>
-            </Link>
+            </Link> */}
+
             <button
               type="submit"
               onClick={handleSubmit}
               className="w-auto bg-purple-500 hover:bg-purple-700 rounded-lg shadow-xl font-medium text-white px-4 py-2"
             >
-              Submit order
+              Go to payments
             </button>
           </div>
         </div>
@@ -235,26 +319,7 @@ function OrderForm() {
   );
 }
 
-function OrderSummary() {
-  const router = useRouter();
-  const [chosenBundle, setChosenBundle] = useState<PriceInformation>();
-
-  useEffect(() => {
-    const storedItem: { bundle: string } = JSON.parse(
-      localStorage.getItem("bundle")!
-    );
-    console.log(storedItem);
-    if (!storedItem || !Object.values(storedItem).length) {
-      alert("pls choose a bundle before proceeding");
-      router.push("/fathacks");
-      return;
-    }
-    const itemBundle = priceInformation.find(
-      (item) => item.title === storedItem.bundle
-    );
-    setChosenBundle(itemBundle);
-    // console.log(itemBundle);
-  }, [router]);
+function OrderSummary({ chosenBundle }: { chosenBundle: PriceInformation }) {
   return (
     <div className="bg-gray-100 dark:bg-slate-600 p-4">
       {chosenBundle && (
@@ -280,8 +345,8 @@ function OrderSummaryItem({
   chosenBundle: PriceInformation;
 }) {
   return (
-    <div className="flex px-2 h-full space-x-2">
-      <div className="relative h-20 w-1/2">
+    <div className="flex px-2 h-full justify-between space-x-2">
+      <div className="relative w-1/3 h-20">
         <Image
           src={chosenBundle.photo}
           className="rounded absolute"
@@ -291,7 +356,7 @@ function OrderSummaryItem({
           priority
         />
       </div>
-      <div className="h-20 p-1 py-2 flex flex-col justify-between w-1/2">
+      <div className="h-20 p-1 py-2 flex flex-col justify-between ">
         <h3 className="capitalize">{chosenBundle.title} bundle </h3>
         <div>
           ${chosenBundle.discountedPrice} x {chosenBundle.quantity} bottles
@@ -316,14 +381,18 @@ function OrderSummaryTotals({
           <span>${chosenBundle.discountedPrice * chosenBundle.quantity}</span>
         </div>
         <div className="w-full flex justify-between">
+          <span>Shipping</span>
           <p>{chosenBundle.shipping ? `$${chosenBundle.shipping}` : "free"}</p>
-          <span>free</span>
         </div>
       </div>
       <div className="px-2">
         <div className="w-full flex justify-between items-center text-2xl font-medium">
           <p>Total</p>
-          <span>${chosenBundle.discountedPrice * chosenBundle.quantity}</span>
+          <span>
+            $
+            {chosenBundle.discountedPrice * chosenBundle.quantity +
+              chosenBundle.shipping}
+          </span>
         </div>
       </div>
     </>
@@ -332,9 +401,9 @@ function OrderSummaryTotals({
 
 function ProtectionLabel() {
   return (
-    <div className="bg-gray-100 dark:bg-slate-600 p-4">
-      <div className="flex space-x-2">
-        <div className="relative w-1/2 md:w-1/4 h-24 md:h-40">
+    <div className="bg-gray-100 dark:bg-slate-600 p-4 space-y-4">
+      <div className="flex space-x-2 border-b-4 pb-4">
+        <div className="relative w-full md:w-1/4 h-24 md:h-40">
           <Image
             src="/images/checkout/padlock.png"
             alt="secure"
@@ -351,6 +420,15 @@ function ProtectionLabel() {
             secure.
           </p>
         </div>
+      </div>
+      <div className="relative h-60 md:h-72 w-full">
+        <Image
+          src="/images/fathacks/mb-guarantee.jpg"
+          alt=""
+          layout="fill"
+          objectFit="contain"
+          className="absolute top-0 md:-translate-y-0"
+        />
       </div>
     </div>
   );
