@@ -1,16 +1,25 @@
+import { GetServerSideProps } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import priceInformation from "../../../lib/fathacksPage/priceInformation";
-import { PriceInformation } from "../../../lib/types";
+import { CustomerInfo, PriceInformation } from "../../../lib/types";
+import { RootState } from "../../../store";
+import Stripe from "stripe";
 
-function SuccessPage() {
+function SuccessPage({ sessionId, paymentItent }: any) {
+  // console.log(paymentItent);
   const router = useRouter();
   const [chosenBundle, setChosenBundle] = useState<PriceInformation>();
+  const [name, setName] = useState<string>();
 
   useEffect(() => {
     const storedItem: { bundle: string } = JSON.parse(
       localStorage.getItem("bundle")!
+    );
+    const customerInfo: CustomerInfo = JSON.parse(
+      localStorage.getItem("customerInfo")!
     );
     if (!storedItem || !Object.values(storedItem).length) {
       alert("pls choose a bundle before proceeding");
@@ -21,8 +30,44 @@ function SuccessPage() {
       (item) => item.title === storedItem.bundle
     );
     setChosenBundle(itemBundle);
-    console.log(itemBundle);
+    setName(customerInfo.name);
+    // console.log(customerInfo.name);
+
+    // SENDING OF DATA
+    const customerName = customerInfo.name;
+    const customerEmail = customerInfo.email;
+    const customerPhone = customerInfo.phoneNumber;
+    const customerId = sessionId.customer;
+    const paymentIntentId = sessionId.payment_intent;
+    const paymentChargesId = paymentItent.charges.data[0].id;
+    const { uniqueEventId } = customerInfo;
+    const { facebookCookie } = customerInfo;
+    const productId = itemBundle?.productId;
+    const productPrice =
+      itemBundle?.discountedPrice! * itemBundle?.quantity! + itemBundle?.shipping!;
+
+    const dataToBeSent = {
+      customerName,
+      customerEmail,
+      customerPhone,
+      customerId,
+      paymentIntentId,
+      paymentChargesId,
+      uniqueEventId,
+      facebookCookie,
+      productId,
+      productPrice,
+    };
+
+    // console.log(dataToBeSent);
+
+    return () => {
+      console.log("unmounting");
+      // localStorage.removeItem("customerInfo");
+      // localStorage.removeItem("bundle");
+    };
   }, [router]);
+
   return (
     <section className="py-24 max-w-7xl mx-auto px-4 space-y-8">
       <div className="relative h-20 md:w-1/4">
@@ -44,7 +89,7 @@ function SuccessPage() {
 
       <div>
         <h4 className="text-lg">
-          Hello <span className="italic">(name or email of customer)</span>{" "}
+          Hello <span className="italic">{name}</span>{" "}
         </h4>
         <p>Kindly check your order details below.</p>
       </div>
@@ -112,5 +157,22 @@ function OrderDetails({ chosenBundle }: { chosenBundle: PriceInformation }) {
     </>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const { stripe_session_id: sessionId }: any = ctx.query;
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+    apiVersion: "2020-08-27",
+  });
+  const session = await stripe.checkout.sessions.retrieve(
+    sessionId?.toString()!
+  );
+  const paymentItent = await stripe.paymentIntents.retrieve(
+    session.payment_intent?.toString()!
+  );
+
+  return {
+    props: { sessionId: session, paymentItent },
+  };
+};
 
 export default SuccessPage;

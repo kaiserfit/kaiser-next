@@ -1,9 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
+import { v4 as uuidv4 } from "uuid";
 import { useRouter } from "next/router";
 import React, { FormEvent, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { uiActions } from "../../features/uiSlice";
+import { userActions } from "../../features/userSlice";
 import checkOut from "../../lib/checkout";
 import countries from "../../lib/checkout/countries";
 import priceInformation from "../../lib/fathacksPage/priceInformation";
@@ -50,7 +52,10 @@ function CheckoutPage() {
 
 function OrderForm({ chosenBundle }: { chosenBundle: PriceInformation }) {
   const router = useRouter();
+  const dispatch = useDispatch();
 
+  const [uniqueEventId, setUniqueEventId] = useState(uuidv4());
+  const [facebookCookie, setFacebookCookie] = useState<string>();
   const [fullName, setFullName] = useState<string>();
   const [email, setEmail] = useState<string>();
   const [phoneNumber, setPhoneNumber] = useState<number>();
@@ -58,6 +63,15 @@ function OrderForm({ chosenBundle }: { chosenBundle: PriceInformation }) {
   const [city, setCity] = useState<string>();
   const [postalCode, setPostalCode] = useState<string>();
   const [streetName, setStreetName] = useState<string>();
+
+  // REFERENCE FOR COOKIE : https://stackoverflow.com/questions/10730362/get-cookie-by-name
+  useEffect(() => {
+    const cookie = ("; " + document.cookie)
+      .split(`; COOKIE_NAME=_fbc`)
+      .pop()!
+      .split(";")[0];
+    setFacebookCookie(cookie);
+  }, []);
 
   const handleSubmit = (
     e:
@@ -76,14 +90,24 @@ function OrderForm({ chosenBundle }: { chosenBundle: PriceInformation }) {
       alert("pls fill out all inputs");
       return;
     }
-    checkOut({
+    const userInfo = {
+      name: fullName,
+      email,
+      phoneNumber,
+      uniqueEventId,
+      facebookCookie,
+    };
+    localStorage.setItem("customerInfo", JSON.stringify(userInfo));
+    const checkoutOptions = {
       lineItems: [
         {
           price: chosenBundle.id,
           quantity: 1,
         },
       ],
-    });
+      email,
+    };
+    checkOut(checkoutOptions);
     // router.push("/checkout/success");
   };
 
@@ -137,7 +161,7 @@ function OrderForm({ chosenBundle }: { chosenBundle: PriceInformation }) {
                 <label className="label-style">Phone number *</label>
                 <input
                   className="billing-input"
-                  type="number"
+                  type="tel"
                   placeholder="Phone number"
                   name="phoneNumber"
                   required
@@ -275,11 +299,11 @@ function OrderForm({ chosenBundle }: { chosenBundle: PriceInformation }) {
           </div>
 
           <div className="flex items-center justify-center  md:gap-8 gap-4 ">
-            <Link passHref href={"/fathacks"}>
+            {/* <Link passHref href={"/fathacks"}>
               <a className="w-auto bg-gray-500 hover:bg-gray-700 rounded-lg shadow-xl font-medium text-white px-4 py-2">
                 Go back
               </a>
-            </Link>
+            </Link> */}
 
             <button
               type="submit"

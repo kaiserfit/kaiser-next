@@ -1,6 +1,15 @@
 import { loadStripe, Stripe } from "@stripe/stripe-js";
 
-const checkOut = async ({ lineItems }: any) => {
+const checkOut = async ({
+  lineItems,
+  email,
+}: {
+  lineItems: {
+    price?: string | undefined;
+    quantity?: number | undefined;
+  }[];
+  email: string;
+}) => {
   let stripePromise: any = null;
 
   const getStripe = () => {
@@ -17,8 +26,10 @@ const checkOut = async ({ lineItems }: any) => {
   await stripe.redirectToCheckout({
     mode: "payment",
     lineItems,
-    successUrl: "http://localhost:3000/checkout/success",
-    cancelUrl: "http://localhost:3000/checkout",
+    customerEmail: email,
+    successUrl: `${process.env.NEXT_PUBLIC_URL}/checkout/success?stripe_session_id={CHECKOUT_SESSION_ID}`,
+    cancelUrl: `${process.env.NEXT_PUBLIC_URL}/checkout`,
+    clientReferenceId: `${email}${Date.now()}`,
   });
 };
 
