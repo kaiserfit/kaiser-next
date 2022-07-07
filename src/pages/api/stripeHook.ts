@@ -4,7 +4,7 @@ import Stripe from "stripe";
 
 type Data = {
   session?: Stripe.Checkout.Session;
-  message?: string;
+  // message?: string;
 };
 
 // const stripe = new Stripe();
