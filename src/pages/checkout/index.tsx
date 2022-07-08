@@ -360,7 +360,7 @@ function OrderForm({
             <button
               type="submit"
               onClick={handleSubmit}
-              className="w-auto bg-purple-500 hover:bg-purple-700 rounded-lg shadow-xl font-medium text-white px-4 py-2"
+              className="w-auto outline-none bg-purple-500 hover:bg-purple-700 rounded-lg shadow-xl font-medium text-white px-4 py-2"
             >
               Go to payments
             </button>
