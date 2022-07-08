@@ -7,8 +7,9 @@ import priceInformation from "../../../lib/fathacksPage/priceInformation";
 import { CustomerInfo, PriceInformation } from "../../../lib/types";
 import { RootState } from "../../../store";
 import Stripe from "stripe";
+import generateId from "../../../lib/randomString";
 
-function SuccessPage({ sessionId, paymentItent }: any) {
+function SuccessPage({ sessionId, paymentItent, userPassword }: any) {
   // console.log(paymentItent);
   const router = useRouter();
   const [chosenBundle, setChosenBundle] = useState<PriceInformation>();
@@ -38,19 +39,23 @@ function SuccessPage({ sessionId, paymentItent }: any) {
     const customerEmail = customerInfo.email;
     const customerPhone = customerInfo.phoneNumber;
     const customerId = sessionId.customer;
+    const limitedOffer = customerInfo.limitedOffer;
     const paymentIntentId = sessionId.payment_intent;
     const paymentChargesId = paymentItent.charges.data[0].id;
     const { uniqueEventId } = customerInfo;
     const { facebookCookie } = customerInfo;
     const productId = itemBundle?.productId;
     const productPrice =
-      itemBundle?.discountedPrice! * itemBundle?.quantity! + itemBundle?.shipping!;
+      itemBundle?.discountedPrice! * itemBundle?.quantity! +
+      itemBundle?.shipping!;
 
     const dataToBeSent = {
       customerName,
       customerEmail,
       customerPhone,
       customerId,
+      userPassword,
+      limitedOffer,
       paymentIntentId,
       paymentChargesId,
       uniqueEventId,
@@ -59,7 +64,27 @@ function SuccessPage({ sessionId, paymentItent }: any) {
       productPrice,
     };
 
-    // console.log(dataToBeSent);
+    console.log(dataToBeSent);
+
+    const sendData = async () => {
+      const resp = await fetch(
+        "https://pay.kaiserfitapp.com/webpoint/post.php",
+        {
+          method: "POST",
+          body: JSON.stringify(dataToBeSent),
+          // headers: {
+          //   "Content-Type": "application/json",
+          // },
+        }
+      );
+      // console.log(await resp.json());
+      const data = await resp.json();
+
+      // const data = await resp.json();
+      console.log(data);
+    };
+
+    sendData();
 
     return () => {
       console.log("unmounting");
@@ -169,10 +194,20 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const paymentItent = await stripe.paymentIntents.retrieve(
     session.payment_intent?.toString()!
   );
+  const userPassword = generateId(8);
+  const customer = await stripe.customers.update(
+    session.customer?.toString()!,
+    {
+      metadata: { userPassword },
+    }
+  );
 
   return {
-    props: { sessionId: session, paymentItent },
+    props: { sessionId: session, paymentItent, userPassword },
   };
 };
 
 export default SuccessPage;
+function uuidv4() {
+  throw new Error("Function not implemented.");
+}
