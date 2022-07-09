@@ -10,7 +10,7 @@ import Stripe from "stripe";
 import generateId from "../../../lib/randomString";
 
 function SuccessPage({ sessionId, paymentItent, userPassword }: any) {
-  // console.log(paymentItent);
+  // console.log(sessionId);
   const router = useRouter();
   const [chosenBundle, setChosenBundle] = useState<PriceInformation>();
   const [name, setName] = useState<string>();
@@ -64,7 +64,7 @@ function SuccessPage({ sessionId, paymentItent, userPassword }: any) {
       productPrice,
     };
 
-    console.log(dataToBeSent);
+    // console.log(dataToBeSent);
 
     const sendData = async () => {
       const resp = await fetch(
@@ -72,22 +72,37 @@ function SuccessPage({ sessionId, paymentItent, userPassword }: any) {
         {
           method: "POST",
           body: JSON.stringify(dataToBeSent),
-          // headers: {
-          //   "Content-Type": "application/json",
-          // },
         }
       );
-      // console.log(await resp.json());
-      const data = await resp.json();
-
       // const data = await resp.json();
+      // console.log(data);
+    };
+
+    // sendData();
+
+    const updateData = async () => {
+      console.log("start update");
+      const resp = await fetch("/api/stripeUpdate", {
+        method: "POST",
+        body: JSON.stringify({ itemBundle, paymentIntentId }),
+      });
+      const data = await resp.json();
       console.log(data);
     };
 
-    sendData();
+    updateData();
+
+    // const updatePaymentDesc = async () => {
+    //   await stripeClient.paymentIntents.update(paymentItent.id, {
+    //     description: `${itemBundle?.productId!}`,
+    //   });
+    //   console.log("updated");
+    // };
+
+    // updatePaymentDesc();
 
     return () => {
-      console.log("unmounting");
+      // console.log("unmounting");
       // localStorage.removeItem("customerInfo");
       // localStorage.removeItem("bundle");
     };
@@ -185,17 +200,18 @@ function OrderDetails({ chosenBundle }: { chosenBundle: PriceInformation }) {
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const { stripe_session_id: sessionId }: any = ctx.query;
-  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  const stripeServer = new Stripe(process.env.STRIPE_SECRET_KEY!, {
     apiVersion: "2020-08-27",
   });
-  const session = await stripe.checkout.sessions.retrieve(
+  const session = await stripeServer.checkout.sessions.retrieve(
     sessionId?.toString()!
   );
-  const paymentItent = await stripe.paymentIntents.retrieve(
+  const paymentItent = await stripeServer.paymentIntents.retrieve(
     session.payment_intent?.toString()!
   );
+
   const userPassword = generateId(8);
-  const customer = await stripe.customers.update(
+  const customer = await stripeServer.customers.update(
     session.customer?.toString()!,
     {
       metadata: { userPassword },
@@ -208,6 +224,3 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 };
 
 export default SuccessPage;
-function uuidv4() {
-  throw new Error("Function not implemented.");
-}

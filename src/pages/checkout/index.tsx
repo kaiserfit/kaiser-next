@@ -21,7 +21,6 @@ function CheckoutPage() {
     const storedItem: { bundle: string } = JSON.parse(
       localStorage.getItem("bundle")!
     );
-    console.log(storedItem);
     if (!storedItem || !Object.values(storedItem).length) {
       alert("pls choose a bundle before proceeding");
       router.push("/fathacks");
@@ -31,7 +30,6 @@ function CheckoutPage() {
       (item) => item.title === storedItem.bundle
     );
     setChosenBundle(itemBundle);
-    // console.log(itemBundle);
   }, [router]);
   useEffect(() => {
     dispatch(uiActions.toggleIsWindowAtTop(false));
