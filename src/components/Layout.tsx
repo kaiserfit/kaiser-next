@@ -69,22 +69,22 @@ function Navbar({
             : "bg-indigo-600/50 py-1 backdrop-blur-sm rounded-br-full rounded-bl-full"
         } px-4 pr-8 md:pr-16 w-full flex justify-between items-center fixed top-0 left-0 z-20 transition-all duration-500 ease-in-out`}
       >
-        <Link rel="preload" passHref href={"/"}>
-          <div
-            onClick={() => setShowMenu(false)}
-            className="relative w-1/2 md:w-1/3 lg:w-1/5 h-12 cursor-pointer"
-          >
-            <Image
-              src={"/images/kaiser.webp"}
-              alt={"yep"}
-              layout="fill"
-              objectFit="contain"
-              className="absolute"
-              priority={true}
-            />
-            {/* <KaiserfitLogo /> */}
-          </div>
-        </Link>
+        {/* <Link rel="preload" passHref href={"/"}> */}
+        <div
+          onClick={() => setShowMenu(false)}
+          className="relative w-1/2 md:w-1/3 lg:w-1/5 h-12 cursor-pointer"
+        >
+          <Image
+            src={"/images/kaiser.webp"}
+            alt={"yep"}
+            layout="fill"
+            objectFit="contain"
+            className="absolute"
+            priority={true}
+          />
+          {/* <KaiserfitLogo /> */}
+        </div>
+        {/* </Link> */}
         {!isQuizAnswered ||
           (router.pathname !== "/fathacks" && (
             <Link passHref href="/quiz">
@@ -94,14 +94,14 @@ function Navbar({
             </Link>
           ))}
 
-        <button
+        {/* <button
           className={`${
             showMenu ? "text-red-300" : ""
           } inline-block md:hidden text-3xl relative hover:opacity-[0.85]`}
           onClick={handleToggle}
         >
           <GiHamburgerMenu />
-        </button>
+        </button> */}
       </header>
       <Menu setShowMenu={setShowMenu} showMenu={showMenu} />
     </>
@@ -156,30 +156,22 @@ function Footer() {
   const FIRST_COL = [
     {
       label: "Order",
-      link: "/order",
-    },
-    {
-      label: "Menu",
-      link: "/menu",
-    },
-    {
-      label: "Menu QR Code",
-      link: "/qr",
+      link: "/fathacks#pricing",
     },
   ];
 
   const SECOND_COL = [
     {
       label: "About us",
-      link: "/about",
+      link: "/fathacks",
     },
-    {
-      label: "Contact us",
-      link: "/contact",
-    },
+    // {
+    //   label: "Contact us",
+    //   link: "/contact",
+    // },
     {
       label: "Frequently Asked Questions",
-      link: "/faq",
+      link: "/fathacks#FAQ",
     },
   ];
 
@@ -216,7 +208,7 @@ function Footer() {
             <div className="text-sm font-medium py-1">
               Copyright © {new Date().getFullYear()}{" "}
               <Link href={"/"}>
-                <a>{/* {process.env.siteTitle} */} name of site</a>
+                <a>{/* {process.env.siteTitle} */} Kaiserfit</a>
               </Link>
             </div>
           </div>

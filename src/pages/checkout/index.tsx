@@ -2,10 +2,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { v4 as uuidv4 } from "uuid";
 import { useRouter } from "next/router";
-import React, { FormEvent, useEffect, useState } from "react";
+import React, { Dispatch, FormEvent, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { uiActions } from "../../features/uiSlice";
-import { userActions } from "../../features/userSlice";
 import checkOut from "../../lib/checkout";
 import countries from "../../lib/checkout/countries";
 import priceInformation from "../../lib/fathacksPage/priceInformation";
@@ -15,34 +14,36 @@ function CheckoutPage() {
   const dispatch = useDispatch();
   const router = useRouter();
   const [chosenBundle, setChosenBundle] = useState<PriceInformation>();
+  const [limitedOffer, setLimitedOffer] = useState(true);
 
   useEffect(() => {
     const storedItem: { bundle: string } = JSON.parse(
       localStorage.getItem("bundle")!
     );
-    console.log(storedItem);
     if (!storedItem || !Object.values(storedItem).length) {
       alert("pls choose a bundle before proceeding");
       router.push("/fathacks");
       return;
     }
-    const itemBundle = priceInformation.find(
+    const itemBundle: PriceInformation | undefined = priceInformation.find(
       (item) => item.title === storedItem.bundle
     );
     setChosenBundle(itemBundle);
-    // console.log(itemBundle);
   }, [router]);
+
   useEffect(() => {
     dispatch(uiActions.toggleIsWindowAtTop(false));
   }, [dispatch]);
+
   return (
     <section className="py-20 container mx-auto px-4">
       {chosenBundle && (
         <div className="flex flex-col-reverse md:flex-row md:justify-between gap-y-8 md:gap-y-0 md:gap-x-8">
-          <OrderForm chosenBundle={chosenBundle} />
+          <OrderForm chosenBundle={chosenBundle} limitedOffer={limitedOffer} />
           <div className="md:w-1/3 space-y-8">
             <OrderSummary chosenBundle={chosenBundle} />
             <ProtectionLabel />
+            <LimitedOffer setLimitedOffer={setLimitedOffer} />
           </div>
         </div>
       )}
@@ -50,27 +51,68 @@ function CheckoutPage() {
   );
 }
 
-function OrderForm({ chosenBundle }: { chosenBundle: PriceInformation }) {
-  const router = useRouter();
-  const dispatch = useDispatch();
+function OrderForm({
+  chosenBundle,
+  limitedOffer,
+}: {
+  chosenBundle: PriceInformation;
+  limitedOffer: boolean;
+}) {
+  // const router = useRouter();
+  // const dispatch = useDispatch();
 
-  const [uniqueEventId, setUniqueEventId] = useState(uuidv4());
   const [facebookCookie, setFacebookCookie] = useState<string>();
   const [fullName, setFullName] = useState<string>();
   const [email, setEmail] = useState<string>();
-  const [phoneNumber, setPhoneNumber] = useState<number>();
+  const [phoneNumber, setPhoneNumber] = useState<string | number>();
   const [country, setCountry] = useState<string>();
   const [city, setCity] = useState<string>();
   const [postalCode, setPostalCode] = useState<string>();
   const [streetName, setStreetName] = useState<string>();
 
-  // REFERENCE FOR COOKIE : https://stackoverflow.com/questions/10730362/get-cookie-by-name
   useEffect(() => {
-    const cookie = ("; " + document.cookie)
-      .split(`; COOKIE_NAME=_fbc`)
-      .pop()!
-      .split(";")[0];
-    setFacebookCookie(cookie);
+    // const setCookie = (cname: any, cvalue: any, exdays: any) => {
+    //   const d = new Date();
+    //   d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
+    //   let expires = "expires=" + d.toUTCString();
+    //   document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+    // };
+
+    const getCookie = (cname: string) => {
+      let name = cname + "=";
+      let decodedCookie = decodeURIComponent(document.cookie);
+      let ca = decodedCookie.split(";");
+      for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) == " ") {
+          c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+          return c.substring(name.length, c.length);
+        }
+      }
+      return "";
+    };
+    // getCookie("_fbc");
+    const checkCookie = () => {
+      const user: any = getCookie("_fbc");
+      if (user) {
+        setFacebookCookie(user);
+        return;
+      }
+      const user2: any = getCookie("_fbp");
+      if (user2) {
+        setFacebookCookie(user);
+        return;
+      }
+      // else {
+      //   user = prompt("Please enter your name:", "");
+      //   if (user != "" && user != null) {
+      //     setCookie("_fbc", user, 365);
+      //   }
+      // }
+    };
+    checkCookie();
   }, []);
 
   const handleSubmit = (
@@ -94,7 +136,8 @@ function OrderForm({ chosenBundle }: { chosenBundle: PriceInformation }) {
       name: fullName,
       email,
       phoneNumber,
-      uniqueEventId,
+      limitedOffer,
+      uniqueEventId: uuidv4(),
       facebookCookie,
     };
     localStorage.setItem("customerInfo", JSON.stringify(userInfo));
@@ -161,22 +204,23 @@ function OrderForm({ chosenBundle }: { chosenBundle: PriceInformation }) {
                 <label className="label-style">Phone number *</label>
                 <input
                   className="billing-input"
-                  type="tel"
+                  type="text"
                   placeholder="Phone number"
                   name="phoneNumber"
                   required
                   value={phoneNumber}
-                  onChange={(e) => setPhoneNumber(+e.currentTarget.value)}
+                  onChange={(e) => setPhoneNumber(e.currentTarget.value)}
                 />
               </div>
               <div className="flex flex-col">
-                <label className="label-style">Email address</label>
+                <label className="label-style">Email address *</label>
                 <input
                   className="billing-input"
                   type="email"
                   placeholder="Email Address"
                   name="email"
                   value={email}
+                  required
                   onChange={(e) => setEmail(e.currentTarget.value)}
                 />
               </div>
@@ -308,7 +352,7 @@ function OrderForm({ chosenBundle }: { chosenBundle: PriceInformation }) {
             <button
               type="submit"
               onClick={handleSubmit}
-              className="w-auto bg-purple-500 hover:bg-purple-700 rounded-lg shadow-xl font-medium text-white px-4 py-2"
+              className="w-auto outline-none bg-purple-500 hover:bg-purple-700 rounded-lg shadow-xl font-medium text-white px-4 py-2"
             >
               Go to payments
             </button>
@@ -429,6 +473,69 @@ function ProtectionLabel() {
           objectFit="contain"
           className="absolute top-0 md:-translate-y-0"
         />
+      </div>
+    </div>
+  );
+}
+
+function LimitedOffer({
+  setLimitedOffer,
+}: {
+  setLimitedOffer: Dispatch<React.SetStateAction<boolean>>;
+}) {
+  return (
+    <div className="bg-gray-100 dark:bg-slate-600 space-y-4">
+      <div className="relative h-40 bg-gray-200 dark:bg-slate-700">
+        <Image
+          src="/images/checkout/limited-offer.png"
+          alt="limited offer"
+          layout="fill"
+          objectFit="contain"
+          className="absolute"
+        />
+      </div>
+      <div className="text-center p-4 space-y-3">
+        <div className="space-y-2">
+          <div>
+            <h4 className="text-4xl font-bold">
+              $0 <span className="line-through text-sm">$79</span>
+            </h4>
+          </div>
+          <h4 className="text-xl md:text-2xl font-semibold">
+            Grab this one time offer
+          </h4>
+          <p>
+            <span className="font-semibold">One time Offer:</span> Join our most
+            successful members who lose the most weight EFFORTLESSLY in the
+            Kaiser Coach Platinum absolutely FREE and Supercharge Your Fat Loss.
+            Get Monthly cooking videos, workout videos, cook books, weight loss
+            secrets & MUCH MORE!{" "}
+            <span className="font-semibold">
+              Get all of this for the first 30 days 100% FREE!
+            </span>{" "}
+            After that, you will be billed $79/Month and you can cancel anytime.{" "}
+            <span className="font-semibold">
+              Plus, get the Divine Desserts Cookbook absolutely FREE (normally
+              $29.95)
+            </span>
+          </p>
+        </div>
+        <div className="flex justify-center gap-x-4 items-center">
+          <input
+            onChange={(e) => setLimitedOffer(e.target.checked)}
+            type="checkbox"
+            name="limited"
+            id="limited"
+            className="cursor-pointer scale-150"
+            defaultChecked={true}
+          />
+          <label
+            htmlFor="limited"
+            className="text-2xl font-medium cursor-pointer"
+          >
+            Sign me up
+          </label>
+        </div>
       </div>
     </div>
   );

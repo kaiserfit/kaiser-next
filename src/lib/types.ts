@@ -60,6 +60,7 @@ export type CustomerInfo = {
   name: string;
   email: string;
   phoneNumber: string;
+  limitedOffer: boolean;
   uniqueEventId: string;
   facebookCookie: string;
 };

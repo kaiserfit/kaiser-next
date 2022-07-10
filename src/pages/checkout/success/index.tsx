@@ -2,15 +2,18 @@ import { GetServerSideProps } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import priceInformation from "../../../lib/fathacksPage/priceInformation";
 import { CustomerInfo, PriceInformation } from "../../../lib/types";
 import { RootState } from "../../../store";
 import Stripe from "stripe";
+import generateId from "../../../lib/randomString";
+import { uiActions } from "../../../features/uiSlice";
 
-function SuccessPage({ sessionId, paymentItent }: any) {
-  // console.log(paymentItent);
+function SuccessPage({ sessionId, paymentItent, userPassword }: any) {
+  // console.log(sessionId);
   const router = useRouter();
+  const dispatch = useDispatch();
   const [chosenBundle, setChosenBundle] = useState<PriceInformation>();
   const [name, setName] = useState<string>();
 
@@ -31,26 +34,29 @@ function SuccessPage({ sessionId, paymentItent }: any) {
     );
     setChosenBundle(itemBundle);
     setName(customerInfo.name);
-    // console.log(customerInfo.name);
 
     // SENDING OF DATA
     const customerName = customerInfo.name;
     const customerEmail = customerInfo.email;
     const customerPhone = customerInfo.phoneNumber;
     const customerId = sessionId.customer;
+    const limitedOffer = customerInfo.limitedOffer;
     const paymentIntentId = sessionId.payment_intent;
     const paymentChargesId = paymentItent.charges.data[0].id;
     const { uniqueEventId } = customerInfo;
     const { facebookCookie } = customerInfo;
     const productId = itemBundle?.productId;
     const productPrice =
-      itemBundle?.discountedPrice! * itemBundle?.quantity! + itemBundle?.shipping!;
+      itemBundle?.discountedPrice! * itemBundle?.quantity! +
+      itemBundle?.shipping!;
 
     const dataToBeSent = {
       customerName,
       customerEmail,
       customerPhone,
       customerId,
+      userPassword,
+      limitedOffer,
       paymentIntentId,
       paymentChargesId,
       uniqueEventId,
@@ -59,14 +65,41 @@ function SuccessPage({ sessionId, paymentItent }: any) {
       productPrice,
     };
 
-    // console.log(dataToBeSent);
+    console.log(dataToBeSent);
+
+    const sendData = async () => {
+      const resp = await fetch(
+        "https://pay.kaiserfitapp.com/webpoint/post.php",
+        {
+          method: "POST",
+          body: JSON.stringify(dataToBeSent),
+        }
+      );
+      // const data = await resp.json();
+      // console.log(data);
+    };
+
+    // sendData();
+
+    const updateData = async () => {
+      const resp = await fetch("/api/stripeUpdate", {
+        method: "POST",
+        body: JSON.stringify({ itemBundle, paymentIntentId }),
+      });
+      const data = await resp.json();
+      console.log(data);
+    };
+
+    updateData();
+
+    dispatch(uiActions.toggleIsWindowAtTop(false));
 
     return () => {
-      console.log("unmounting");
+      // console.log("unmounting");
       // localStorage.removeItem("customerInfo");
       // localStorage.removeItem("bundle");
     };
-  }, [router]);
+  }, [router, dispatch]);
 
   return (
     <section className="py-24 max-w-7xl mx-auto px-4 space-y-8">
@@ -160,18 +193,26 @@ function OrderDetails({ chosenBundle }: { chosenBundle: PriceInformation }) {
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const { stripe_session_id: sessionId }: any = ctx.query;
-  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  const stripeServer = new Stripe(process.env.STRIPE_SECRET_KEY!, {
     apiVersion: "2020-08-27",
   });
-  const session = await stripe.checkout.sessions.retrieve(
+  const session = await stripeServer.checkout.sessions.retrieve(
     sessionId?.toString()!
   );
-  const paymentItent = await stripe.paymentIntents.retrieve(
+  const paymentItent = await stripeServer.paymentIntents.retrieve(
     session.payment_intent?.toString()!
   );
 
+  const userPassword = generateId(8);
+  const customer = await stripeServer.customers.update(
+    session.customer?.toString()!,
+    {
+      metadata: { userPassword },
+    }
+  );
+
   return {
-    props: { sessionId: session, paymentItent },
+    props: { sessionId: session, paymentItent, userPassword },
   };
 };
 
