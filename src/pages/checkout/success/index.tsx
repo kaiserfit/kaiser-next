@@ -2,16 +2,18 @@ import { GetServerSideProps } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import priceInformation from "../../../lib/fathacksPage/priceInformation";
 import { CustomerInfo, PriceInformation } from "../../../lib/types";
 import { RootState } from "../../../store";
 import Stripe from "stripe";
 import generateId from "../../../lib/randomString";
+import { uiActions } from "../../../features/uiSlice";
 
 function SuccessPage({ sessionId, paymentItent, userPassword }: any) {
   // console.log(sessionId);
   const router = useRouter();
+  const dispatch = useDispatch();
   const [chosenBundle, setChosenBundle] = useState<PriceInformation>();
   const [name, setName] = useState<string>();
 
@@ -32,7 +34,6 @@ function SuccessPage({ sessionId, paymentItent, userPassword }: any) {
     );
     setChosenBundle(itemBundle);
     setName(customerInfo.name);
-    // console.log(customerInfo.name);
 
     // SENDING OF DATA
     const customerName = customerInfo.name;
@@ -64,7 +65,7 @@ function SuccessPage({ sessionId, paymentItent, userPassword }: any) {
       productPrice,
     };
 
-    // console.log(dataToBeSent);
+    console.log(dataToBeSent);
 
     const sendData = async () => {
       const resp = await fetch(
@@ -81,7 +82,6 @@ function SuccessPage({ sessionId, paymentItent, userPassword }: any) {
     // sendData();
 
     const updateData = async () => {
-      console.log("start update");
       const resp = await fetch("/api/stripeUpdate", {
         method: "POST",
         body: JSON.stringify({ itemBundle, paymentIntentId }),
@@ -92,21 +92,14 @@ function SuccessPage({ sessionId, paymentItent, userPassword }: any) {
 
     updateData();
 
-    // const updatePaymentDesc = async () => {
-    //   await stripeClient.paymentIntents.update(paymentItent.id, {
-    //     description: `${itemBundle?.productId!}`,
-    //   });
-    //   console.log("updated");
-    // };
-
-    // updatePaymentDesc();
+    dispatch(uiActions.toggleIsWindowAtTop(false));
 
     return () => {
       // console.log("unmounting");
       // localStorage.removeItem("customerInfo");
       // localStorage.removeItem("bundle");
     };
-  }, [router]);
+  }, [router, dispatch]);
 
   return (
     <section className="py-24 max-w-7xl mx-auto px-4 space-y-8">

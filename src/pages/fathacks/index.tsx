@@ -25,17 +25,16 @@ import video from "../../lib/vidalytics";
 import { RootState } from "../../store";
 import team from "../../lib/fathacksPage/team";
 import faqData from "../../lib/fathacksPage/faq";
-import ReactPaginate from "react-paginate";
-import usePaginate from "../../hooks/usePaginate";
 import customerReviews from "../../lib/fathacksPage/reviews";
 
 const lazyOptions = { threshold: 0.035, triggerOnce: true };
 
 function FathacksPage() {
+  const router = useRouter();
   useEffect(() => {
-    setTimeout(() => {
-      // SCROLL TO PRICING SECTION
-    }, 400000);
+    // setTimeout(() => {
+    //   // SCROLL TO PRICING SECTION
+    // }, 400000);
   }, []);
 
   return (
@@ -643,10 +642,11 @@ function FAQSection() {
   }, [inView]);
   return (
     <section
+      id="FAQ"
       ref={ref}
       className={`container mx-auto space-y-6 ${
         isInView ? "opacity-100 -translate-x-0" : "opacity-0 -translate-x-8"
-      } transition-all duration-700 ease-in-out`}
+      } transition-all duration-700 ease-in-out scroll-pt-8`}
     >
       <div className="text-center">
         <h2 className="text-3xl md:text-5xl font-bold">

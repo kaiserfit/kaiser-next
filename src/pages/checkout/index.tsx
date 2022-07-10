@@ -5,7 +5,6 @@ import { useRouter } from "next/router";
 import React, { Dispatch, FormEvent, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { uiActions } from "../../features/uiSlice";
-import { userActions } from "../../features/userSlice";
 import checkOut from "../../lib/checkout";
 import countries from "../../lib/checkout/countries";
 import priceInformation from "../../lib/fathacksPage/priceInformation";
@@ -26,14 +25,16 @@ function CheckoutPage() {
       router.push("/fathacks");
       return;
     }
-    const itemBundle = priceInformation.find(
+    const itemBundle: PriceInformation | undefined = priceInformation.find(
       (item) => item.title === storedItem.bundle
     );
     setChosenBundle(itemBundle);
   }, [router]);
+
   useEffect(() => {
     dispatch(uiActions.toggleIsWindowAtTop(false));
   }, [dispatch]);
+
   return (
     <section className="py-20 container mx-auto px-4">
       {chosenBundle && (
@@ -42,10 +43,7 @@ function CheckoutPage() {
           <div className="md:w-1/3 space-y-8">
             <OrderSummary chosenBundle={chosenBundle} />
             <ProtectionLabel />
-            <LimitedOffer
-              limitedOffer={limitedOffer}
-              setLimitedOffer={setLimitedOffer}
-            />
+            <LimitedOffer setLimitedOffer={setLimitedOffer} />
           </div>
         </div>
       )}
@@ -60,10 +58,9 @@ function OrderForm({
   chosenBundle: PriceInformation;
   limitedOffer: boolean;
 }) {
-  const router = useRouter();
-  const dispatch = useDispatch();
+  // const router = useRouter();
+  // const dispatch = useDispatch();
 
-  const [uniqueEventId, setUniqueEventId] = useState(uuidv4());
   const [facebookCookie, setFacebookCookie] = useState<string>();
   const [fullName, setFullName] = useState<string>();
   const [email, setEmail] = useState<string>();
@@ -73,14 +70,13 @@ function OrderForm({
   const [postalCode, setPostalCode] = useState<string>();
   const [streetName, setStreetName] = useState<string>();
 
-  // REFERENCE FOR COOKIE : https://stackoverflow.com/questions/10730362/get-cookie-by-name
   useEffect(() => {
-    const setCookie = (cname: any, cvalue: any, exdays: any) => {
-      const d = new Date();
-      d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
-      let expires = "expires=" + d.toUTCString();
-      document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-    };
+    // const setCookie = (cname: any, cvalue: any, exdays: any) => {
+    //   const d = new Date();
+    //   d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
+    //   let expires = "expires=" + d.toUTCString();
+    //   document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+    // };
 
     const getCookie = (cname: string) => {
       let name = cname + "=";
@@ -92,23 +88,20 @@ function OrderForm({
           c = c.substring(1);
         }
         if (c.indexOf(name) == 0) {
-          // console.log(name.length, c.length);
           return c.substring(name.length, c.length);
         }
       }
       return "";
     };
     // getCookie("_fbc");
-    function checkCookie() {
-      let user: any = getCookie("_fbc");
-      if (user != "") {
-        // alert("Welcome again " + user);
+    const checkCookie = () => {
+      const user: any = getCookie("_fbc");
+      if (user) {
         setFacebookCookie(user);
         return;
       }
-      let user2: any = getCookie("_fbp");
-      if (user2 != "") {
-        // alert("Welcome again " + user);
+      const user2: any = getCookie("_fbp");
+      if (user2) {
         setFacebookCookie(user);
         return;
       }
@@ -118,7 +111,7 @@ function OrderForm({
       //     setCookie("_fbc", user, 365);
       //   }
       // }
-    }
+    };
     checkCookie();
   }, []);
 
@@ -144,7 +137,7 @@ function OrderForm({
       email,
       phoneNumber,
       limitedOffer,
-      uniqueEventId,
+      uniqueEventId: uuidv4(),
       facebookCookie,
     };
     localStorage.setItem("customerInfo", JSON.stringify(userInfo));
@@ -220,13 +213,14 @@ function OrderForm({
                 />
               </div>
               <div className="flex flex-col">
-                <label className="label-style">Email address</label>
+                <label className="label-style">Email address *</label>
                 <input
                   className="billing-input"
                   type="email"
                   placeholder="Email Address"
                   name="email"
                   value={email}
+                  required
                   onChange={(e) => setEmail(e.currentTarget.value)}
                 />
               </div>
@@ -486,10 +480,8 @@ function ProtectionLabel() {
 
 function LimitedOffer({
   setLimitedOffer,
-  limitedOffer,
 }: {
   setLimitedOffer: Dispatch<React.SetStateAction<boolean>>;
-  limitedOffer: boolean;
 }) {
   return (
     <div className="bg-gray-100 dark:bg-slate-600 space-y-4">
