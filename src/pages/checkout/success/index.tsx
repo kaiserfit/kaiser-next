@@ -117,7 +117,7 @@ function SuccessPage({ sessionId, paymentItent, userPassword }: any) {
         <h2 className="text-xl md:text-2xl font-bold">
           Thank you for choosing us!
         </h2>
-        <h3 className="text-lg font-medium">Your order is a confirmed!</h3>
+        <h3 className="text-lg font-medium">Your order has been confirmed!</h3>
       </div>
 
       <div>

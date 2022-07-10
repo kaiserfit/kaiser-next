@@ -69,6 +69,7 @@ function OrderForm({
   const [city, setCity] = useState<string>();
   const [postalCode, setPostalCode] = useState<string>();
   const [streetName, setStreetName] = useState<string>();
+  const [isProccessingInfo, setIsProccessingInfo] = useState(false);
 
   useEffect(() => {
     // const setCookie = (cname: any, cvalue: any, exdays: any) => {
@@ -121,6 +122,7 @@ function OrderForm({
       | React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     e.preventDefault();
+    setIsProccessingInfo(true);
     if (
       !fullName ||
       !email ||
@@ -130,8 +132,10 @@ function OrderForm({
       !streetName
     ) {
       alert("pls fill out all inputs");
+      setIsProccessingInfo(false);
       return;
     }
+
     const userInfo = {
       name: fullName,
       email,
@@ -351,10 +355,15 @@ function OrderForm({
 
             <button
               type="submit"
+              disabled={isProccessingInfo}
               onClick={handleSubmit}
-              className="w-auto outline-none bg-purple-500 hover:bg-purple-700 rounded-lg shadow-xl font-medium text-white px-4 py-2"
+              className={`w-auto outline-none  rounded-lg shadow-xl font-medium text-white px-4 py-2 ${
+                isProccessingInfo
+                  ? "bg-transparent border-2 border-purple-500 cursor-not-allowed"
+                  : "bg-purple-500 hover:bg-purple-700"
+              }`}
             >
-              Go to payments
+              {isProccessingInfo ? "Processing..." : "Go to payments"}
             </button>
           </div>
         </div>
