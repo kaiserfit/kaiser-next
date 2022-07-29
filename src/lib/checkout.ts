@@ -15,7 +15,7 @@ const checkOut = async ({
   const getStripe = () => {
     if (!stripePromise) {
       stripePromise = loadStripe(
-        process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
+        "pk_test_51LIQslAtSFPFrKY5mJdnQuad2wmALyct6SXkoXBaibPgsbyI5Lc3TZjU9avJBICFuY6vgJvvPNc8uhRraZo6YQ4S00qsiff8sZ"
       );
     }
     return stripePromise;
@@ -27,8 +27,8 @@ const checkOut = async ({
     mode: "payment",
     lineItems,
     customerEmail: email,
-    successUrl: `${process.env.NEXT_PUBLIC_URL}/checkout/success?stripe_session_id={CHECKOUT_SESSION_ID}`,
-    cancelUrl: `${process.env.NEXT_PUBLIC_URL}/checkout`,
+    successUrl: `https://www.queenformula.net/checkout/success?stripe_session_id={CHECKOUT_SESSION_ID}`,
+    cancelUrl: `https://www.queenformula.net/checkout`,
     clientReferenceId: `${email}${Date.now()}`,
   });
 };

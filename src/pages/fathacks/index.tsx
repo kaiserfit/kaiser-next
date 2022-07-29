@@ -560,11 +560,11 @@ function TeamsSection() {
       >
         <div className="space-y-4 text-center max-w-xl">
           <h2 className="text-3xl md:text-5xl font-bold">Our team</h2>
-          <p className=" text-gray-400">
+          {/* <p className=" text-gray-400">
             Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nobis, in
             quisquam. Molestiae cupiditate iure quaerat illum enim aspernatur
             omnis, autem natus corrupti.
-          </p>
+          </p> */}
         </div>
 
         <Team />

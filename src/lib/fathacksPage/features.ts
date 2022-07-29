@@ -19,9 +19,12 @@ const freeBonuses = [
       "All my life's work in ONE incredible program known as the Dream Body In 90 Program.",
     paragraph2:
       "This works PERFECTLY with Kaiser Coach as you will get access to my coaching secrets I have never shared anywhere else such as:",
-    paragraph3: "list item number 1",
-    paragraph4: "list item number 2",
-    paragraph5: "list item number 3",
+    paragraph3:
+      "The 3 Fat burning superfoods that can burn an extra 3 pounds per week",
+    paragraph4:
+      "2 Low impact exercises any Woman and Man can do which melts more fat than hours of extreme exercise",
+    paragraph5:
+      "The brand new DVP eating plan- how to eat food you love every day while blasting belly fat on autopilot",
     paragraph6: "",
   },
   //   {
