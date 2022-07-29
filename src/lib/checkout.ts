@@ -14,9 +14,7 @@ const checkOut = async ({
 
   const getStripe = () => {
     if (!stripePromise) {
-      stripePromise = loadStripe(
-        "pk_test_51LIQslAtSFPFrKY5mJdnQuad2wmALyct6SXkoXBaibPgsbyI5Lc3TZjU9avJBICFuY6vgJvvPNc8uhRraZo6YQ4S00qsiff8sZ"
-      );
+      stripePromise = loadStripe("pk_test_laGA1Jl4I44TUJFzQJI8DNuD");
     }
     return stripePromise;
   };

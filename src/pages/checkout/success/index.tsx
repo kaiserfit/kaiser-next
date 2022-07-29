@@ -75,11 +75,11 @@ function SuccessPage({ sessionId, paymentItent, userPassword }: any) {
           body: JSON.stringify(dataToBeSent),
         }
       );
-      // const data = await resp.json();
-      // console.log(data);
+      const data = await resp.json();
+      console.log(data);
     };
 
-    // sendData();
+    sendData();
 
     const updateData = async () => {
       const resp = await fetch("/api/stripeUpdate", {
@@ -87,7 +87,7 @@ function SuccessPage({ sessionId, paymentItent, userPassword }: any) {
         body: JSON.stringify({ itemBundle, paymentIntentId }),
       });
       const data = await resp.json();
-      console.log(data);
+      // console.log(data);
     };
 
     updateData();
@@ -193,12 +193,9 @@ function OrderDetails({ chosenBundle }: { chosenBundle: PriceInformation }) {
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const { stripe_session_id: sessionId }: any = ctx.query;
-  const stripeServer = new Stripe(
-    "sk_test_51LIQslAtSFPFrKY5a6K4H7qvA1f0ju9fZRbChHZMTDqNR9VlH78XIW4dgtvgzmqzHHzA3sgu5UDqyYFcklpn7EW200GNo1cScF",
-    {
-      apiVersion: "2020-08-27",
-    }
-  );
+  const stripeServer = new Stripe("sk_test_NlFusDtsSTByRRBAALqwEJmJ", {
+    apiVersion: "2020-08-27",
+  });
   const session = await stripeServer.checkout.sessions.retrieve(
     sessionId?.toString()!
   );
