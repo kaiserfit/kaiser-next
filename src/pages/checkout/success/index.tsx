@@ -193,12 +193,9 @@ function OrderDetails({ chosenBundle }: { chosenBundle: PriceInformation }) {
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const { stripe_session_id: sessionId }: any = ctx.query;
-  const stripeServer = new Stripe(
-    "sk_test_51LIQslAtSFPFrKY5a6K4H7qvA1f0ju9fZRbChHZMTDqNR9VlH78XIW4dgtvgzmqzHHzA3sgu5UDqyYFcklpn7EW200GNo1cScF",
-    {
-      apiVersion: "2020-08-27",
-    }
-  );
+  const stripeServer = new Stripe("sk_test_NlFusDtsSTByRRBAALqwEJmJ", {
+    apiVersion: "2020-08-27",
+  });
   const session = await stripeServer.checkout.sessions.retrieve(
     sessionId?.toString()!
   );
