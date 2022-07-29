@@ -36,7 +36,7 @@ function CheckoutPage() {
   }, [dispatch]);
 
   return (
-    <section className="py-20 container mx-auto px-4">
+    <section className="min-h-screen py-20 container mx-auto px-4">
       {chosenBundle && (
         <div className="flex flex-col-reverse md:flex-row md:justify-between gap-y-8 md:gap-y-0 md:gap-x-8">
           <OrderForm chosenBundle={chosenBundle} limitedOffer={limitedOffer} />
