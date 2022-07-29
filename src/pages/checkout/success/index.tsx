@@ -75,11 +75,11 @@ function SuccessPage({ sessionId, paymentItent, userPassword }: any) {
           body: JSON.stringify(dataToBeSent),
         }
       );
-      // const data = await resp.json();
-      // console.log(data);
+      const data = await resp.json();
+      console.log(data);
     };
 
-    // sendData();
+    sendData();
 
     const updateData = async () => {
       const resp = await fetch("/api/stripeUpdate", {
@@ -87,7 +87,7 @@ function SuccessPage({ sessionId, paymentItent, userPassword }: any) {
         body: JSON.stringify({ itemBundle, paymentIntentId }),
       });
       const data = await resp.json();
-      console.log(data);
+      // console.log(data);
     };
 
     updateData();
